@@ -116,7 +116,7 @@ struct InsertTagsView: View {
     private var currentDateString: String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
-        formatter.timeStyle = .none
+        formatter.timeStyle = .short
         return formatter.string(from: Date())
     }
     

@@ -65,7 +65,7 @@ struct StatusDeleteView: View {
 
     private func formattedDate(from dateString: String) -> String {
         let inputFormatter = DateFormatter()
-        inputFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss" // Adjust this format to your current format
+        inputFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss" // Adjust this format to your current format
         if let date = inputFormatter.date(from: dateString) {
             let outputFormatter = DateFormatter()
             outputFormatter.dateFormat = "dd MMM yyyy 'at' HH:mm"
