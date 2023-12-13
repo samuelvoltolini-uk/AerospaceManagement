@@ -12,7 +12,7 @@ import PartialSheet
 struct AerospaceApp: App {
     var body: some Scene {
         WindowGroup {
-            OnboardingView()
+            StatusDeleteView()
         }
     }
 }

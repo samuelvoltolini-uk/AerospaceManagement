@@ -41,25 +41,33 @@ struct Manufacturer {
     var creationDate: String
 }
 
+struct Status {
+    var id: Int
+    var name: String
+    var description: String
+    var user: String
+    var date: String // Use String for simplicity; you might use Date with a DateFormatter
+}
+
 
 
 class DatabaseManager {
     var db: OpaquePointer?
-
+    
     init() {
         // Open the database
         do {
             let fileURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
                 .appendingPathComponent("UsersDatabase.sqlite")
-
+            
             // Print the database path
             print("Database Path: \(fileURL.path)")
-
+            
             if sqlite3_open(fileURL.path, &db) != SQLITE_OK {
                 print("Error opening database")
                 return
             }
-
+            
             // Create the table
             if sqlite3_exec(db, "CREATE TABLE IF NOT EXISTS Users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, password TEXT)", nil, nil, nil) != SQLITE_OK {
                 print("Error creating table")
@@ -69,18 +77,18 @@ class DatabaseManager {
             print("Error getting file URL: \(error)")
         }
     }
-
+    
     func addUser(name: String, email: String, password: String) {
         // Prepare the insert query
         let insertStatementString = "INSERT INTO Users (name, email, password) VALUES (?, ?, ?);"
         var insertStatement: OpaquePointer?
-
+        
         // Prepare statement
         if sqlite3_prepare_v2(db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
             sqlite3_bind_text(insertStatement, 1, (name as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 2, (email as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 3, (password as NSString).utf8String, -1, nil)
-
+            
             // Execute the query
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 print("Successfully inserted row.")
@@ -90,18 +98,18 @@ class DatabaseManager {
         } else {
             print("INSERT statement could not be prepared.")
         }
-
+        
         // Finalize statement
         sqlite3_finalize(insertStatement)
     }
-
-
+    
+    
     deinit {
         sqlite3_close(db)
     }
     
     func createTagsTable() {
-            let createTableString = """
+        let createTableString = """
             CREATE TABLE IF NOT EXISTS Tags(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
@@ -110,56 +118,56 @@ class DatabaseManager {
             creatorName TEXT,
             creationDate TEXT);
             """
-            var createTableStatement: OpaquePointer?
-            if sqlite3_prepare_v2(db, createTableString, -1, &createTableStatement, nil) == SQLITE_OK {
-                if sqlite3_step(createTableStatement) == SQLITE_DONE {
-                    print("Tags table created.")
-                } else {
-                    print("Tags table could not be created.")
-                }
+        var createTableStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, createTableString, -1, &createTableStatement, nil) == SQLITE_OK {
+            if sqlite3_step(createTableStatement) == SQLITE_DONE {
+                print("Tags table created.")
             } else {
-                print("CREATE TABLE statement could not be prepared.")
+                print("Tags table could not be created.")
             }
-            sqlite3_finalize(createTableStatement)
+        } else {
+            print("CREATE TABLE statement could not be prepared.")
         }
-
-        func addTag(tag: Tag) {
-            let insertStatementString = "INSERT INTO Tags (name, description, imageName, creatorName, creationDate) VALUES (?, ?, ?, ?, ?);"
-            var insertStatement: OpaquePointer?
-
-            if sqlite3_prepare_v2(db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
-                let dateString = DateFormatter.localizedString(from: tag.creationDate, dateStyle: .medium, timeStyle: .medium)
-                
-                sqlite3_bind_text(insertStatement, 1, (tag.name as NSString).utf8String, -1, nil)
-                sqlite3_bind_text(insertStatement, 2, (tag.description as NSString).utf8String, -1, nil)
-                sqlite3_bind_text(insertStatement, 3, (tag.imageName as NSString).utf8String, -1, nil)
-                sqlite3_bind_text(insertStatement, 4, (tag.creatorName as NSString).utf8String, -1, nil)
-                sqlite3_bind_text(insertStatement, 5, (dateString as NSString).utf8String, -1, nil)
-
-                if sqlite3_step(insertStatement) == SQLITE_DONE {
-                    print("Successfully inserted row.")
-                } else {
-                    print("Could not insert row.")
-                }
-            } else {
-                print("INSERT statement could not be prepared.")
-            }
-            sqlite3_finalize(insertStatement)
-        }
-
-        // Existing database functions...
+        sqlite3_finalize(createTableStatement)
     }
+    
+    func addTag(tag: Tag) {
+        let insertStatementString = "INSERT INTO Tags (name, description, imageName, creatorName, creationDate) VALUES (?, ?, ?, ?, ?);"
+        var insertStatement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            let dateString = DateFormatter.localizedString(from: tag.creationDate, dateStyle: .medium, timeStyle: .medium)
+            
+            sqlite3_bind_text(insertStatement, 1, (tag.name as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 2, (tag.description as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, (tag.imageName as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, (tag.creatorName as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, (dateString as NSString).utf8String, -1, nil)
+            
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                print("Successfully inserted row.")
+            } else {
+                print("Could not insert row.")
+            }
+        } else {
+            print("INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    
+    // Existing database functions...
+}
 
 extension DatabaseManager {
     func fetchUser(email: String, password: String) -> User? {
         let queryStatementString = "SELECT * FROM Users WHERE email = ? AND password = ?;"
         var queryStatement: OpaquePointer?
         var user: User?
-
+        
         if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
             sqlite3_bind_text(queryStatement, 1, (email as NSString).utf8String, -1, nil)
             sqlite3_bind_text(queryStatement, 2, (password as NSString).utf8String, -1, nil)
-
+            
             while sqlite3_step(queryStatement) == SQLITE_ROW {
                 let id = sqlite3_column_int64(queryStatement, 0)
                 let name = String(cString: sqlite3_column_text(queryStatement, 1))
@@ -168,7 +176,7 @@ extension DatabaseManager {
         } else {
             print("SELECT statement could not be prepared")
         }
-
+        
         sqlite3_finalize(queryStatement)
         return user
     }
@@ -178,7 +186,7 @@ extension DatabaseManager {
     func fetchTagsInfo() -> [Tag] {
         var tags = [Tag]()
         let queryStatementString = "SELECT * FROM Tags;"
-
+        
         var queryStatement: OpaquePointer?
         if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
             while sqlite3_step(queryStatement) == SQLITE_ROW {
@@ -192,7 +200,7 @@ extension DatabaseManager {
         } else {
             print("SELECT statement could not be prepared")
         }
-
+        
         sqlite3_finalize(queryStatement)
         return tags
     }
@@ -202,7 +210,7 @@ extension DatabaseManager {
     func fetchAllTags() -> [FullTag] {
         var fulltags: [FullTag] = []
         let queryStatementString = "SELECT id, name, description, imageName, creatorName, creationDate FROM Tags;"
-
+        
         var queryStatement: OpaquePointer?
         if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
             while sqlite3_step(queryStatement) == SQLITE_ROW {
@@ -211,10 +219,10 @@ extension DatabaseManager {
                 let description = String(cString: sqlite3_column_text(queryStatement, 2))
                 let imageName = String(cString: sqlite3_column_text(queryStatement, 3))
                 let creatorName = String(cString: sqlite3_column_text(queryStatement, 4))
-
+                
                 let dateString = String(cString: sqlite3_column_text(queryStatement, 5))
                 let creationDate = dateFormatter.date(from: dateString) ?? Date()
-
+                
                 let tag = FullTag(id: id, name: name, description: description, imageName: imageName, creatorName: creatorName, creationDate: creationDate)
                 fulltags.append(tag)
             }
@@ -224,7 +232,7 @@ extension DatabaseManager {
         sqlite3_finalize(queryStatement)
         return fulltags
     }
-
+    
     private var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd MMM yyyy 'at' HH:mm:ss" // Adjust to match the format in the database
@@ -235,7 +243,7 @@ extension DatabaseManager {
 extension DatabaseManager {
     func deleteTag(withId id: Int64) {
         let deleteStatementString = "DELETE FROM Tags WHERE id = ?;"
-
+        
         var deleteStatement: OpaquePointer?
         if sqlite3_prepare_v2(db, deleteStatementString, -1, &deleteStatement, nil) == SQLITE_OK {
             sqlite3_bind_int64(deleteStatement, 1, id)
@@ -247,13 +255,13 @@ extension DatabaseManager {
         } else {
             print("DELETE statement could not be prepared.")
         }
-
+        
         sqlite3_finalize(deleteStatement)
     }
 }
 
 extension DatabaseManager {
-
+    
     func createManufacturerTable() {
         let createTableString = """
         CREATE TABLE IF NOT EXISTS Manufacturer(
@@ -270,7 +278,7 @@ extension DatabaseManager {
         createdBy TEXT,
         creationDate TEXT);
         """
-
+        
         var createTableStatement: OpaquePointer?
         if sqlite3_prepare_v2(db, createTableString, -1, &createTableStatement, nil) == SQLITE_OK {
             if sqlite3_step(createTableStatement) == SQLITE_DONE {
@@ -283,12 +291,12 @@ extension DatabaseManager {
         }
         sqlite3_finalize(createTableStatement)
     }
-
+    
     func insertManufacturer(name: String, code: String, country: String, stateOrProvince: String, postCode: String, street: String, number: String, phoneNumber: String, email: String, createdBy: String, creationDate: String) {
         let insertStatementString = """
         INSERT INTO Manufacturer (name, code, country, stateOrProvince, postCode, street, number, phoneNumber, email, createdBy, creationDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
         """
-
+        
         var insertStatement: OpaquePointer?
         if sqlite3_prepare_v2(db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
             sqlite3_bind_text(insertStatement, 1, (name as NSString).utf8String, -1, nil)
@@ -302,7 +310,7 @@ extension DatabaseManager {
             sqlite3_bind_text(insertStatement, 9, (email as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 10, (createdBy as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 11, (creationDate as NSString).utf8String, -1, nil)
-
+            
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 print("Successfully inserted row.")
             } else {
@@ -316,23 +324,23 @@ extension DatabaseManager {
 }
 
 extension DatabaseManager {
-
+    
     func checkIfManufacturerExists(name: String, code: String) -> Bool {
         let queryStatementString = "SELECT * FROM Manufacturer WHERE name = ? OR code = ?;"
         var queryStatement: OpaquePointer?
         var exists = false
-
+        
         if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
             sqlite3_bind_text(queryStatement, 1, (name as NSString).utf8String, -1, nil)
             sqlite3_bind_text(queryStatement, 2, (code as NSString).utf8String, -1, nil)
-
+            
             if sqlite3_step(queryStatement) == SQLITE_ROW {
                 exists = true
             }
         } else {
             print("SELECT statement could not be prepared")
         }
-
+        
         sqlite3_finalize(queryStatement)
         return exists
     }
@@ -340,44 +348,44 @@ extension DatabaseManager {
 
 extension DatabaseManager {
     func fetchManufacturers() -> [Manufacturer] {
-            var manufacturers = [Manufacturer]()
-            let queryStatementString = "SELECT * FROM Manufacturer;"
-
-            var queryStatement: OpaquePointer?
-            if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
-                while sqlite3_step(queryStatement) == SQLITE_ROW {
-                    let id = sqlite3_column_int(queryStatement, 0)
-                    let name = String(cString: sqlite3_column_text(queryStatement, 1))
-                    let code = String(cString: sqlite3_column_text(queryStatement, 2))
-                    let country = String(cString: sqlite3_column_text(queryStatement, 3))
-                    let stateOrProvince = String(cString: sqlite3_column_text(queryStatement, 4))
-                    let postCode = String(cString: sqlite3_column_text(queryStatement, 5))
-                    let street = String(cString: sqlite3_column_text(queryStatement, 6))
-                    let number = String(cString: sqlite3_column_text(queryStatement, 7))
-                    let phoneNumber = String(cString: sqlite3_column_text(queryStatement, 8))
-                    let email = String(cString: sqlite3_column_text(queryStatement, 9))
-                    let createdBy = String(cString: sqlite3_column_text(queryStatement, 10))
-                    let creationDate = String(cString: sqlite3_column_text(queryStatement, 11))
-
-                    let manufacturer = Manufacturer(id: Int(id), name: name, code: code, country: country, stateOrProvince: stateOrProvince, postCode: postCode, street: street, number: number, phoneNumber: phoneNumber, email: email, createdBy: createdBy, creationDate: creationDate)
-                    manufacturers.append(manufacturer)
-                }
-            } else {
-                print("SELECT statement could not be prepared.")
+        var manufacturers = [Manufacturer]()
+        let queryStatementString = "SELECT * FROM Manufacturer;"
+        
+        var queryStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = sqlite3_column_int(queryStatement, 0)
+                let name = String(cString: sqlite3_column_text(queryStatement, 1))
+                let code = String(cString: sqlite3_column_text(queryStatement, 2))
+                let country = String(cString: sqlite3_column_text(queryStatement, 3))
+                let stateOrProvince = String(cString: sqlite3_column_text(queryStatement, 4))
+                let postCode = String(cString: sqlite3_column_text(queryStatement, 5))
+                let street = String(cString: sqlite3_column_text(queryStatement, 6))
+                let number = String(cString: sqlite3_column_text(queryStatement, 7))
+                let phoneNumber = String(cString: sqlite3_column_text(queryStatement, 8))
+                let email = String(cString: sqlite3_column_text(queryStatement, 9))
+                let createdBy = String(cString: sqlite3_column_text(queryStatement, 10))
+                let creationDate = String(cString: sqlite3_column_text(queryStatement, 11))
+                
+                let manufacturer = Manufacturer(id: Int(id), name: name, code: code, country: country, stateOrProvince: stateOrProvince, postCode: postCode, street: street, number: number, phoneNumber: phoneNumber, email: email, createdBy: createdBy, creationDate: creationDate)
+                manufacturers.append(manufacturer)
             }
-            sqlite3_finalize(queryStatement)
-            return manufacturers
+        } else {
+            print("SELECT statement could not be prepared.")
         }
+        sqlite3_finalize(queryStatement)
+        return manufacturers
+    }
 }
 
 extension DatabaseManager {
     func deleteManufacturer(id: Int) {
         let deleteStatementString = "DELETE FROM Manufacturer WHERE id = ?;"
-
+        
         var deleteStatement: OpaquePointer?
         if sqlite3_prepare_v2(db, deleteStatementString, -1, &deleteStatement, nil) == SQLITE_OK {
             sqlite3_bind_int(deleteStatement, 1, Int32(id))
-
+            
             if sqlite3_step(deleteStatement) == SQLITE_DONE {
                 print("Successfully deleted row.")
             } else {
@@ -417,7 +425,7 @@ extension DatabaseManager {
         }
         
         sqlite3_finalize(createTableStatement)
-
+        
     }
     
     func insertStatus(name: String, description: String, user: String, date: Date) -> Bool {
@@ -451,14 +459,14 @@ extension DatabaseManager {
 }
 
 extension DatabaseManager {
-
+    
     func statusExists(name: String) -> Bool {
         let queryStatementString = "SELECT * FROM Status WHERE Name = ?;"
         var queryStatement: OpaquePointer?
-
+        
         if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
             sqlite3_bind_text(queryStatement, 1, (name as NSString).utf8String, -1, nil)
-
+            
             if sqlite3_step(queryStatement) == SQLITE_ROW {
                 sqlite3_finalize(queryStatement)
                 return true // Status exists
@@ -473,6 +481,52 @@ extension DatabaseManager {
         return false
     }
 }
+
+extension DatabaseManager {
+    
+    func fetchStatuses() -> [Status] {
+        var statuses = [Status]()
+        let queryStatementString = "SELECT Id, Name, Description, User, Date FROM Status;"
+        var queryStatement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = sqlite3_column_int(queryStatement, 0)
+                let name = String(cString: sqlite3_column_text(queryStatement, 1))
+                let description = String(cString: sqlite3_column_text(queryStatement, 2))
+                let user = String(cString: sqlite3_column_text(queryStatement, 3))
+                let date = String(cString: sqlite3_column_text(queryStatement, 4))
+                statuses.append(Status(id: Int(id), name: name, description: description, user: user, date: date))
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+        return statuses
+    }
+    
+    func deleteStatus(withId id: Int) -> Bool {
+        let deleteStatementString = "DELETE FROM Status WHERE Id = ?;"
+        var deleteStatement: OpaquePointer?
+        
+        var result = false
+        if sqlite3_prepare_v2(db, deleteStatementString, -1, &deleteStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(deleteStatement, 1, Int32(id))
+            result = sqlite3_step(deleteStatement) == SQLITE_DONE
+            if result {
+                print("Successfully deleted row.")
+            } else {
+                print("Could not delete row.")
+            }
+        } else {
+            print("DELETE statement could not be prepared.")
+        }
+        sqlite3_finalize(deleteStatement)
+        return result
+    }
+}
+
+
 
 
 

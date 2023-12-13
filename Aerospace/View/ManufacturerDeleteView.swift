@@ -58,7 +58,7 @@ struct ManufacturerDeleteView: View {
                         .padding(.top, 5)
                         
                         HStack {
-                            Image("UserCreated")
+                            Image("WorkerID")
                                 .resizable()
                                 .frame(width: 20, height: 20)
                             Text(manufacturer.createdBy)
@@ -68,7 +68,7 @@ struct ManufacturerDeleteView: View {
                         .padding(.top, 5)
                         
                         HStack {
-                            Image("Date")
+                            Image("DateCreated")
                                 .resizable()
                                 .frame(width: 20, height: 20)
                             Text(manufacturer.creationDate)

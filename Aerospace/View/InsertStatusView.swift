@@ -23,7 +23,7 @@ struct InsertStatusView: View {
                         .textInputAutocapitalization(.sentences)
                 }
                 
-                Section(header: headerWithIcon("User", title: "User Information")) {
+                Section(header: headerWithIcon("WorkerID", title: "User Information")) {
                     HStack {
                         Text("User")
                         Spacer()
