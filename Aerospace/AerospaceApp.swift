@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import PartialSheet
 
 @main
 struct AerospaceApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            OnboardingView()
         }
     }
 }
