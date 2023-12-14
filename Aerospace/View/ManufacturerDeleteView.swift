@@ -101,6 +101,7 @@ struct ManufacturerDeleteView: View {
             databaseManager.deleteManufacturer(id: manufacturer.id)
             manufacturers.remove(at: index)
         }
+        fetchManufacturers()
     }
 }
 

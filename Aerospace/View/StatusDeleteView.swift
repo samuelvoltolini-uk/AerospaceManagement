@@ -3,54 +3,67 @@ import SwiftUI
 struct StatusDeleteView: View {
     @State private var statuses: [Status] = []
     let databaseManager = DatabaseManager()
+    
+    @State private var fetchFailed: Bool = false
 
     var body: some View {
-        List {
-            ForEach(statuses, id: \.id) { status in
-                VStack(alignment: .leading) {
-                    HStack {
-                        Image("StatusView")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                        Text(status.name).font(.headline)
-                    }
-                    .padding(.top, 5)
-
-                    HStack {
-                        Image("HistoryUpdate")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                        Text(status.description)
-                            .font(.footnote)
-                    }
-                    .padding(.top, 5)
-
-                    HStack {
-                        Image("WorkerID")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                        Text(status.user)
-                            .foregroundStyle(Color.gray)
-                            .font(.footnote)
-                    }
-                    .padding(.top, 5)
-
-                    HStack {
-                        Image("DateCreated")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                        Text(formattedDate(from: status.date))
-                            .foregroundStyle(Color.gray)
-                            .font(.footnote)
-                    }
-                    .padding(.top, 5)
-                }
+        if fetchFailed {
+            VStack {
+                Image("NothingHere") // Replace with your 'Nothing to see here' image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 300, height: 300)
+                Text("Nothing to see here")
+                    .font(.headline)
             }
-            .onDelete(perform: deleteStatus)
-        }
-        .navigationTitle("Status")
-        .onAppear {
-            statuses = databaseManager.fetchStatuses()
+        } else {
+            List {
+                ForEach(statuses, id: \.id) { status in
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Image("StatusView")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                            Text(status.name).font(.headline)
+                        }
+                        .padding(.top, 5)
+                        
+                        HStack {
+                            Image("HistoryUpdate")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                            Text(status.description)
+                                .font(.footnote)
+                        }
+                        .padding(.top, 5)
+                        
+                        HStack {
+                            Image("WorkerID")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                            Text(status.user)
+                                .foregroundStyle(Color.gray)
+                                .font(.footnote)
+                        }
+                        .padding(.top, 5)
+                        
+                        HStack {
+                            Image("DateCreated")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                            Text(formattedDate(from: status.date))
+                                .foregroundStyle(Color.gray)
+                                .font(.footnote)
+                        }
+                        .padding(.top, 5)
+                    }
+                }
+                .onDelete(perform: deleteStatus)
+            }
+            .navigationTitle("Status")
+            .onAppear {
+                fetchStatusIfFail()
+            }
         }
     }
 
@@ -60,6 +73,16 @@ struct StatusDeleteView: View {
             if databaseManager.deleteStatus(withId: statusId) {
                 statuses.remove(at: index)
             }
+            fetchStatusIfFail()
+        }
+    }
+    
+    func fetchStatusIfFail() {
+        let result = databaseManager.fetchStatuses()
+        if result.isEmpty {
+            fetchFailed = true
+        } else {
+            statuses = result
         }
     }
 

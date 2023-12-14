@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D0420CD42B2B1DC1007710E6 /* InsertCountryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0420CD32B2B1DC1007710E6 /* InsertCountryView.swift */; };
 		D0560A4A2B288A3400F93E84 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0560A492B288A3400F93E84 /* Database.swift */; };
 		D0560A4C2B2893B400F93E84 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0560A4B2B2893B400F93E84 /* LoginView.swift */; };
 		D0560A4E2B2895F000F93E84 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0560A4D2B2895F000F93E84 /* OnboardingView.swift */; };
@@ -28,6 +29,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D0420CD32B2B1DC1007710E6 /* InsertCountryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsertCountryView.swift; sourceTree = "<group>"; };
 		D0560A492B288A3400F93E84 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		D0560A4B2B2893B400F93E84 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		D0560A4D2B2895F000F93E84 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -74,6 +76,7 @@
 				D0560A622B2A28BB00F93E84 /* ManufacturerDeleteView.swift */,
 				D0560A642B2A55ED00F93E84 /* InsertStatusView.swift */,
 				D0560A662B2A68FC00F93E84 /* StatusDeleteView.swift */,
+				D0420CD32B2B1DC1007710E6 /* InsertCountryView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -208,6 +211,7 @@
 				D0560A632B2A28BB00F93E84 /* ManufacturerDeleteView.swift in Sources */,
 				D0560A592B28FB9700F93E84 /* InsertTagsView.swift in Sources */,
 				D0560A4A2B288A3400F93E84 /* Database.swift in Sources */,
+				D0420CD42B2B1DC1007710E6 /* InsertCountryView.swift in Sources */,
 				D0560A4C2B2893B400F93E84 /* LoginView.swift in Sources */,
 				D0560A612B29F10500F93E84 /* InsertManufacturerView.swift in Sources */,
 				D0560A4E2B2895F000F93E84 /* OnboardingView.swift in Sources */,
