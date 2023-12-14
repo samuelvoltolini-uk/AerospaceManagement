@@ -48,7 +48,7 @@ struct InsertStatusView: View {
                             .foregroundStyle(Color.accentColor)
                         
                     } else {
-                        Button("Submit") {
+                        Button("Save") {
                             
                             databaseManager.createStatusTable()
                             

@@ -526,6 +526,72 @@ extension DatabaseManager {
     }
 }
 
+extension DatabaseManager {
+    
+    func createCountryTable() {
+            let createTableString = """
+            CREATE TABLE IF NOT EXISTS Countries(
+            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            CountryName TEXT,
+            UserName TEXT,
+            CreationDate TEXT);
+            """
+
+            var createTableStatement: OpaquePointer?
+            if sqlite3_prepare_v2(db, createTableString, -1, &createTableStatement, nil) == SQLITE_OK {
+                if sqlite3_step(createTableStatement) == SQLITE_DONE {
+                    print("Countries table created.")
+                } else {
+                    print("Countries table could not be created.")
+                }
+            } else {
+                print("CREATE TABLE statement could not be prepared.")
+            }
+            sqlite3_finalize(createTableStatement)
+        }
+    
+    func insertCountry(name: String, userName: String, creationDate: String) {
+            let insertStatementString = "INSERT INTO Countries (CountryName, UserName, CreationDate) VALUES (?, ?, ?);"
+            var insertStatement: OpaquePointer?
+
+            if sqlite3_prepare_v2(db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+                sqlite3_bind_text(insertStatement, 1, (name as NSString).utf8String, -1, nil)
+                sqlite3_bind_text(insertStatement, 2, (userName as NSString).utf8String, -1, nil)
+                sqlite3_bind_text(insertStatement, 3, (creationDate as NSString).utf8String, -1, nil)
+
+                if sqlite3_step(insertStatement) == SQLITE_DONE {
+                    print("Successfully inserted row.")
+                } else {
+                    print("Could not insert row.")
+                }
+            } else {
+                print("INSERT statement could not be prepared.")
+            }
+            sqlite3_finalize(insertStatement)
+        }
+}
+
+extension DatabaseManager {
+
+    func countryExists(name: String) -> Bool {
+        let queryStatementString = "SELECT * FROM Countries WHERE CountryName = ?;"
+        var queryStatement: OpaquePointer?
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(queryStatement, 1, (name as NSString).utf8String, -1, nil)
+
+            if sqlite3_step(queryStatement) == SQLITE_ROW {
+                sqlite3_finalize(queryStatement)
+                return true // Country exists
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+        return false // Country does not exist
+    }
+}
+
 
 
 

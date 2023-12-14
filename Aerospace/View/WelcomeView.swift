@@ -123,7 +123,7 @@ struct WelcomeView: View {
                     }
                     
                     Section(header: Text("Country Origin"), footer: Text("Enter, view and delete the country origin.")) {
-                        NavigationLink(destination: Text("Enter New Country")) {
+                        NavigationLink(destination: InsertCountryView(loggedInUser: user)) {
                             HStack {
                                 Image("NewCountry")
                                     .resizable()

@@ -105,7 +105,7 @@ struct InsertManufacturerView: View {
                     .frame(maxWidth: .infinity, alignment: .center)
                     .foregroundStyle(Color.accentColor)
             } else {
-                Button("Save Manufacturer") {
+                Button("Save") {
                     if validateFields() {
                         if databaseManager.checkIfManufacturerExists(name: manufacturerName, code: manufacturerCode) {
                             errorMessage = "Manufacturer with same name or code already exists."

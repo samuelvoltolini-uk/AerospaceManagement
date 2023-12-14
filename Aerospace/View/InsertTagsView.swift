@@ -81,7 +81,7 @@ struct InsertTagsView: View {
                         .frame(maxWidth: .infinity)
                         .foregroundStyle(Color.accentColor)
                 } else {
-                    Text("Create Tag")
+                    Text("Save")
                         .font(.callout)
                         .frame(maxWidth: .infinity)
                         .foregroundColor(.accentColor)
