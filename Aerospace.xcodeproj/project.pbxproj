@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D04207A12B2B70F000DEE395 /* CountryDeleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04207A02B2B70F000DEE395 /* CountryDeleteView.swift */; };
 		D0420CD42B2B1DC1007710E6 /* InsertCountryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0420CD32B2B1DC1007710E6 /* InsertCountryView.swift */; };
 		D0560A4A2B288A3400F93E84 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0560A492B288A3400F93E84 /* Database.swift */; };
 		D0560A4C2B2893B400F93E84 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0560A4B2B2893B400F93E84 /* LoginView.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D04207A02B2B70F000DEE395 /* CountryDeleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryDeleteView.swift; sourceTree = "<group>"; };
 		D0420CD32B2B1DC1007710E6 /* InsertCountryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsertCountryView.swift; sourceTree = "<group>"; };
 		D0560A492B288A3400F93E84 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		D0560A4B2B2893B400F93E84 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 				D0560A642B2A55ED00F93E84 /* InsertStatusView.swift */,
 				D0560A662B2A68FC00F93E84 /* StatusDeleteView.swift */,
 				D0420CD32B2B1DC1007710E6 /* InsertCountryView.swift */,
+				D04207A02B2B70F000DEE395 /* CountryDeleteView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -204,6 +207,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0560A5D2B29218C00F93E84 /* DisplayTagsView.swift in Sources */,
+				D04207A12B2B70F000DEE395 /* CountryDeleteView.swift in Sources */,
 				D0560A672B2A68FC00F93E84 /* StatusDeleteView.swift in Sources */,
 				D0560A652B2A55ED00F93E84 /* InsertStatusView.swift in Sources */,
 				D0810B1F2B286C93005825D6 /* SignupView.swift in Sources */,

@@ -49,6 +49,13 @@ struct Status {
     var date: String // Use String for simplicity; you might use Date with a DateFormatter
 }
 
+struct Country: Identifiable {
+    let id: Int
+    let name: String
+    let userName: String
+    let creationDate: String
+}
+
 
 
 class DatabaseManager {
@@ -589,6 +596,49 @@ extension DatabaseManager {
         }
         sqlite3_finalize(queryStatement)
         return false // Country does not exist
+    }
+}
+
+extension DatabaseManager {
+    func fetchCountries() -> [Country] {
+        let queryStatementString = "SELECT Id, CountryName, UserName, CreationDate FROM Countries;"
+        var queryStatement: OpaquePointer?
+        var countries = [Country]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = sqlite3_column_int(queryStatement, 0)
+                let name = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let userName = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let creationDate = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+
+                countries.append(Country(id: Int(id), name: name, userName: userName, creationDate: creationDate))
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+        return countries
+    }
+}
+
+extension DatabaseManager {
+    func deleteCountry(withId id: Int) {
+        let deleteStatementString = "DELETE FROM Countries WHERE Id = ?;"
+        var deleteStatement: OpaquePointer?
+
+        if sqlite3_prepare_v2(db, deleteStatementString, -1, &deleteStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(deleteStatement, 1, Int32(id))
+
+            if sqlite3_step(deleteStatement) == SQLITE_DONE {
+                print("Successfully deleted row.")
+            } else {
+                print("Could not delete row.")
+            }
+        } else {
+            print("DELETE statement could not be prepared")
+        }
+        sqlite3_finalize(deleteStatement)
     }
 }
 

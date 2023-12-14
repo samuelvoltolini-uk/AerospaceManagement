@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct StatusDeleteView: View {
+    
     @State private var statuses: [Status] = []
     let databaseManager = DatabaseManager()
     

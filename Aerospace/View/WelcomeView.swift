@@ -254,7 +254,7 @@ struct WelcomeView: View {
     private var currentDateTime: String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
-        formatter.timeStyle = .medium
+        formatter.timeStyle = .short
         return formatter.string(from: Date())
     }
 }
