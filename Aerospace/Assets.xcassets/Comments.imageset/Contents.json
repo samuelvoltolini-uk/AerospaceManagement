@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "icons8-apps-tab-48(@1×).png",
+      "filename" : "icons8-comments-48(@1×).png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "icons8-apps-tab-96(@2×).png",
+      "filename" : "icons8-comments-96(@2×).png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "icons8-apps-tab-144(@3×).png",
+      "filename" : "icons8-comments-144(@3×).png",
       "idiom" : "universal",
       "scale" : "3x"
     }

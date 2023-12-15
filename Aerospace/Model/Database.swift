@@ -76,6 +76,56 @@ struct ClientFetch: Identifiable {
     
 }
 
+struct Item {
+    var name: String
+    var barcode: String
+    var description: String
+    var manufacturer: String
+    var status: String
+    var origin: String
+    var client: String
+    var material: String
+    var repairCompanyOne: String
+    var repairCompanyTwo: String
+    var historyNumber: Int
+    var comments: String
+    var tagName: String
+    var isFavorite: Bool
+    var isPriority: Bool
+    var quantity: Double
+    var receiveDate: Date
+    var expectedDate: Date
+    var file: Data? // File data
+    var createdBy: String
+    var creationDate: String
+}
+
+
+struct ManufacturerPicker: Hashable {
+    var id: Int
+    var name: String
+}
+
+struct StatusPicker: Hashable {
+    var id: Int
+    var name: String
+}
+
+struct CountryOfOriginPicker: Hashable {
+    var id: Int
+    var name: String
+}
+
+struct ClientPicker: Hashable {
+    var id: Int
+    var name: String
+}
+
+struct TagPicker: Hashable {
+    var id: Int
+    var name: String
+}
+
 
 
 class DatabaseManager {
@@ -795,6 +845,210 @@ extension DatabaseManager {
             print("DELETE statement could not be prepared.")
         }
         sqlite3_finalize(deleteStatement)
+    }
+}
+
+extension DatabaseManager {
+    func createItemsTable() {
+        let createTableString = """
+        CREATE TABLE IF NOT EXISTS Items(
+        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Name TEXT,
+        Barcode TEXT,
+        Description TEXT,
+        Manufacturer TEXT,
+        Status TEXT,
+        Origin TEXT,
+        Client TEXT,
+        Material TEXT,
+        RepairCompanyOne TEXT,
+        RepairCompanyTwo TEXT,
+        HistoryNumber INTEGER,
+        Comments TEXT,
+        TagName TEXT,
+        IsFavorite INTEGER,
+        IsPriority INTEGER,
+        Quantity REAL,
+        ReceiveDate TEXT,
+        ExpectedDate TEXT,
+        File BLOB,
+        CreatedBy TEXT,
+        CreationDate TEXT);
+        """
+
+        var createTableStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, createTableString, -1, &createTableStatement, nil) == SQLITE_OK {
+            if sqlite3_step(createTableStatement) == SQLITE_DONE {
+                print("Items table created.")
+            } else {
+                print("Items table could not be created.")
+            }
+        } else {
+            print("CREATE TABLE statement could not be prepared.")
+        }
+        sqlite3_finalize(createTableStatement)
+    }
+
+    func insertItem(item: Item) {
+        let insertStatementString = """
+        INSERT INTO Items (Name, Barcode, Description, Manufacturer, Status, Origin, Client, Material, RepairCompanyOne, RepairCompanyTwo, HistoryNumber, Comments, TagName, IsFavorite, IsPriority, Quantity, ReceiveDate, ExpectedDate, File, CreatedBy, CreationDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        """
+        var insertStatement: OpaquePointer?
+
+        if sqlite3_prepare_v2(db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(insertStatement, 1, (item.name as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 2, (item.barcode as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, (item.description as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, (item.manufacturer as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, (item.status as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 6, (item.origin as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 7, (item.client as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 8, (item.material as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 9, (item.repairCompanyOne as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 10, (item.repairCompanyTwo as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 11, Int32(item.historyNumber))
+            sqlite3_bind_text(insertStatement, 12, (item.comments as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 13, (item.tagName as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 14, item.isFavorite ? 1 : 0)
+            sqlite3_bind_int(insertStatement, 15, item.isPriority ? 1 : 0)
+            sqlite3_bind_double(insertStatement, 16, item.quantity)
+
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd-mm-yyyy"
+            let receiveDateString = dateFormatter.string(from: item.receiveDate)
+            let expectedDateString = dateFormatter.string(from: item.expectedDate)
+            sqlite3_bind_text(insertStatement, 17, (receiveDateString as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 18, (expectedDateString as NSString).utf8String, -1, nil)
+
+            if let fileData = item.file {
+                    fileData.withUnsafeBytes { rawBufferPointer in
+                        guard let pointer = rawBufferPointer.baseAddress?.assumingMemoryBound(to: UInt8.self) else { return }
+                        sqlite3_bind_blob(insertStatement, 19, pointer, Int32(fileData.count), nil)
+                    }
+                } else {
+                    sqlite3_bind_blob(insertStatement, 19, nil, 0, nil)
+                }
+
+            sqlite3_bind_text(insertStatement, 20, (item.createdBy as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 21, (item.creationDate as NSString).utf8String, -1, nil)
+
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                print("Successfully inserted row.")
+            } else {
+                print("Could not insert row.")
+            }
+        } else {
+            print("INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+}
+
+
+extension DatabaseManager {
+    // Function to fetch manufacturers
+    func fetchManufacturersPicker() -> [ManufacturerPicker] {
+        var manufacturers: [ManufacturerPicker] = []
+        let queryStatementString = "SELECT id, name FROM Manufacturer;"
+        var queryStatement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = sqlite3_column_int(queryStatement, 0)
+                if let queryResultCol1 = sqlite3_column_text(queryStatement, 1) {
+                    let name = String(cString: queryResultCol1)
+                    manufacturers.append(ManufacturerPicker(id: Int(id), name: name))
+                }
+            }
+        } else {
+            print("SELECT statement could not be prepared for Manufacturer")
+        }
+        sqlite3_finalize(queryStatement)
+        return manufacturers
+    }
+    
+    // Function to fetch statuses
+    func fetchStatusesPicker() -> [StatusPicker] {
+        var statuses: [StatusPicker] = []
+        let queryStatementString = "SELECT id, name FROM Status;"
+        var queryStatement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = sqlite3_column_int(queryStatement, 0)
+                if let queryResultCol1 = sqlite3_column_text(queryStatement, 1) {
+                    let name = String(cString: queryResultCol1)
+                    statuses.append(StatusPicker(id: Int(id), name: name))
+                }
+            }
+        } else {
+            print("SELECT statement could not be prepared for Status")
+        }
+        sqlite3_finalize(queryStatement)
+        return statuses
+    }
+    
+    // Function to fetch countries of origin
+    func fetchCountriesOfOriginPicker() -> [CountryOfOriginPicker] {
+        var countries: [CountryOfOriginPicker] = []
+        let queryStatementString = "SELECT id, CountryName FROM Countries;"
+        var queryStatement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = sqlite3_column_int(queryStatement, 0)
+                if let queryResultCol1 = sqlite3_column_text(queryStatement, 1) {
+                    let name = String(cString: queryResultCol1)
+                    countries.append(CountryOfOriginPicker(id: Int(id), name: name))
+                }
+            }
+        } else {
+            print("SELECT statement could not be prepared for Countries")
+        }
+        sqlite3_finalize(queryStatement)
+        return countries
+    }
+    
+    // Function to fetch clients
+    func fetchClientsPicker() -> [ClientPicker] {
+        var clients: [ClientPicker] = []
+        let queryStatementString = "SELECT id, name FROM Clients;"
+        var queryStatement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = sqlite3_column_int(queryStatement, 0)
+                if let queryResultCol1 = sqlite3_column_text(queryStatement, 1) {
+                    let name = String(cString: queryResultCol1)
+                    clients.append(ClientPicker(id: Int(id), name: name))
+                }
+            }
+        } else {
+            print("SELECT statement could not be prepared for Clients")
+        }
+        sqlite3_finalize(queryStatement)
+        return clients
+    }
+    
+    // Function to fetch tags
+    func fetchTagPicker() -> [TagPicker] {
+        var tags: [TagPicker] = []
+        let queryStatementString = "SELECT id, name FROM Tags;"
+        var queryStatement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = sqlite3_column_int(queryStatement, 0)
+                if let queryResultCol1 = sqlite3_column_text(queryStatement, 1) {
+                    let name = String(cString: queryResultCol1)
+                    tags.append(TagPicker(id: Int(id), name: name))
+                }
+            }
+        } else {
+            print("SELECT statement could not be prepared for Tags")
+        }
+        sqlite3_finalize(queryStatement)
+        return tags
     }
 }
 

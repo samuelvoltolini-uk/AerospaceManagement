@@ -18,7 +18,7 @@ struct WelcomeView: View {
                                 Text("Overview")
                             }
                         }
-                        NavigationLink(destination: Text("Insert Item View")) {
+                        NavigationLink(destination: InsertItemView(loggedInUser: user)) {
                             HStack {
                                 Image("InsertItem")
                                     .resizable()
