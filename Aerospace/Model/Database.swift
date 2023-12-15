@@ -65,6 +65,17 @@ struct Client {
     var registrationDate: String
 }
 
+struct ClientFetch: Identifiable {
+    let id: Int
+    let name: String
+    let code: String
+    let phoneNumber: String
+    let email: String
+    let registeredBy: String
+    let registrationDate: String
+    
+}
+
 
 
 class DatabaseManager {
@@ -739,7 +750,52 @@ extension DatabaseManager {
     }
 }
 
+extension DatabaseManager {
+    func fetchClients() -> [ClientFetch] {
+        var clients = [ClientFetch]()
+        let queryStatementString = "SELECT * FROM Clients;"
+        var queryStatement: OpaquePointer?
 
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = sqlite3_column_int(queryStatement, 0)
+                let name = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let code = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let phoneNumber = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let email = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let registeredBy = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let registrationDate = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                // Fetch other fields as necessary
 
+                let client = ClientFetch(id: Int(id), name: name, code: code, phoneNumber: phoneNumber, email: email, registeredBy: registeredBy, registrationDate: registrationDate)
+                clients.append(client)
+            }
+        } else {
+            print("SELECT statement could not be prepared.")
+        }
+        sqlite3_finalize(queryStatement)
+        return clients
+    }
+}
+
+extension DatabaseManager {
+    func deleteClient(withId id: Int) {
+        let deleteStatementString = "DELETE FROM Clients WHERE Id = ?;"
+        var deleteStatement: OpaquePointer?
+
+        if sqlite3_prepare_v2(db, deleteStatementString, -1, &deleteStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(deleteStatement, 1, Int32(id))
+
+            if sqlite3_step(deleteStatement) == SQLITE_DONE {
+                print("Successfully deleted client.")
+            } else {
+                print("Could not delete client.")
+            }
+        } else {
+            print("DELETE statement could not be prepared.")
+        }
+        sqlite3_finalize(deleteStatement)
+    }
+}
 
 

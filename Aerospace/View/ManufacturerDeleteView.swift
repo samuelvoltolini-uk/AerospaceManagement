@@ -14,7 +14,7 @@ struct ManufacturerDeleteView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 300, height: 300)
-                Text("Nothing to see here")
+                Text("Nothing to see here!")
                     .font(.headline)
             }
         } else {

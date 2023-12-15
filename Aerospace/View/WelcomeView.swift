@@ -154,7 +154,7 @@ struct WelcomeView: View {
                                 Text("Insert Customer")
                             }
                         }
-                        NavigationLink(destination: Text("Delete Client")) {
+                        NavigationLink(destination: ClientDeleteView()) {
                             HStack {
                                 Image("ViewCustomer")
                                     .resizable()
