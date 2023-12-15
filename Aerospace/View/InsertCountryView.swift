@@ -27,6 +27,7 @@ struct InsertCountryView: View {
                         Text("Country Details")
                     }) {
                     TextField("Country of Origin", text: $countryOfOrigin)
+                            .textInputAutocapitalization(.words)
                 }
 
                 // User and Date Section
@@ -95,7 +96,6 @@ struct InsertCountryView: View {
                     .multilineTextAlignment(.center)
                     .padding(.top, 5)
             }
-            .padding()
         }
         .attachPartialSheetToRoot()
     }

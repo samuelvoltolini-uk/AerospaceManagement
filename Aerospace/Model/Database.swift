@@ -56,6 +56,15 @@ struct Country: Identifiable {
     let creationDate: String
 }
 
+struct Client {
+    var name: String
+    var code: String
+    var phoneNumber: String
+    var email: String
+    var registeredBy: String
+    var registrationDate: String
+}
+
 
 
 class DatabaseManager {
@@ -639,6 +648,94 @@ extension DatabaseManager {
             print("DELETE statement could not be prepared")
         }
         sqlite3_finalize(deleteStatement)
+    }
+}
+
+extension DatabaseManager {
+    // Function to create the clients table
+    func createClientsTable() {
+        let createTableString = """
+        CREATE TABLE IF NOT EXISTS Clients(
+        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Name TEXT,
+        Code TEXT,
+        PhoneNumber TEXT,
+        Email TEXT,
+        RegisteredBy TEXT,
+        RegistrationDate TEXT);
+        """
+
+        var createTableStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, createTableString, -1, &createTableStatement, nil) == SQLITE_OK {
+            if sqlite3_step(createTableStatement) == SQLITE_DONE {
+                print("Clients table created.")
+            } else {
+                print("Clients table could not be created.")
+            }
+        } else {
+            print("CREATE TABLE statement could not be prepared.")
+        }
+        sqlite3_finalize(createTableStatement)
+    }
+
+    // Function to insert a new client
+    func insertClient(client: Client) {
+        let insertStatementString = "INSERT INTO Clients (Name, Code, PhoneNumber, Email, RegisteredBy, RegistrationDate) VALUES (?, ?, ?, ?, ?, ?);"
+        var insertStatement: OpaquePointer?
+
+        if sqlite3_prepare_v2(db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(insertStatement, 1, (client.name as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 2, (client.code as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, (client.phoneNumber as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, (client.email as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, (client.registeredBy as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 6, (client.registrationDate as NSString).utf8String, -1, nil)
+
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                print("Successfully inserted row.")
+            } else {
+                print("Could not insert row.")
+            }
+        } else {
+            print("INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    
+    func customerNameExists(name: String) -> Bool {
+        let queryStatementString = "SELECT * FROM Clients WHERE Name = ?;"
+        var queryStatement: OpaquePointer?
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(queryStatement, 1, (name as NSString).utf8String, -1, nil)
+
+            if sqlite3_step(queryStatement) == SQLITE_ROW {
+                sqlite3_finalize(queryStatement)
+                return true // Country exists
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+        return false // Country does not exist
+    }
+    
+    func customerCodeExists(code: String) -> Bool {
+        let queryStatementString = "SELECT * FROM Clients WHERE Code = ?;"
+        var queryStatement: OpaquePointer?
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(queryStatement, 1, (code as NSString).utf8String, -1, nil)
+
+            if sqlite3_step(queryStatement) == SQLITE_ROW {
+                sqlite3_finalize(queryStatement)
+                return true // Country exists
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+        return false // Country does not exist
     }
 }
 

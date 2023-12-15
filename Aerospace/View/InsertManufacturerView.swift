@@ -67,7 +67,7 @@ struct InsertManufacturerView: View {
                     .textInputAutocapitalization(.words)
                 
                 TextField("Number", text: $number)
-                    .keyboardType(.numberPad)
+                    .keyboardType(.phonePad)
             }
             
             Section(header: HStack {
@@ -87,7 +87,7 @@ struct InsertManufacturerView: View {
             }
             
             Section(header: HStack {
-                Image("User")
+                Image("WorkerID")
                     .resizable()
                     .frame(width: 20, height: 20)
                 

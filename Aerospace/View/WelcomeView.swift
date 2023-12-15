@@ -145,7 +145,7 @@ struct WelcomeView: View {
                     }
                     
                     Section(header: Text("Client"), footer: Text("Enter, view and delete customers.")) {
-                        NavigationLink(destination: Text("Insert Client")) {
+                        NavigationLink(destination: InsertClientView(loggedInUser: user)) {
                             HStack {
                                 Image("NewCustomer")
                                     .resizable()
