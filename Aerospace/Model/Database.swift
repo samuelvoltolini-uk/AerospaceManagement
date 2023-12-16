@@ -79,6 +79,7 @@ struct ClientFetch: Identifiable {
 struct Item {
     var name: String
     var barcode: String
+    var SKU: [String]
     var description: String
     var manufacturer: String
     var status: String
@@ -855,6 +856,7 @@ extension DatabaseManager {
         Id INTEGER PRIMARY KEY AUTOINCREMENT,
         Name TEXT,
         Barcode TEXT,
+        SKU TEXT,
         Description TEXT,
         Manufacturer TEXT,
         Status TEXT,
@@ -891,46 +893,48 @@ extension DatabaseManager {
 
     func insertItem(item: Item) {
         let insertStatementString = """
-        INSERT INTO Items (Name, Barcode, Description, Manufacturer, Status, Origin, Client, Material, RepairCompanyOne, RepairCompanyTwo, HistoryNumber, Comments, TagName, IsFavorite, IsPriority, Quantity, ReceiveDate, ExpectedDate, File, CreatedBy, CreationDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        INSERT INTO Items (Name, Barcode, SKU, Description, Manufacturer, Status, Origin, Client, Material, RepairCompanyOne, RepairCompanyTwo, HistoryNumber, Comments, TagName, IsFavorite, IsPriority, Quantity, ReceiveDate, ExpectedDate, File, CreatedBy, CreationDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
         """
         var insertStatement: OpaquePointer?
 
         if sqlite3_prepare_v2(db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
             sqlite3_bind_text(insertStatement, 1, (item.name as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 2, (item.barcode as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 3, (item.description as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 4, (item.manufacturer as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 5, (item.status as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 6, (item.origin as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 7, (item.client as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 8, (item.material as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 9, (item.repairCompanyOne as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 10, (item.repairCompanyTwo as NSString).utf8String, -1, nil)
-            sqlite3_bind_int(insertStatement, 11, Int32(item.historyNumber))
-            sqlite3_bind_text(insertStatement, 12, (item.comments as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 13, (item.tagName as NSString).utf8String, -1, nil)
-            sqlite3_bind_int(insertStatement, 14, item.isFavorite ? 1 : 0)
-            sqlite3_bind_int(insertStatement, 15, item.isPriority ? 1 : 0)
-            sqlite3_bind_double(insertStatement, 16, item.quantity)
+            let skusString = item.SKU.joined(separator: ",")
+            sqlite3_bind_text(insertStatement, 3, (skusString as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, (item.description as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, (item.manufacturer as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 6, (item.status as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 7, (item.origin as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 8, (item.client as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 9, (item.material as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 10, (item.repairCompanyOne as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 11, (item.repairCompanyTwo as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 12, Int32(item.historyNumber))
+            sqlite3_bind_text(insertStatement, 13, (item.comments as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 14, (item.tagName as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 15, item.isFavorite ? 1 : 0)
+            sqlite3_bind_int(insertStatement, 16, item.isPriority ? 1 : 0)
+            sqlite3_bind_double(insertStatement, 17, item.quantity)
 
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "dd-mm-yyyy"
             let receiveDateString = dateFormatter.string(from: item.receiveDate)
             let expectedDateString = dateFormatter.string(from: item.expectedDate)
-            sqlite3_bind_text(insertStatement, 17, (receiveDateString as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 18, (expectedDateString as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 18, (receiveDateString as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 19, (expectedDateString as NSString).utf8String, -1, nil)
 
             if let fileData = item.file {
                     fileData.withUnsafeBytes { rawBufferPointer in
                         guard let pointer = rawBufferPointer.baseAddress?.assumingMemoryBound(to: UInt8.self) else { return }
-                        sqlite3_bind_blob(insertStatement, 19, pointer, Int32(fileData.count), nil)
+                        sqlite3_bind_blob(insertStatement, 20, pointer, Int32(fileData.count), nil)
                     }
                 } else {
-                    sqlite3_bind_blob(insertStatement, 19, nil, 0, nil)
+                    sqlite3_bind_blob(insertStatement, 20, nil, 0, nil)
                 }
 
-            sqlite3_bind_text(insertStatement, 20, (item.createdBy as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 21, (item.creationDate as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 21, (item.createdBy as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 22, (item.creationDate as NSString).utf8String, -1, nil)
 
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 print("Successfully inserted row.")
@@ -1050,6 +1054,53 @@ extension DatabaseManager {
         sqlite3_finalize(queryStatement)
         return tags
     }
+}
+
+extension DatabaseManager {
+    
+    func barcodeExists(_ barcode: String) -> Bool {
+          let queryStatementString = "SELECT EXISTS(SELECT 1 FROM Items WHERE Barcode = ? LIMIT 1);"
+          var queryStatement: OpaquePointer?
+
+          if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+              sqlite3_bind_text(queryStatement, 1, (barcode as NSString).utf8String, -1, nil)
+
+              if sqlite3_step(queryStatement) == SQLITE_ROW {
+                  let exists = sqlite3_column_int(queryStatement, 0)
+                  sqlite3_finalize(queryStatement)
+                  return exists == 1 // Returns true if barcode exists, false otherwise
+              } else {
+                  print("Query execution failed")
+              }
+          } else {
+              print("SELECT statement for barcode could not be prepared")
+          }
+          sqlite3_finalize(queryStatement)
+          return false
+      }
+
+      // Function to check if a SKU exists
+      func skuExists(_ sku: String) -> Bool {
+          let queryStatementString = "SELECT EXISTS(SELECT 1 FROM Items WHERE SKU = ? LIMIT 1);"
+          var queryStatement: OpaquePointer?
+
+          if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+              sqlite3_bind_text(queryStatement, 1, (sku as NSString).utf8String, -1, nil)
+
+              if sqlite3_step(queryStatement) == SQLITE_ROW {
+                  let exists = sqlite3_column_int(queryStatement, 0)
+                  sqlite3_finalize(queryStatement)
+                  return exists == 1 // Returns true if SKU exists, false otherwise
+              } else {
+                  print("Query execution failed")
+              }
+          } else {
+              print("SELECT statement for SKU could not be prepared")
+          }
+          sqlite3_finalize(queryStatement)
+          return false
+      }
+    
 }
 
 

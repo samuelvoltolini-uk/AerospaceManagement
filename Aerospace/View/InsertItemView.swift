@@ -1,6 +1,10 @@
 import SwiftUI
+import PartialSheet
 
 struct InsertItemView: View {
+    
+    @State private var showErrorSheet: Bool = false
+    @State private var errorMessage: String = ""
     
     @State private var itemName: String = ""
     @State private var barcode: String = ""
@@ -16,6 +20,8 @@ struct InsertItemView: View {
     @State private var historyNumber: Int = 1 // Assuming non-editable
     @State private var comments: String = ""
     @State private var selectedFile: URL?
+    
+    @State private var skus: [String] = []
     
     @State private var isFavorite: Bool = false
     @State private var isPriority: Bool = false
@@ -73,7 +79,7 @@ struct InsertItemView: View {
                 }
                 .foregroundStyle(Color.gray)
             }
-
+            
             Section(header: labelWithIcon("Select Country of Origin", image: "CountryView")) {
                 Picker("Select Country of Origin", selection: $origin) {
                     ForEach(countriesOfOrigin, id: \.id) { country in
@@ -82,7 +88,7 @@ struct InsertItemView: View {
                 }
                 .foregroundStyle(Color.gray)
             }
-
+            
             Section(header: labelWithIcon("Select Client", image: "NewCustomer")) {
                 Picker("Select Client", selection: $client) {
                     ForEach(clients, id: \.id) { client in
@@ -119,7 +125,7 @@ struct InsertItemView: View {
                 }
                 .foregroundStyle(Color.gray)
             }
-
+            
             Section(header: labelWithIcon("Favorite Item", image: "Favorite")) {
                 Toggle("Mark as Favorite", isOn: $isFavorite)
                     .tint(.accentColor)
@@ -131,10 +137,21 @@ struct InsertItemView: View {
             }
             
             Section(header: labelWithIcon("Quantity", image: "Quantity")) {
-                Slider(value: $quantity, in: 1...50, step: 1)
+                Slider(value: $quantity, in: 1...10, step: 1, onEditingChanged: quantityChanged)
                 Text("\(Int(quantity))")
                     .fontWeight(.bold)
                     .foregroundStyle(Color.accentColor)
+            }
+            
+            Section(header: labelWithIcon("SKU (Stock Keeping Unit)", image: "SKU")) {
+                ForEach(0..<Int(quantity), id: \.self) { index in
+                    TextField("SKU for item \(index + 1)", text: Binding(
+                        get: { self.skus.count > index ? self.skus[index] : "" },
+                        set: { self.skus[index] = $0 }
+                    ))
+                    .textInputAutocapitalization(.characters)
+                    .keyboardType(.numberPad)
+                }
             }
             
             
@@ -165,19 +182,53 @@ struct InsertItemView: View {
             .foregroundStyle(Color.gray)
             
             Button("Save") {
+                // Validate required fields
+                guard !itemName.isEmpty, !barcode.isEmpty, !description.isEmpty,
+                      !material.isEmpty, !repairCompanyOne.isEmpty, !comments.isEmpty else {
+                    errorMessage = "Please fill all required fields."
+                    showErrorSheet = true
+                    return
+                }
+                
+                // Ensure all SKUs are provided
+                guard skus.count == Int(quantity), !skus.contains(where: { $0.isEmpty }) else {
+                    errorMessage = "Please provide SKUs for all items."
+                    showErrorSheet = true
+                    return
+                }
+                
+                // Check if barcode or SKUs already exist
+                let dbManager = DatabaseManager()
+                if dbManager.barcodeExists(barcode) {
+                    errorMessage = "Barcode already exists. Please use the update screen."
+                    showErrorSheet = true
+                    return
+                }
+                
+                for sku in skus {
+                    if dbManager.skuExists(sku) {
+                        errorMessage = "SKU \(sku) is already in the system."
+                        showErrorSheet = true
+                        return
+                    }
+                }
+                
+                // Proceed with saving the item
                 var fileData: Data? = nil
                 if let selectedFileURL = selectedFile {
                     do {
                         fileData = try Data(contentsOf: selectedFileURL)
                     } catch {
-                        print("Error reading file data: \(error)")
-                        // Handle the error appropriately
+                        errorMessage = "Error reading file data: \(error.localizedDescription)"
+                        showErrorSheet = true
+                        return
                     }
                 }
                 
                 let newItem = Item(
                     name: itemName,
                     barcode: barcode,
+                    SKU: skus,
                     description: description,
                     manufacturer: manufacturer,
                     status: status,
@@ -194,22 +245,76 @@ struct InsertItemView: View {
                     quantity: quantity,
                     receiveDate: receiveDate,
                     expectedDate: expectedDate,
-                    file: fileData, // Pass the binary data of the file
+                    file: fileData,
                     createdBy: loggedInUser.name,
                     creationDate: currentDate
                 )
                 
-                let dbManager = DatabaseManager()
                 dbManager.createItemsTable()
                 dbManager.insertItem(item: newItem)
+                
+                // Reset fields or navigate away as needed after successful save
             }
             .frame(maxWidth: .infinity)
+            
         }
         .scrollIndicators(.hidden)
-        .navigationBarTitle("Insert Item", displayMode: .inline)
+        .navigationTitle("Insert Item")
+        .partialSheet(isPresented: $showErrorSheet) {
+            VStack {
+                Image("Attention")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 50, height: 50)
+                
+                Text(errorMessage)
+                    .foregroundColor(.gray)
+                    .font(.footnote)
+                    .multilineTextAlignment(.center)
+                    .padding(.top, 5)
+            }
+        }
+        .attachPartialSheetToRoot()
+        
         .onAppear {
             loadPickerData()
         }
+    }
+    
+    
+    private func validateFields() -> Bool {
+        // Basic validation for empty fields
+        if itemName.isEmpty || barcode.isEmpty || description.isEmpty ||
+            material.isEmpty || repairCompanyOne.isEmpty || comments.isEmpty {
+            errorMessage = "Please fill all required fields."
+            showErrorSheet = true
+            return false
+        }
+        
+        // Validate SKUs
+        if skus.contains(where: { $0.isEmpty }) || skus.count < Int(quantity) {
+            errorMessage = "Please provide SKUs for all items."
+            showErrorSheet = true
+            return false
+        }
+        
+        // Check if barcode or SKUs already exist in the database
+        let dbManager = DatabaseManager()
+        if dbManager.barcodeExists(barcode) {
+            errorMessage = "Barcode already exists. Please use the update screen."
+            showErrorSheet = true
+            return false
+        }
+        
+        for sku in skus {
+            if dbManager.skuExists(sku) {
+                errorMessage = "SKU \(sku) is already in the system."
+                showErrorSheet = true
+                return false
+            }
+        }
+        
+        return true
     }
     
     private func loadPickerData() {
@@ -218,25 +323,35 @@ struct InsertItemView: View {
         if let firstManufacturer = manufacturers.first {
             manufacturer = firstManufacturer.name
         }
-
+        
         statuses = dbManager.fetchStatusesPicker()
         if let firstStatus = statuses.first {
             status = firstStatus.name
         }
-
+        
         countriesOfOrigin = dbManager.fetchCountriesOfOriginPicker()
         if let firstCountry = countriesOfOrigin.first {
             origin = firstCountry.name
         }
-
+        
         clients = dbManager.fetchClientsPicker()
         if let firstClient = clients.first {
             client = firstClient.name
         }
-
+        
         tags = dbManager.fetchTagPicker()
         if let firstTag = tags.first {
             tagName = firstTag.name
+        }
+    }
+    
+    private func quantityChanged(_ editing: Bool) {
+        if !editing {
+            // Adjust the size of the SKUs array to match the quantity
+            skus = Array(skus.prefix(Int(quantity)))
+            while skus.count < Int(quantity) {
+                skus.append("")
+            }
         }
     }
     
