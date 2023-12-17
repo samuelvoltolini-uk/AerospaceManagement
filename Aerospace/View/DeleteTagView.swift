@@ -25,16 +25,22 @@ struct DeleteTagView: View {
                             HStack {
                                 Image(tag.imageName)
                                     .resizable()
+                                    .scaledToFit()
                                     .frame(width: 20, height: 20)
+                                
                                 Text(tag.name)
                                     .font(.headline)
                             }
                             .padding(.top, 5)
 
                             HStack {
-                                Image("TagInformation")
+                                Image(systemName: "info.square.fill")
+                                    .renderingMode(.original)
                                     .resizable()
+                                    .scaledToFit()
                                     .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text(tag.description)
                                     .font(.subheadline)
                             }

@@ -25,7 +25,7 @@ struct InsertTagsView: View {
 
     var body: some View {
         Form {
-            Section(header: SectionHeaderView(text: "Tag Information", imageName: "TagsOverview")) {
+            Section(header: SectionHeaderView(text: "Tag Information", imageName: "tag.square.fill")) {
                 TextField("Name", text: $tagName)
                     .textInputAutocapitalization(.words)
                 
@@ -33,7 +33,7 @@ struct InsertTagsView: View {
                     .textInputAutocapitalization(.sentences)
             }
             
-            Section(header: SectionHeaderView(text: "Tag Image", imageName: "TagImage")) {
+            Section(header: SectionHeaderView(text: "Tag Image", imageName: "photo.fill")) {
                 Picker("Tag Image", selection: $selectedImageName) {
                     ForEach(tagImages, id: \.self) { imageName in
                         Text(imageName)
@@ -47,7 +47,7 @@ struct InsertTagsView: View {
                     .cornerRadius(10)
             }
 
-            Section(header: SectionHeaderView(text: "User Information", imageName: "UserInformation")) {
+            Section(header: SectionHeaderView(text: "User Information", imageName: "person.text.rectangle.fill")) {
                 HStack {
                     Text("User")
                         .foregroundStyle(Color.gray)
@@ -67,7 +67,7 @@ struct InsertTagsView: View {
                 .disabled(true)
             }
             
-            Section(header: SectionHeaderView(text: "Existing Tags", imageName: "Number")) {
+            Section(header: SectionHeaderView(text: "Existing Tags", imageName: "number.square.fill")) {
                 HStack {
                     Text("Total Tags: \(existingTags.count)")
                         .foregroundStyle(Color.gray)
@@ -82,25 +82,28 @@ struct InsertTagsView: View {
                         .foregroundStyle(Color.accentColor)
                 } else {
                     Text("Save")
-                        .font(.callout)
                         .frame(maxWidth: .infinity)
                         .foregroundColor(.accentColor)
+                        .fontWeight(.semibold)
                 }
             }
         }
         .navigationTitle("Create Tag")
         .partialSheet(isPresented: $showPartialSheet) {
             VStack {
-                Image("Attention")
+                Image(systemName: "questionmark.square.fill")
+                    .renderingMode(.original)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 50, height: 50)
+                    .foregroundColor(.accentColor)
+                    .padding(.top, 5)
                 
                 Text(errorMessage)
                     .foregroundColor(.gray)
                     .font(.footnote)
                     .multilineTextAlignment(.center)
-                    .padding(.top, 5)
+                    .padding(.top, 10)
             }
         }
         .onAppear {
@@ -151,10 +154,12 @@ struct SectionHeaderView: View {
     
     var body: some View {
         HStack {
-            Image(imageName)
+            Image(systemName: imageName)
+                .renderingMode(.original)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 25, height: 25)
+                .frame(width: 20, height: 20)
+                .foregroundStyle(Color.accentColor)
             Text(text)
         }
     }

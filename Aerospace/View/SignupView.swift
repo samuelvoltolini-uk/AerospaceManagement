@@ -1,135 +1,126 @@
 import SwiftUI
+import PartialSheet
 
 struct SignupView: View {
     @State private var name: String = ""
     @State private var email: String = ""
     @State private var password: String = ""
-    
+    @State private var isPasswordVisible: Bool = false
+    @State private var showingErrorSheet: Bool = false
+    @State private var errorMessage: String = ""
+
     let databaseManager = DatabaseManager()
 
     var body: some View {
-        VStack(spacing: 20) {
-            
-            Spacer()
-            
-            // Name Section
-            VStack(alignment: .leading) {
-                HStack {
-                    Image("User")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 25, height: 25)
-                    
-                    Text("Name")
-                        .foregroundColor(.gray)
-                        .font(.footnote)
+
+            Form {
+                Section(header: labelWithIcon("Name", image: "person.fill.badge.plus")) {
+                    TextField("Full Name", text: $name)
+                        .textInputAutocapitalization(.words)
+                        .disableAutocorrection(true)
                 }
-                TextField("Full Name", text: $name)
-                    .textInputAutocapitalization(.words)
-                    .disableAutocorrection(true)
-                    .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(10)
-            }
-            .padding(.horizontal)
 
-            // Email Section
-            VStack(alignment: .leading) {
-                HStack {
-                    Image("Email")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 25, height: 25)
-                    Text("Email")
-                        .foregroundColor(.gray)
-                        .font(.footnote)
+                Section(header: labelWithIcon("Email", image: "at.badge.plus")) {
+                    TextField("Email", text: $email)
+                        .textInputAutocapitalization(.never)
+                        .disableAutocorrection(true)
+                        .keyboardType(.emailAddress)
                 }
-                TextField("Email", text: $email)
-                    .textInputAutocapitalization(.never)
-                    .disableAutocorrection(true)
-                    .keyboardType(.emailAddress)
-                    .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(10)
-            }
-            .padding(.horizontal)
 
-            // Password Section
-            VStack(alignment: .leading) {
-                HStack {
-                    Image("Password")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 25, height: 25)
-                    Text("Password")
-                        .foregroundColor(.gray)
-                        .font(.footnote)
-                }
-                SecureField("Password", text: $password)
-                    .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(10)
-            }
-            .padding(.horizontal)
-
-
-            Button(action: {createAccount()}) {
-                            Text("Create Account")
-                                .frame(width: 150)
-                                .padding()
-                                .foregroundColor(.white)
-                                .background(isFormValid ? Color.accentColor : Color.gray)
-                                .cornerRadius(10)
+                Section(header: labelWithIcon("Password", image: "person.badge.key.fill")) {
+                    HStack {
+                        if isPasswordVisible {
+                            TextField("Password", text: $password)
+                        } else {
+                            SecureField("Password", text: $password)
                         }
-                        .disabled(!isFormValid)
-                        .padding(.top, 20)
-            
-            Spacer()
-            
-            VStack {
-                Image("Security")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 70, height: 70)
-                
-                Text("Please note that your login details will be stored in your iCloud account and processed exclusively on your device. No information will be processed on any external server.")
-                    .foregroundColor(.gray)
-                    .font(.footnote)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
-                
-                
+                        Spacer()
+                        Button(action: {
+                            isPasswordVisible.toggle()
+                        }) {
+                            Image(systemName: isPasswordVisible ? "eye.slash.fill" : "eye.fill")
+                        }
+                    }
+                }
+
+                Section {
+                    Button("Create Account") {
+                        attemptCreateAccount()
+                        
+                        name = ""
+                        email = ""
+                        password = ""
+                    }
+                    .disabled(!isFormValid)
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.accentColor)
+                    .fontWeight(.semibold)
+                }
             }
-            
-        }
-        .padding()
+            .navigationBarTitle("Signup", displayMode: .inline)
+            .scrollDisabled(true)
+            .partialSheet(isPresented: $showingErrorSheet) {
+                VStack {
+                    Image(systemName: "questionmark.square.fill")
+                        .renderingMode(.original)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 50, height: 50)
+                        .foregroundStyle(Color.accentColor)
+                    
+                    Text(errorMessage)
+                        .foregroundColor(.gray)
+                        .font(.footnote)
+                        .multilineTextAlignment(.center)
+                        .padding(.top, 10)
+                }
+            }
+            .attachPartialSheetToRoot()
     }
-    
+
     private var isFormValid: Bool {
-            !name.isEmpty && isValidEmail(email) && isValidPassword(password)
-        }
-
-        private func isValidEmail(_ email: String) -> Bool {
-            let emailPattern = "[A-Z0-9a-z._%+-]+@[A-Z0-9a-z.-]+\\.[A-Za-z]{2,}"
-            let emailPred = NSPredicate(format:"SELF MATCHES %@", emailPattern)
-            return emailPred.evaluate(with: email)
-        }
-
-        private func isValidPassword(_ password: String) -> Bool {
-            let passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$"
-            let passwordPred = NSPredicate(format: "SELF MATCHES %@", passwordPattern)
-            return passwordPred.evaluate(with: password)
-        }
-    
-    private func createAccount() {
-            databaseManager.addUser(name: name, email: email, password: password)
-            // Handle success or error accordingly
-        }
-
+        !name.isEmpty && isValidEmail(email) && isValidPassword(password)
     }
 
+    private func isValidEmail(_ email: String) -> Bool {
+        let emailPattern = "[A-Z0-9a-z._%+-]+@[A-Z0-9a-z.-]+\\.[A-Za-z]{2,}"
+        let emailPred = NSPredicate(format:"SELF MATCHES %@", emailPattern)
+        return emailPred.evaluate(with: email)
+    }
 
+    private func isValidPassword(_ password: String) -> Bool {
+        let passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$"
+        let passwordPred = NSPredicate(format: "SELF MATCHES %@", passwordPattern)
+        return passwordPred.evaluate(with: password)
+    }
 
+    private func attemptCreateAccount() {
+        if databaseManager.userExists(email: email) {
+            errorMessage = "A user with this email already exists. Please try another email."
+            showingErrorSheet = true
+        } else {
+            createAccount()
+        }
+    }
+
+    private func createAccount() {
+        databaseManager.addUser(name: name, email: email, password: password)
+        // Handle success or error accordingly
+    }
+
+    private func labelWithIcon(_ text: String, image: String) -> some View {
+        HStack {
+            Image(systemName: image)
+                .renderingMode(.original)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 20, height: 20)
+                .foregroundStyle(Color.accentColor)
+            
+            Text(text)
+        }
+    }
+}
 
 #Preview {
     SignupView()

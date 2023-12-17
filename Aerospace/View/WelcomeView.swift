@@ -8,40 +8,51 @@ struct WelcomeView: View {
             VStack {
                 List {
                     Section(header: Text("Inventory"), footer: Text("Manage your inventory items, including adding, editing, and deleting items.")) {
-                        NavigationLink(destination: Text("Overview View")) {
+                        NavigationLink(destination: ViewItemView()) {
                             HStack {
-                                Image("ItemOverview")
+                                Image(systemName: "archivebox.fill")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
                                 
                                 Text("Overview")
                             }
                         }
                         NavigationLink(destination: InsertItemView(loggedInUser: user)) {
                             HStack {
-                                Image("InsertItem")
+                                Image(systemName: "plus.app.fill")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text("Insert Item")
                             }
                         }
                         NavigationLink(destination: Text("Edit Item View")) {
                             HStack {
-                                Image("EditItem")
+                                Image(systemName: "square.text.square.fill")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text("Edit Item")
                             }
                         }
                         NavigationLink(destination: Text("Delete Item View")) {
                             HStack {
-                                Image("DeleteItem")
+                                Image(systemName: "trash.square.fill")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text("Delete Item")
                             }
                         }
@@ -50,28 +61,37 @@ struct WelcomeView: View {
                     Section(header: Text("Tags"), footer: Text("Organize your inventory with tags, allowing for easier item categorization and retrieval.")) {
                         NavigationLink(destination: DisplayTagsView()) {
                             HStack {
-                                Image("TagsOverview")
+                                Image(systemName: "tag.square.fill")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text("Overview")
                             }
                         }
                         NavigationLink(destination: InsertTagsView(loggedInUser: user)) {
                             HStack {
-                                Image("InsertTags")
+                                Image(systemName: "plus.app.fill")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text("Insert Tag")
                             }
                         }
                         NavigationLink(destination: DeleteTagView()) {
                             HStack {
-                                Image("DeleteTags")
+                                Image(systemName: "trash.square.fill")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text("Delete Tag")
                             }
                         }
@@ -80,19 +100,26 @@ struct WelcomeView: View {
                     Section(header: Text("Manufacturer"), footer: Text("Enter, view and delete manufacturer.")) {
                         NavigationLink(destination: InsertManufacturerView(loggedInUser: user)) {
                             HStack {
-                                Image("NewManufacturer")
+                                
+                                Image(systemName: "building.2.fill")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text("Insert Manufacturer")
                             }
                         }
                         NavigationLink(destination: ManufacturerDeleteView()) {
                             HStack {
-                                Image("ViewManufacturer")
+                                Image(systemName: "trash.square.fill")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text("View & Delete")
                             }
                         }
@@ -103,19 +130,25 @@ struct WelcomeView: View {
                     Section(header: Text("Status"), footer: Text("Enter, view and delete status.")) {
                         NavigationLink(destination: InsertStatusView(loggedInUser: user)) {
                             HStack {
-                                Image("NewStatus")
+                                Image(systemName: "checkmark.rectangle.stack.fill")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text("Insert Status")
                             }
                         }
                         NavigationLink(destination: StatusDeleteView()) {
                             HStack {
-                                Image("ViewStatus")
+                                Image(systemName: "trash.square.fill")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text("View & Delete")
                             }
                         }
@@ -125,19 +158,25 @@ struct WelcomeView: View {
                     Section(header: Text("Country Origin"), footer: Text("Enter, view and delete the country origin.")) {
                         NavigationLink(destination: InsertCountryView(loggedInUser: user)) {
                             HStack {
-                                Image("NewCountry")
+                                Image(systemName: "globe")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text("Insert Country")
                             }
                         }
                         NavigationLink(destination: Text("Delete Customer")) {
                             HStack {
-                                Image("ViewCountry")
+                                Image(systemName: "trash.square.fill")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text("View & Delete")
                             }
                         }
@@ -147,19 +186,25 @@ struct WelcomeView: View {
                     Section(header: Text("Client"), footer: Text("Enter, view and delete customers.")) {
                         NavigationLink(destination: InsertClientView(loggedInUser: user)) {
                             HStack {
-                                Image("NewCustomer")
+                                Image(systemName: "person.crop.rectangle.stack.fill")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text("Insert Customer")
                             }
                         }
                         NavigationLink(destination: ClientDeleteView()) {
                             HStack {
-                                Image("ViewCustomer")
+                                Image(systemName: "trash.square.fill")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text("View & Delete")
                             }
                         }
@@ -169,19 +214,25 @@ struct WelcomeView: View {
                     Section(header: Text("History"), footer: Text("View the history and log of all item transactions and modifications.")) {
                         NavigationLink(destination: Text("History View")) {
                             HStack {
-                                Image("HistoryView")
+                                Image(systemName: "calendar.badge.checkmark")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text("History View")
                             }
                         }
                         NavigationLink(destination: Text("History View")) {
                             HStack {
-                                Image("HistoryUpdate")
+                                Image(systemName: "calendar.badge.plus")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                            
                                 Text("History Update")
                             }
                         }
@@ -191,10 +242,13 @@ struct WelcomeView: View {
                     Section(header: Text("Scan"), footer: Text("Quickly scan and update inventory items using barcode scanning.")) {
                         NavigationLink(destination: Text("Scan Item View")) {
                             HStack {
-                                Image("ScanView")
+                                Image(systemName: "qrcode")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text("Scan Item")
                             }
                         }
@@ -203,10 +257,13 @@ struct WelcomeView: View {
                     Section(header: Text("Warehouse Statistics"), footer: Text("Access detailed statistics and reports about your inventory.")) {
                         NavigationLink(destination: Text("Statistics View")) {
                             HStack {
-                                Image("StatisticsView")
+                                Image(systemName: "chart.bar.fill")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text("Overview")
                             }
                         }
@@ -215,10 +272,13 @@ struct WelcomeView: View {
                     Section(header: Text("Account and Configuration"), footer: Text("Configure settings and account preferences.")) {
                         NavigationLink(destination: Text("Settings View")) {
                             HStack {
-                                Image("SettingsView")
+                                Image(systemName: "gearshape.fill")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text("Settings")
                             }
                         }
@@ -226,18 +286,24 @@ struct WelcomeView: View {
                     
                     Section(header: Text("Current User & Date"), footer: Text("Current user logged in and date.")) {
                         HStack {
-                            Image("User")
+                            Image(systemName: "person.text.rectangle")
+                                .renderingMode(.original)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 25, height: 25)
+                                .frame(width: 20, height: 20)
+                                .foregroundStyle(Color.accentColor)
+                            
                             Text("\(user.name)")
                                 .foregroundStyle(Color.gray)
                         }
                         HStack {
-                            Image("Date")
+                            Image(systemName: "clock.arrow.circlepath")
+                                .renderingMode(.original)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 25, height: 25)
+                                .frame(width: 20, height: 20)
+                                .foregroundStyle(Color.accentColor)
+                            
                             Text(currentDateTime)
                                 .foregroundStyle(Color.gray)
                         }

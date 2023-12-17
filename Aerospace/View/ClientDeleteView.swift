@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ClientDeleteView: View {
     @State private var clients: [ClientFetch] = []
+    
     let databaseManager = DatabaseManager()
     
     @State private var fetchFailed: Bool = false
@@ -24,50 +25,74 @@ struct ClientDeleteView: View {
                     ForEach(clients, id: \.id) { client in
                         VStack(alignment: .leading) {
                             HStack {
-                                Image("NewCustomer")
+                                Image(systemName: "info.square.fill")
+                                    .renderingMode(.original)
                                     .resizable()
+                                    .scaledToFit()
                                     .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text(client.name).font(.headline)
                             }
                             .padding(.top, 5)
 
                             HStack {
-                                Image("ManufacturerCode")
+                                Image(systemName: "circle.hexagongrid.fill")
+                                    .renderingMode(.original)
                                     .resizable()
+                                    .scaledToFit()
                                     .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text(client.code).font(.footnote)
                             }
                             .padding(.top, 5)
 
                             HStack {
-                                Image("PhoneView")
+                                Image(systemName: "phone.fill")
+                                    .renderingMode(.original)
                                     .resizable()
+                                    .scaledToFit()
                                     .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text(client.phoneNumber).font(.footnote)
                             }
                             .padding(.top, 5)
 
                             HStack {
-                                Image("ContactView")
+                                Image(systemName: "envelope.fill")
+                                    .renderingMode(.original)
                                     .resizable()
+                                    .scaledToFit()
                                     .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text(client.email).font(.footnote)
                             }
                             .padding(.top, 5)
 
                             HStack {
-                                Image("WorkerID")
+                                Image(systemName: "person.text.rectangle.fill")
+                                    .renderingMode(.original)
                                     .resizable()
+                                    .scaledToFit()
                                     .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text(client.registeredBy).font(.footnote)
                                     .foregroundStyle(Color.gray)
                             }
                             .padding(.top, 5)
 
                             HStack {
-                                Image("TagCreated")
+                                Image(systemName: "clock.arrow.2.circlepath")
+                                    .renderingMode(.original)
                                     .resizable()
+                                    .scaledToFit()
                                     .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text(client.registrationDate).font(.footnote)
                                     .foregroundStyle(Color.gray)
                             }

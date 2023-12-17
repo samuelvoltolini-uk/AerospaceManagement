@@ -21,17 +21,25 @@ struct CountryDeleteView: View {
                     ForEach(countries, id: \.id) { country in
                         VStack(alignment: .leading) {
                             HStack {
-                                Image("CountryView")
+                                Image(systemName: "info.square.fill")
+                                    .renderingMode(.original)
                                     .resizable()
+                                    .scaledToFit()
                                     .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text(country.name).font(.headline)
                             }
                             .padding(.top, 5)
                             
                             HStack {
-                                Image("WorkerID")
+                                Image(systemName: "person.text.rectangle.fill")
+                                    .renderingMode(.original)
                                     .resizable()
+                                    .scaledToFit()
                                     .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text(country.userName)
                                     .foregroundStyle(Color.gray)
                                     .font(.footnote)
@@ -39,9 +47,13 @@ struct CountryDeleteView: View {
                             .padding(.top, 5)
                             
                             HStack {
-                                Image("DateCreated")
+                                Image(systemName: "clock.arrow.2.circlepath")
+                                    .renderingMode(.original)
                                     .resizable()
+                                    .scaledToFit()
                                     .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
                                 Text(country.creationDate)
                                     .foregroundStyle(Color.gray)
                                     .font(.footnote)

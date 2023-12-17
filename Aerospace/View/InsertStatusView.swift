@@ -16,14 +16,14 @@ struct InsertStatusView: View {
     var body: some View {
         
             Form {
-                Section(header: headerWithIcon("StatusView", title: "Status Details")) {
+                Section(header: headerWithIcon("info.square.fill", title: "Status Details")) {
                     TextField("Status Name", text: $statusName)
                         .textInputAutocapitalization(.words)
                     TextField("Description", text: $statusDescription)
                         .textInputAutocapitalization(.sentences)
                 }
                 
-                Section(header: headerWithIcon("WorkerID", title: "User Information")) {
+                Section(header: headerWithIcon("person.text.rectangle.fill", title: "User Information")) {
                     HStack {
                         Text("User")
                         Spacer()
@@ -45,7 +45,7 @@ struct InsertStatusView: View {
                             .progressViewStyle(CircularProgressViewStyle())
                             .scaleEffect(1.5)
                             .frame(maxWidth: .infinity)
-                            .foregroundStyle(Color.accentColor)
+                            .tint(.accentColor)
                         
                     } else {
                         Button("Save") {
@@ -55,23 +55,28 @@ struct InsertStatusView: View {
                             submitStatus()
                         }
                         .frame(maxWidth: .infinity)
+                        .foregroundColor(.accentColor)
+                        .fontWeight(.semibold)
                     }
                 }
             }
             .navigationTitle("Insert Status")
             .partialSheet(isPresented: $showingSheet) {
-                    VStack {
-                        Image("Attention")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 50, height: 50)
-                        
-                        Text(sheetMessage)
-                            .foregroundColor(.gray)
-                            .font(.footnote)
-                            .multilineTextAlignment(.center)
-                            .padding(.top, 5)
-                    }
+                VStack {
+                    Image(systemName: "questionmark.square.fill")
+                        .renderingMode(.original)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 50, height: 50)
+                        .foregroundColor(.accentColor)
+                        .padding(.top, 5)
+                    
+                    Text(sheetMessage)
+                        .foregroundColor(.gray)
+                        .font(.footnote)
+                        .multilineTextAlignment(.center)
+                        .padding(.top, 10)
+                }
             }
             .attachPartialSheetToRoot()
     }
@@ -85,9 +90,13 @@ struct InsertStatusView: View {
     
     private func headerWithIcon(_ iconName: String, title: String) -> some View {
         HStack {
-            Image(iconName)
+            Image(systemName: iconName)
+                .renderingMode(.original)
                 .resizable()
+                .scaledToFit()
                 .frame(width: 20, height: 20)
+                .foregroundStyle(Color.accentColor)
+            
             Text(title)
         }
     }

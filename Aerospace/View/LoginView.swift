@@ -4,6 +4,7 @@ import PartialSheet
 struct LoginView: View {
     @State private var email: String = ""
     @State private var password: String = ""
+    @State private var isPasswordVisible: Bool = false
     @State private var showingSheet = false
     @State private var alertMessage = ""
     
@@ -14,96 +15,71 @@ struct LoginView: View {
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
-            VStack(spacing: 20) {
-                Spacer()
-
+            Form {
                 // Email Section
-                VStack(alignment: .leading) {
-                    HStack {
-                        Image("Email")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 25, height: 25)
-                        Text("Email")
-                            .foregroundColor(.gray)
-                            .font(.footnote)
-                    }
-                    TextField("Email", text: $email)
+                Section(header: labelWithIcon("Email", image: "at")) {
+                    TextField("Enter your email", text: $email)
                         .textInputAutocapitalization(.never)
                         .disableAutocorrection(true)
                         .keyboardType(.emailAddress)
-                        .padding()
-                        .background(Color(.secondarySystemBackground))
-                        .cornerRadius(8)
                 }
-                .padding(.horizontal)
 
                 // Password Section
-                VStack(alignment: .leading) {
+                Section(header: labelWithIcon("Password", image: "lock.open.fill")) {
                     HStack {
-                        Image("Password")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 25, height: 25)
-                        Text("Password")
-                            .foregroundColor(.gray)
-                            .font(.footnote)
+                        if isPasswordVisible {
+                            TextField("Enter your password", text: $password)
+                        } else {
+                            SecureField("Enter your password", text: $password)
+                        }
+                        Button(action: {
+                            isPasswordVisible.toggle()
+                        }) {
+                            Image(systemName: isPasswordVisible ? "eye.slash.fill" : "eye.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(.accentColor)
+                        }
                     }
-                    SecureField("Password", text: $password)
-                        .padding()
-                        .background(Color(.secondarySystemBackground))
-                        .cornerRadius(8)
                 }
-                .padding(.horizontal)
 
-                // Login Button
-                Button(action: loginAction) {
-                    Text("Login")
-                        .frame(width: 150)
-                        .padding()
-                        .foregroundColor(.white)
-                        .background(Color.accentColor)
-                        .cornerRadius(8)
-                }
-                .disabled(email.isEmpty || password.isEmpty)
-                .padding(.top, 20)
-                .partialSheet(isPresented: $showingSheet) {
-                    VStack {
-                        Image("Denied")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 50, height: 50)
-                        
-                        Text(alertMessage)
-                            .foregroundColor(.gray)
-                            .font(.footnote)
-                            .multilineTextAlignment(.center)
-                            .padding(.top, 10)
+                // Login Button Section
+                Section {
+                    Button(action: loginAction) {
+                        Text("Login")
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.accentColor)
+                            .fontWeight(.semibold)
                     }
+                    .disabled(email.isEmpty || password.isEmpty)
                 }
-                
-                Spacer()
-                
+            }
+            .navigationBarTitle("Login", displayMode: .inline)
+            .partialSheet(isPresented: $showingSheet) {
                 VStack {
-                    Image("Staff")
+                    Image(systemName: "questionmark.square.fill")
+                        .renderingMode(.original)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 70, height: 70)
+                        .frame(width: 50, height: 50)
+                        .foregroundColor(.accentColor)
+                        .padding(.top, 5)
                     
-                    Text("Only staff members who have completed the registration process will be able to log in. If you are not yet registered, please return to the previous screen to sign up.")
+                    Text(alertMessage)
                         .foregroundColor(.gray)
                         .font(.footnote)
                         .multilineTextAlignment(.center)
-                        .padding(.horizontal)
+                        .padding(.top, 10)
                 }
             }
-            .padding()
             .attachPartialSheetToRoot()
             .navigationDestination(for: User.self) { user in
                 WelcomeView(user: user)
                     .navigationBarBackButtonHidden(true)
             }
         }
+        .scrollDisabled(true)
     }
 
     private func loginAction() {
@@ -113,6 +89,17 @@ struct LoginView: View {
         } else {
             alertMessage = "Incorrect email or password."
             showingSheet = true
+        }
+    }
+
+    private func labelWithIcon(_ text: String, image: String) -> some View {
+        HStack {
+            Image(systemName: image)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 20, height: 20)
+                .foregroundColor(.accentColor)
+            Text(text)
         }
     }
 }

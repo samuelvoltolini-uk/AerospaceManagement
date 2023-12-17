@@ -30,9 +30,12 @@ struct InsertManufacturerView: View {
     var body: some View {
         Form {
             Section(header: HStack {
-                Image("ManufacturerView")
+                Image(systemName: "info.square.fill")
+                    .renderingMode(.original)
                     .resizable()
+                    .scaledToFit()
                     .frame(width: 20, height: 20)
+                    .foregroundStyle(Color.accentColor)
                 
                 Text("Manufacturer Identification")
             }) {
@@ -45,9 +48,12 @@ struct InsertManufacturerView: View {
             }
             
             Section(header: HStack {
-                Image("AddressView")
+                Image(systemName: "globe")
+                    .renderingMode(.original)
                     .resizable()
+                    .scaledToFit()
                     .frame(width: 20, height: 20)
+                    .foregroundStyle(Color.accentColor)
                 
                 Text("Address")
             }) {
@@ -71,9 +77,12 @@ struct InsertManufacturerView: View {
             }
             
             Section(header: HStack {
-                Image("EmailView")
+                Image(systemName: "phone.fill")
+                    .renderingMode(.original)
                     .resizable()
+                    .scaledToFit()
                     .frame(width: 20, height: 20)
+                    .foregroundStyle(Color.accentColor)
                 
                 Text("Contact")
             }) {
@@ -87,9 +96,12 @@ struct InsertManufacturerView: View {
             }
             
             Section(header: HStack {
-                Image("WorkerID")
+                Image(systemName: "person.text.rectangle.fill")
+                    .renderingMode(.original)
                     .resizable()
+                    .scaledToFit()
                     .frame(width: 20, height: 20)
+                    .foregroundStyle(Color.accentColor)
                 
                 Text("User")
                 
@@ -103,7 +115,8 @@ struct InsertManufacturerView: View {
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle())
                     .frame(maxWidth: .infinity, alignment: .center)
-                    .foregroundStyle(Color.accentColor)
+                    .tint(.accentColor)
+                
             } else {
                 Button("Save") {
                     if validateFields() {
@@ -117,24 +130,27 @@ struct InsertManufacturerView: View {
                         showingErrorSheet = true
                     }
                 }
-                .font(.callout)
                 .frame(maxWidth: .infinity)
                 .foregroundColor(.accentColor)
+                .fontWeight(.bold)
             }
         }
         .navigationTitle("New Manufacturer")
                 .partialSheet(isPresented: $showingErrorSheet) {
                     VStack {
-                        Image("Attention")
+                        Image(systemName: "questionmark.square.fill")
+                            .renderingMode(.original)
                             .resizable()
                             .scaledToFit()
                             .frame(width: 50, height: 50)
+                            .foregroundColor(.accentColor)
+                            .padding(.top, 5)
                         
                         Text(errorMessage)
                             .foregroundColor(.gray)
                             .font(.footnote)
                             .multilineTextAlignment(.center)
-                            .padding(.top, 5)
+                            .padding(.top, 10)
                     }
                 } // End of error sheet modifier
                 .attachPartialSheetToRoot()

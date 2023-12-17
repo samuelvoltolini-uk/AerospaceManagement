@@ -22,45 +22,65 @@ struct ManufacturerDeleteView: View {
                 ForEach(manufacturers, id: \.id) { manufacturer in
                     VStack(alignment: .leading) {
                         HStack {
-                            Image("ManufacturerView")
+                            Image(systemName: "info.square.fill")
+                                .renderingMode(.original)
                                 .resizable()
+                                .scaledToFit()
                                 .frame(width: 20, height: 20)
+                                .foregroundStyle(Color.accentColor)
+                            
                             Text(manufacturer.name)
                                 .font(.headline)
                         }
                         .padding(.top, 5)
                         
                         HStack {
-                            Image("ManufacturerCode")
+                            Image(systemName: "circle.hexagongrid.fill")
+                                .renderingMode(.original)
                                 .resizable()
+                                .scaledToFit()
                                 .frame(width: 20, height: 20)
+                                .foregroundStyle(Color.accentColor)
+                            
                             Text(manufacturer.code)
                                 .font(.footnote)
                         }
                         .padding(.top, 5)
                         
                         HStack {
-                            Image("AddressView")
+                            Image(systemName: "location.square.fill")
+                                .renderingMode(.original)
                                 .resizable()
+                                .scaledToFit()
                                 .frame(width: 20, height: 20)
+                                .foregroundStyle(Color.accentColor)
+                            
                             Text(manufacturer.country + ", " + manufacturer.stateOrProvince + ", " + manufacturer.postCode)
                                 .font(.footnote)
                         }
                         .padding(.top, 5)
                         
                         HStack {
-                            Image("ContactView")
+                            Image(systemName: "envelope.fill")
+                                .renderingMode(.original)
                                 .resizable()
+                                .scaledToFit()
                                 .frame(width: 20, height: 20)
+                                .foregroundStyle(Color.accentColor)
+                            
                             Text(manufacturer.email)
                                 .font(.footnote)
                         }
                         .padding(.top, 5)
                         
                         HStack {
-                            Image("WorkerID")
+                            Image(systemName: "person.text.rectangle.fill")
+                                .renderingMode(.original)
                                 .resizable()
+                                .scaledToFit()
                                 .frame(width: 20, height: 20)
+                                .foregroundStyle(Color.accentColor)
+                            
                             Text(manufacturer.createdBy)
                                 .font(.footnote)
                         }
@@ -68,9 +88,13 @@ struct ManufacturerDeleteView: View {
                         .padding(.top, 5)
                         
                         HStack {
-                            Image("DateCreated")
+                            Image(systemName: "clock.arrow.2.circlepath")
+                                .renderingMode(.original)
                                 .resizable()
+                                .scaledToFit()
                                 .frame(width: 20, height: 20)
+                                .foregroundStyle(Color.accentColor)
+                            
                             Text(manufacturer.creationDate)
                                 .font(.footnote)
                         }

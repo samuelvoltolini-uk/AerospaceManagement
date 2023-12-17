@@ -31,6 +31,9 @@
 		D0810B1F2B286C93005825D6 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0810B1E2B286C93005825D6 /* SignupView.swift */; };
 		D0810B212B286C94005825D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0810B202B286C94005825D6 /* Assets.xcassets */; };
 		D0810B242B286C94005825D6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0810B232B286C94005825D6 /* Preview Assets.xcassets */; };
+		D0F78CD22B2DF78500DCF50C /* ViewItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F78CD12B2DF78500DCF50C /* ViewItemView.swift */; };
+		D0F78CD42B2DF96700DCF50C /* ItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F78CD32B2DF96700DCF50C /* ItemDetailView.swift */; };
+		D0F78CD62B2E1AA700DCF50C /* USDZFileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F78CD52B2E1AA700DCF50C /* USDZFileView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +59,9 @@
 		D0810B1E2B286C93005825D6 /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
 		D0810B202B286C94005825D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D0810B232B286C94005825D6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		D0F78CD12B2DF78500DCF50C /* ViewItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewItemView.swift; sourceTree = "<group>"; };
+		D0F78CD32B2DF96700DCF50C /* ItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailView.swift; sourceTree = "<group>"; };
+		D0F78CD52B2E1AA700DCF50C /* USDZFileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USDZFileView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +97,8 @@
 				D04207A22B2B772300DEE395 /* InsertClientView.swift */,
 				D04207A42B2BD9DE00DEE395 /* ClientDeleteView.swift */,
 				D04207A62B2C742800DEE395 /* InsertItemView.swift */,
+				D0F78CD12B2DF78500DCF50C /* ViewItemView.swift */,
+				D0F78CD32B2DF96700DCF50C /* ItemDetailView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -100,6 +108,7 @@
 			children = (
 				D0560A492B288A3400F93E84 /* Database.swift */,
 				D04207A82B2C9CA900DEE395 /* DocumentPicker.swift */,
+				D0F78CD52B2E1AA700DCF50C /* USDZFileView.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -220,12 +229,15 @@
 			files = (
 				D04207A32B2B772300DEE395 /* InsertClientView.swift in Sources */,
 				D0560A5D2B29218C00F93E84 /* DisplayTagsView.swift in Sources */,
+				D0F78CD22B2DF78500DCF50C /* ViewItemView.swift in Sources */,
 				D04207A92B2C9CA900DEE395 /* DocumentPicker.swift in Sources */,
 				D04207A12B2B70F000DEE395 /* CountryDeleteView.swift in Sources */,
 				D0560A672B2A68FC00F93E84 /* StatusDeleteView.swift in Sources */,
 				D0560A652B2A55ED00F93E84 /* InsertStatusView.swift in Sources */,
 				D0810B1F2B286C93005825D6 /* SignupView.swift in Sources */,
 				D0560A572B28C2BD00F93E84 /* WelcomeView.swift in Sources */,
+				D0F78CD42B2DF96700DCF50C /* ItemDetailView.swift in Sources */,
+				D0F78CD62B2E1AA700DCF50C /* USDZFileView.swift in Sources */,
 				D0560A632B2A28BB00F93E84 /* ManufacturerDeleteView.swift in Sources */,
 				D0560A592B28FB9700F93E84 /* InsertTagsView.swift in Sources */,
 				D0560A4A2B288A3400F93E84 /* Database.swift in Sources */,
@@ -373,6 +385,8 @@
 				DEVELOPMENT_TEAM = C6GW4A76XK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = NSCameraUsageDescription;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We require access to your device.";
 				INFOPLIST_KEY_NSDocumentsFolderUsageDescription = "We require access to your device.";
 				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "We require access to your device.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -407,6 +421,8 @@
 				DEVELOPMENT_TEAM = C6GW4A76XK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = NSCameraUsageDescription;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We require access to your device.";
 				INFOPLIST_KEY_NSDocumentsFolderUsageDescription = "We require access to your device.";
 				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "We require access to your device.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

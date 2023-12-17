@@ -22,26 +22,38 @@ struct StatusDeleteView: View {
                 ForEach(statuses, id: \.id) { status in
                     VStack(alignment: .leading) {
                         HStack {
-                            Image("StatusView")
+                            Image(systemName: "info.square.fill")
+                                .renderingMode(.original)
                                 .resizable()
+                                .scaledToFit()
                                 .frame(width: 20, height: 20)
+                                .foregroundStyle(Color.accentColor)
+                            
                             Text(status.name).font(.headline)
                         }
                         .padding(.top, 5)
                         
                         HStack {
-                            Image("HistoryUpdate")
+                            Image(systemName: "text.bubble.fill")
+                                .renderingMode(.original)
                                 .resizable()
+                                .scaledToFit()
                                 .frame(width: 20, height: 20)
+                                .foregroundStyle(Color.accentColor)
+                            
                             Text(status.description)
                                 .font(.footnote)
                         }
                         .padding(.top, 5)
                         
                         HStack {
-                            Image("WorkerID")
+                            Image(systemName: "person.text.rectangle.fill")
+                                .renderingMode(.original)
                                 .resizable()
+                                .scaledToFit()
                                 .frame(width: 20, height: 20)
+                                .foregroundStyle(Color.accentColor)
+                            
                             Text(status.user)
                                 .foregroundStyle(Color.gray)
                                 .font(.footnote)
@@ -49,9 +61,13 @@ struct StatusDeleteView: View {
                         .padding(.top, 5)
                         
                         HStack {
-                            Image("DateCreated")
+                            Image(systemName: "clock.arrow.2.circlepath")
+                                .renderingMode(.original)
                                 .resizable()
+                                .scaledToFit()
                                 .frame(width: 20, height: 20)
+                                .foregroundStyle(Color.accentColor)
+                            
                             Text(formattedDate(from: status.date))
                                 .foregroundStyle(Color.gray)
                                 .font(.footnote)

@@ -3,8 +3,12 @@ import PartialSheet
 
 struct InsertItemView: View {
     
+    let databaseManager = DatabaseManager()
+    
     @State private var showErrorSheet: Bool = false
     @State private var errorMessage: String = ""
+    
+    @State private var isSaving: Bool = false
     
     @State private var itemName: String = ""
     @State private var barcode: String = ""
@@ -46,23 +50,25 @@ struct InsertItemView: View {
     
     var body: some View {
         Form {
-            Section(header: labelWithIcon("Item Details", image: "InsertItem")) {
+            Section(header: labelWithIcon("Item Details", image: "info.square.fill")) {
                 TextField("Name", text: $itemName)
                 TextField("Barcode", text: $barcode)
+                    .textInputAutocapitalization(.characters)
+                
                 TextField("Description", text: $description)
             }
             
-            Section(header: labelWithIcon("Receive Date", image: "DateCreated")) {
+            Section(header: labelWithIcon("Receive Date", image: "calendar.badge.plus")) {
                 DatePicker("Select Date", selection: $receiveDate, displayedComponents: .date)
                     .foregroundStyle(Color.gray)
             }
             
-            Section(header: labelWithIcon("Expected Date", image: "Date")) {
+            Section(header: labelWithIcon("Expected Date", image: "calendar.badge.exclamationmark")) {
                 DatePicker("Select Date", selection: $expectedDate, displayedComponents: .date)
                     .foregroundStyle(Color.gray)
             }
             
-            Section(header: labelWithIcon("Select Manufacturer", image: "NewManufacturer")) {
+            Section(header: labelWithIcon("Select Manufacturer", image: "building.2.fill")) {
                 Picker("Select Manufacturer", selection: $manufacturer) {
                     ForEach(manufacturers, id: \.id) { option in
                         Text(option.name).tag(option.name)
@@ -71,7 +77,7 @@ struct InsertItemView: View {
                 .foregroundStyle(Color.gray)
             }
             
-            Section(header: labelWithIcon("Select Status", image: "StatusView")) {
+            Section(header: labelWithIcon("Select Status", image: "arrow.left.arrow.right.square.fill")) {
                 Picker("Select Status", selection: $status) {
                     ForEach(statuses, id: \.id) { status in
                         Text(status.name).tag(status.name)
@@ -80,7 +86,7 @@ struct InsertItemView: View {
                 .foregroundStyle(Color.gray)
             }
             
-            Section(header: labelWithIcon("Select Country of Origin", image: "CountryView")) {
+            Section(header: labelWithIcon("Select Country of Origin", image: "globe")) {
                 Picker("Select Country of Origin", selection: $origin) {
                     ForEach(countriesOfOrigin, id: \.id) { country in
                         Text(country.name).tag(country.name)
@@ -89,7 +95,7 @@ struct InsertItemView: View {
                 .foregroundStyle(Color.gray)
             }
             
-            Section(header: labelWithIcon("Select Client", image: "NewCustomer")) {
+            Section(header: labelWithIcon("Select Client", image: "airplane")) {
                 Picker("Select Client", selection: $client) {
                     ForEach(clients, id: \.id) { client in
                         Text(client.name).tag(client.name)
@@ -98,26 +104,26 @@ struct InsertItemView: View {
                 .foregroundStyle(Color.gray)
             }
             
-            Section(header: labelWithIcon("Material", image: "MaterialView")) {
+            Section(header: labelWithIcon("Material", image: "diamond.fill")) {
                 TextField("Item Material", text: $material)
             }
             
-            Section(header: labelWithIcon("Repair Company", image: "Repair")) {
+            Section(header: labelWithIcon("Repair Company", image: "wrench.adjustable.fill")) {
                 TextField("Repair Company 1", text: $repairCompanyOne)
                 TextField("Repair Company 2", text: $repairCompanyTwo)
             }
             
-            Section(header: labelWithIcon("History", image: "HistoryView")) {
+            Section(header: labelWithIcon("History", image: "clock.fill")) {
                 Text("\(historyNumber)")
                     .fontWeight(.bold)
                     .foregroundStyle(Color.gray)
             }
             
-            Section(header: labelWithIcon("Comments", image: "Comments")) {
+            Section(header: labelWithIcon("Comments", image: "bubble.left.and.text.bubble.right.fill")) {
                 TextField("Comments", text: $comments)
             }
             
-            Section(header: labelWithIcon("Assign Tag", image: "InsertTags")) {
+            Section(header: labelWithIcon("Assign Tag", image: "tag.square.fill")) {
                 Picker("Tag Name", selection: $tagName) {
                     ForEach(tags, id: \.id) { tag in
                         Text(tag.name).tag(tag.name)
@@ -126,36 +132,35 @@ struct InsertItemView: View {
                 .foregroundStyle(Color.gray)
             }
             
-            Section(header: labelWithIcon("Favorite Item", image: "Favorite")) {
+            Section(header: labelWithIcon("Favorite Item", image: "star.square.fill")) {
                 Toggle("Mark as Favorite", isOn: $isFavorite)
                     .tint(.accentColor)
             }
             
-            Section(header: labelWithIcon("Priority", image: "Priority")) {
+            Section(header: labelWithIcon("Priority", image: "1.square.fill")) {
                 Toggle("High Priority", isOn: $isPriority)
                     .tint(.accentColor)
             }
             
-            Section(header: labelWithIcon("Quantity", image: "Quantity")) {
+            Section(header: labelWithIcon("Quantity", image: "shippingbox.fill")) {
                 Slider(value: $quantity, in: 1...10, step: 1, onEditingChanged: quantityChanged)
                 Text("\(Int(quantity))")
                     .fontWeight(.bold)
                     .foregroundStyle(Color.accentColor)
             }
             
-            Section(header: labelWithIcon("SKU (Stock Keeping Unit)", image: "SKU")) {
+            Section(header: labelWithIcon("SKU (Stock Keeping Unit)", image: "qrcode.viewfinder")) {
                 ForEach(0..<Int(quantity), id: \.self) { index in
                     TextField("SKU for item \(index + 1)", text: Binding(
                         get: { self.skus.count > index ? self.skus[index] : "" },
                         set: { self.skus[index] = $0 }
                     ))
-                    .textInputAutocapitalization(.characters)
                     .keyboardType(.numberPad)
                 }
             }
             
             
-            Section(header: labelWithIcon("File", image: "Image")) {
+            Section(header: labelWithIcon("File", image: "photo.on.rectangle.angled")) {
                 Button("Select File") {
                     showDocumentPicker = true
                 }
@@ -167,7 +172,7 @@ struct InsertItemView: View {
                 DocumentPicker(selectedFile: $selectedFile)
             }
             
-            Section(header: labelWithIcon("Created By", image: "WorkerID")) {
+            Section(header: labelWithIcon("Created By", image: "person.text.rectangle.fill")) {
                 HStack {
                     Text("User")
                     Spacer()
@@ -181,106 +186,134 @@ struct InsertItemView: View {
             }
             .foregroundStyle(Color.gray)
             
-            Button("Save") {
-                // Validate required fields
-                guard !itemName.isEmpty, !barcode.isEmpty, !description.isEmpty,
-                      !material.isEmpty, !repairCompanyOne.isEmpty, !comments.isEmpty else {
-                    errorMessage = "Please fill all required fields."
-                    showErrorSheet = true
-                    return
-                }
+            if isSaving {
+                ProgressView()
+                    .scaleEffect(1.5, anchor: .center)
+                    .progressViewStyle(CircularProgressViewStyle(tint: .blue))
+                    .frame(maxWidth: .infinity)
                 
-                // Ensure all SKUs are provided
-                guard skus.count == Int(quantity), !skus.contains(where: { $0.isEmpty }) else {
-                    errorMessage = "Please provide SKUs for all items."
-                    showErrorSheet = true
-                    return
-                }
-                
-                // Check if barcode or SKUs already exist
-                let dbManager = DatabaseManager()
-                if dbManager.barcodeExists(barcode) {
-                    errorMessage = "Barcode already exists. Please use the update screen."
-                    showErrorSheet = true
-                    return
-                }
-                
-                for sku in skus {
-                    if dbManager.skuExists(sku) {
-                        errorMessage = "SKU \(sku) is already in the system."
+            } else {
+                Button("Save") {
+                    // Validate required fields
+                    guard !itemName.isEmpty, !barcode.isEmpty, !description.isEmpty,
+                          !material.isEmpty, !repairCompanyOne.isEmpty, !comments.isEmpty else {
+                        errorMessage = "Please fill all required fields."
                         showErrorSheet = true
                         return
                     }
-                }
-                
-                // Proceed with saving the item
-                var fileData: Data? = nil
-                if let selectedFileURL = selectedFile {
-                    do {
-                        fileData = try Data(contentsOf: selectedFileURL)
-                    } catch {
-                        errorMessage = "Error reading file data: \(error.localizedDescription)"
+                    
+                    // Ensure all SKUs are provided
+                    guard skus.count == Int(quantity), !skus.contains(where: { $0.isEmpty }) else {
+                        errorMessage = "Please provide SKUs for all items."
                         showErrorSheet = true
                         return
                     }
+                    
+                    // Check if barcode or SKUs already exist
+                    let dbManager = DatabaseManager()
+                    if dbManager.barcodeExists(barcode) {
+                        errorMessage = "Barcode already exists. Please use the update screen."
+                        showErrorSheet = true
+                        return
+                    }
+                    
+                    for sku in skus {
+                        if dbManager.skuExists(sku) {
+                            errorMessage = "SKU \(sku) is already in the system."
+                            showErrorSheet = true
+                            return
+                        }
+                    }
+                    
+                    // Proceed with saving the item
+                    var fileData: Data? = nil
+                    if let selectedFileURL = selectedFile {
+                        do {
+                            fileData = try Data(contentsOf: selectedFileURL)
+                        } catch {
+                            errorMessage = "Error reading file data: \(error.localizedDescription)"
+                            showErrorSheet = true
+                            return
+                        }
+                    }
+                    
+                    let newItem = Item(
+                        name: itemName,
+                        barcode: barcode,
+                        SKU: skus,
+                        description: description,
+                        manufacturer: manufacturer,
+                        status: status,
+                        origin: origin,
+                        client: client,
+                        material: material,
+                        repairCompanyOne: repairCompanyOne,
+                        repairCompanyTwo: repairCompanyTwo,
+                        historyNumber: historyNumber,
+                        comments: comments,
+                        tagName: tagName,
+                        isFavorite: isFavorite,
+                        isPriority: isPriority,
+                        quantity: quantity,
+                        receiveDate: receiveDate,
+                        expectedDate: expectedDate,
+                        file: fileData,
+                        createdBy: loggedInUser.name,
+                        creationDate: currentDate
+                    )
+                    
+                    dbManager.createItemsTable()
+                    dbManager.insertItem(item: newItem)
+                    
+                    isSaving = true
+                    
+                    let delay = 0.5 + (Double(Int(quantity)) * 0.1)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                                // Reset variables
+                                resetFormFields()
+                                adjustSKUsArray()
+                                // End saving state
+                                isSaving = false
+                            }
                 }
-                
-                let newItem = Item(
-                    name: itemName,
-                    barcode: barcode,
-                    SKU: skus,
-                    description: description,
-                    manufacturer: manufacturer,
-                    status: status,
-                    origin: origin,
-                    client: client,
-                    material: material,
-                    repairCompanyOne: repairCompanyOne,
-                    repairCompanyTwo: repairCompanyTwo,
-                    historyNumber: historyNumber,
-                    comments: comments,
-                    tagName: tagName,
-                    isFavorite: isFavorite,
-                    isPriority: isPriority,
-                    quantity: quantity,
-                    receiveDate: receiveDate,
-                    expectedDate: expectedDate,
-                    file: fileData,
-                    createdBy: loggedInUser.name,
-                    creationDate: currentDate
-                )
-                
-                dbManager.createItemsTable()
-                dbManager.insertItem(item: newItem)
-                
-                // Reset fields or navigate away as needed after successful save
+                .frame(maxWidth: .infinity)
+                .foregroundColor(.accentColor)
+                .fontWeight(.semibold)
             }
-            .frame(maxWidth: .infinity)
-            
         }
         .scrollIndicators(.hidden)
         .navigationTitle("Insert Item")
         .partialSheet(isPresented: $showErrorSheet) {
             VStack {
-                Image("Attention")
+                Image(systemName: "questionmark.square.fill")
+                    .renderingMode(.original)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 50, height: 50)
+                    .foregroundColor(.accentColor)
+                    .padding(.top, 5)
                 
                 Text(errorMessage)
                     .foregroundColor(.gray)
                     .font(.footnote)
                     .multilineTextAlignment(.center)
-                    .padding(.top, 5)
+                    .padding(.top, 10)
             }
         }
         .attachPartialSheetToRoot()
         
         .onAppear {
             loadPickerData()
+            adjustSKUsArray()
+            databaseManager.createItemsTable()
         }
     }
     
+    private func quantityChanged(_ editing: Bool) {
+        if !editing {
+            adjustSKUsArray()
+        }
+    }
     
     private func validateFields() -> Bool {
         // Basic validation for empty fields
@@ -317,6 +350,24 @@ struct InsertItemView: View {
         return true
     }
     
+    private func resetFormFields() {
+        itemName = ""
+        barcode = ""
+        description = ""
+        material = ""
+        repairCompanyOne = ""
+        repairCompanyTwo = ""
+        historyNumber = 1
+        comments = ""
+        selectedFile = nil
+        skus = []
+        isFavorite = false
+        isPriority = false
+        quantity = 1
+        receiveDate = Date()
+        expectedDate = Date()
+    }
+    
     private func loadPickerData() {
         let dbManager = DatabaseManager()
         manufacturers = dbManager.fetchManufacturersPicker()
@@ -345,13 +396,11 @@ struct InsertItemView: View {
         }
     }
     
-    private func quantityChanged(_ editing: Bool) {
-        if !editing {
-            // Adjust the size of the SKUs array to match the quantity
-            skus = Array(skus.prefix(Int(quantity)))
-            while skus.count < Int(quantity) {
-                skus.append("")
-            }
+    
+    private func adjustSKUsArray() {
+        skus = Array(skus.prefix(Int(quantity)))
+        while skus.count < Int(quantity) {
+            skus.append("")
         }
     }
     
@@ -364,9 +413,12 @@ struct InsertItemView: View {
     
     private func labelWithIcon(_ text: String, image: String) -> some View {
         HStack {
-            Image(image)
+            Image(systemName: image)
+                .renderingMode(.original)
                 .resizable()
+                .scaledToFit()
                 .frame(width: 20, height: 20)
+                .foregroundStyle(Color.accentColor)
             
             Text(text)
         }

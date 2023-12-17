@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "icons8-tag-48(@1×).png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "icons8-tag-96(@2×).png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "icons8-tag-144(@3×).png",
+      "filename" : "tag.fill@5x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

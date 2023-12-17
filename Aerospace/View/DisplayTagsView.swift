@@ -24,32 +24,43 @@ struct DisplayTagsView: View {
                         HStack {
                             Image(tag.imageName)
                                 .resizable()
+                                .scaledToFit()
                                 .frame(width: 20, height: 20)
+
                             Text(tag.name)
                                 .font(.headline)
                         }
                         .padding(.top, 5)
                         HStack {
-                            Image("TagInformation")
+                            Image(systemName: "info.square.fill")
+                                .renderingMode(.original)
                                 .resizable()
+                                .scaledToFit()
                                 .frame(width: 20, height: 20)
+                                .foregroundStyle(Color.accentColor)
                             Text(tag.description)
                                 .font(.subheadline)
                         }
                         .padding(.top, 5)
                         HStack {
-                            Image("UserInformation")
+                            Image(systemName:  "person.text.rectangle.fill")
+                                .renderingMode(.original)
                                 .resizable()
+                                .scaledToFit()
                                 .frame(width: 20, height: 20)
+                                .foregroundStyle(Color.accentColor)
                             Text("Created by: \(tag.creatorName)")
                                 .font(.subheadline)
                         }
                         .foregroundStyle(Color.gray)
                         .padding(.top, 5)
                         HStack {
-                            Image("TagCreated")
+                            Image(systemName:  "clock.arrow.2.circlepath")
+                                .renderingMode(.original)
                                 .resizable()
+                                .scaledToFit()
                                 .frame(width: 20, height: 20)
+                                .foregroundStyle(Color.accentColor)
                             Text("Created: \(tag.creationDateFormatted)")
                                 .font(.subheadline)
                         }

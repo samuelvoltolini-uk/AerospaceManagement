@@ -21,9 +21,13 @@ struct InsertCountryView: View {
                 // Country Details Section
                 Section(header:
                     HStack {
-                        Image("CountryView")
-                            .resizable()
-                            .frame(width: 20, height: 20)
+                        Image(systemName: "info.square.fill")
+                        .renderingMode(.original)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
+                        .foregroundStyle(Color.accentColor)
+                    
                         Text("Country Details")
                     }) {
                     TextField("Country of Origin", text: $countryOfOrigin)
@@ -33,9 +37,13 @@ struct InsertCountryView: View {
                 // User and Date Section
                 Section(header:
                     HStack {
-                        Image("WorkerID")
-                            .resizable()
-                            .frame(width: 20, height: 20)
+                        Image(systemName: "person.text.rectangle.fill")
+                        .renderingMode(.original)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
+                        .foregroundStyle(Color.accentColor)
+                    
                         Text("User and Date")
                     }) {
                     HStack {
@@ -74,27 +82,33 @@ struct InsertCountryView: View {
                 }) {
                     if isSaving {
                         ProgressView()
+                            .tint(.accentColor)
+                        
                     } else {
                         Text("Save")
                     }
                 }
                 .frame(maxWidth: .infinity)
+                .foregroundColor(.accentColor)
+                .fontWeight(.semibold)
 
             }
             .navigationBarTitle("Enter Details", displayMode: .inline)
         .partialSheet(isPresented: $showErrorSheet) {
-            // Error message content
             VStack {
-                Image("Attention")
+                Image(systemName: "questionmark.square.fill")
+                    .renderingMode(.original)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 50, height: 50)
-
+                    .foregroundColor(.accentColor)
+                    .padding(.top, 5)
+                
                 Text(errorMessage)
                     .foregroundColor(.gray)
                     .font(.footnote)
                     .multilineTextAlignment(.center)
-                    .padding(.top, 5)
+                    .padding(.top, 10)
             }
         }
         .attachPartialSheetToRoot()

@@ -23,9 +23,12 @@ struct InsertClientView: View {
                 // Customer Details Section
                 Section(header:
                     HStack {
-                    Image("NewCustomer")
+                    Image(systemName: "info.square.fill")
+                        .renderingMode(.original)
                         .resizable()
+                        .scaledToFit()
                         .frame(width: 20, height: 20)
+                        .foregroundStyle(Color.accentColor)
                     
                         Text("Customer Details")
                     }) {
@@ -39,9 +42,12 @@ struct InsertClientView: View {
                 // Contact Information Section
                 Section(header:
                     HStack {
-                    Image("EmailView")
+                    Image(systemName: "phone.fill")
+                        .renderingMode(.original)
                         .resizable()
+                        .scaledToFit()
                         .frame(width: 20, height: 20)
+                        .foregroundStyle(Color.accentColor)
                     
                         Text("Contact Information")
                     
@@ -57,9 +63,12 @@ struct InsertClientView: View {
                 // User and Date Section
                 Section(header:
                     HStack {
-                    Image("WorkerID")
+                    Image(systemName: "person.text.rectangle.fill")
+                        .renderingMode(.original)
                         .resizable()
+                        .scaledToFit()
                         .frame(width: 20, height: 20)
+                        .foregroundStyle(Color.accentColor)
                     
                         Text("User and Date")
                     }) {
@@ -121,26 +130,32 @@ struct InsertClientView: View {
                 }) {
                     if isSaving {
                         ProgressView()
+                            .tint(.accentColor)
                     } else {
                         Text("Save")
                     }
                 }
                 .frame(maxWidth: .infinity)
+                .foregroundColor(.accentColor)
+                .fontWeight(.semibold)
                 
             }
             .navigationBarTitle("Insert Client", displayMode: .inline)
             .partialSheet(isPresented: $showErrorSheet) {
                 VStack {
-                    Image("Attention")
+                    Image(systemName: "questionmark.square.fill")
+                        .renderingMode(.original)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 50, height: 50)
-
+                        .foregroundColor(.accentColor)
+                        .padding(.top, 5)
+                    
                     Text(errorMessage)
                         .foregroundColor(.gray)
                         .font(.footnote)
                         .multilineTextAlignment(.center)
-                        .padding(.top, 5)
+                        .padding(.top, 10)
                 }
             }
             .attachPartialSheetToRoot()

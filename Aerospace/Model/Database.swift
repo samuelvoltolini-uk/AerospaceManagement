@@ -101,6 +101,32 @@ struct Item {
     var creationDate: String
 }
 
+struct ItemFetch: Identifiable {
+    var id: Int
+    var name: String
+    var barcode: String
+    var SKU: [String]
+    var quantity: Int
+    var description: String
+    var manufacturer: String
+    var status: String
+    var origin: String
+    var client: String
+    var material: String
+    var repairCompanyOne: String
+    var repairCompanyTwo: String
+    var historyNumber: Int
+    var comments: String
+    var tagName: String
+    var isFavorite: Bool
+    var isPriority: Bool
+    var receiveDate: Date
+    var expectedDate: Date
+    var fileData: Data?  // Assuming this is a usdz file
+    var createdBy: String
+    var creationDate: String
+}
+
 
 struct ManufacturerPicker: Hashable {
     var id: Int
@@ -1103,4 +1129,115 @@ extension DatabaseManager {
     
 }
 
+extension DatabaseManager {
+    func userExists(email: String) -> Bool {
+        // Assuming the database setup and user table are already defined
+        let queryStatementString = "SELECT * FROM Users WHERE email = ?;"
+        var queryStatement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(queryStatement, 1, (email as NSString).utf8String, -1, nil)
+
+            if sqlite3_step(queryStatement) == SQLITE_ROW {
+                sqlite3_finalize(queryStatement)
+                return true // User exists
+            }
+        }
+        sqlite3_finalize(queryStatement)
+        return false // User does not exist
+    }
+    
+    // Other methods for adding user, creating tables etc.
+    // Omitted for brevity
+}
+
+extension DatabaseManager {
+    
+    func fetchAllItems() -> [ItemFetch] {
+        var items = [ItemFetch]()
+        let queryStatementString = "SELECT * FROM Items;"  // Assuming your table is named 'Items'
+        var queryStatement: OpaquePointer?
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(queryStatement, 0))
+                let name = String(cString: sqlite3_column_text(queryStatement, 1))
+                let barcode = String(cString: sqlite3_column_text(queryStatement, 2))
+                let skuString = String(cString: sqlite3_column_text(queryStatement, 3))
+                let description = String(cString: sqlite3_column_text(queryStatement, 4))
+                let manufacturer = String(cString: sqlite3_column_text(queryStatement, 5))
+                let status = String(cString: sqlite3_column_text(queryStatement, 6))
+                let origin = String(cString: sqlite3_column_text(queryStatement, 7))
+                let client = String(cString: sqlite3_column_text(queryStatement, 8))
+                let material = String(cString: sqlite3_column_text(queryStatement, 9))
+                let repairCompanyOne = String(cString: sqlite3_column_text(queryStatement, 10))
+                let repairCompanyTwo = String(cString: sqlite3_column_text(queryStatement, 11))
+                let historyNumber = Int(sqlite3_column_int(queryStatement, 12))
+                let comments = String(cString: sqlite3_column_text(queryStatement, 13))
+                let tagName = String(cString: sqlite3_column_text(queryStatement, 14))
+                let isFavorite = sqlite3_column_int(queryStatement, 15) != 0
+                let isPriority = sqlite3_column_int(queryStatement, 16) != 0
+                let quantity = Int(sqlite3_column_int(queryStatement, 17))
+                
+                let createdBy = getColumnString(queryStatement, index: 21)
+                let creationDate = getColumnString(queryStatement, index: 22)
+
+                var fileData: Data? = nil
+                if let fileDataBlob = sqlite3_column_blob(queryStatement, 20) {
+                    let fileDataSize = sqlite3_column_bytes(queryStatement, 20)
+                    fileData = Data(bytes: fileDataBlob, count: Int(fileDataSize))
+                }
+
+                let skuArray = skuString.components(separatedBy: ",")
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "dd-mm-yyyy HH:mm"
+                let receiveDateString = getColumnString(queryStatement, index: 18)
+                let expectedDateString = getColumnString(queryStatement, index: 19)
+                let receiveDate = dateFormatter.date(from: receiveDateString) ?? Date()
+                let expectedDate = dateFormatter.date(from: expectedDateString) ?? Date()
+
+                let item = ItemFetch(
+                    id: id,
+                    name: name,
+                    barcode: barcode,
+                    SKU: skuArray,
+                    quantity: quantity,
+                    description: description,
+                    manufacturer: manufacturer,
+                    status: status,
+                    origin: origin,
+                    client: client,
+                    material: material,
+                    repairCompanyOne: repairCompanyOne,
+                    repairCompanyTwo: repairCompanyTwo,
+                    historyNumber: historyNumber,
+                    comments: comments,
+                    tagName: tagName,
+                    isFavorite: isFavorite,
+                    isPriority: isPriority,
+                    receiveDate: receiveDate,
+                    expectedDate: expectedDate,
+                    fileData: fileData,
+                    createdBy: createdBy,
+                    creationDate: creationDate
+                )
+
+                items.append(item)
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+
+        return items
+    }
+
+    private func getColumnString(_ queryStatement: OpaquePointer?, index: Int32) -> String {
+        if let cString = sqlite3_column_text(queryStatement, index) {
+            return String(cString: cString)
+        } else {
+            return ""
+        }
+    }
+}
 

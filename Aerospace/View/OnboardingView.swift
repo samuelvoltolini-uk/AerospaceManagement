@@ -61,41 +61,61 @@ struct OnboardingView: View {
                     
                     VStack {
                         
-                        Spacer()
+                        
                         
                         Image(colorScheme == .dark ? "LogoBlack" : "LogoWhite")
                             .resizable()
                             .scaledToFit()
                             .frame(width: 400, height: 400)
                         
-                        Spacer()
-                        
-                        NavigationLink(destination: LoginView()) {
-                            Text("Login")
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .foregroundColor(.white)
-                                .background(Color.accentColor)
-                                .cornerRadius(10)
-                        }
-                        .padding()
-                        
-                        NavigationLink(destination: SignupView()) {
-                            Text("Sign Up")
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .foregroundColor(colorScheme == .dark ? Color.black : Color.white)
-                                .background(colorScheme == .dark ? Color.white : Color.black)
-                                .cornerRadius(8)
+                        HStack {
+                            NavigationLink(destination: LoginView()) {
+                                Text("Login")
+                                    .padding()
+                                    .frame(maxWidth: 200)
+                                    .foregroundColor(.white)
+                                    .fontWeight(.semibold)
+                                    .background(Color.accentColor)
+                                    .cornerRadius(8)
+                            }
+
+                            NavigationLink(destination: SignupView()) {
+                                Text("Sign Up")
+                                    .padding()
+                                    .frame(maxWidth: 200)
+                                    .foregroundColor(colorScheme == .dark ? Color.black : Color.white)
+                                    .background(colorScheme == .dark ? Color.white : Color.black)
+                                    .fontWeight(.semibold)
+                                    .cornerRadius(8)
+                            }
                         }
                         .padding(.horizontal)
                         
                         Spacer()
+
+                        Image(systemName: "person.3.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 50, height: 50)
+                            .foregroundStyle(Color.primary, Color.accentColor)
+                        
+                        Text("The entire dataset is processed locally on the device, and subsequently transmitted to the database in an encrypted format.")
+                            .multilineTextAlignment(.center)
+                            .font(.caption)
+                            .foregroundStyle(Color.gray)
+                            .padding(.horizontal, 20)
                     }
                     .tag(6)
-                    
                 }
-                .tabViewStyle(PageTabViewStyle())
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: selection == 6 ? .never : .always))
+                .overlay(
+                    Group {
+                        if selection < 6 {
+                            skipButton
+                        }
+                    },
+                    alignment: .bottom
+                )
                 .onAppear {
                     setupAppearance()
                 }
@@ -104,7 +124,20 @@ struct OnboardingView: View {
             }
         }
     }
-    
+
+    private var skipButton: some View {
+        Button(action: {
+            selection = 6
+        }) {
+            Image(systemName: "arrowshape.forward.circle.fill")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 50, height: 50)
+                .padding()
+        }
+        .padding(.bottom, 70)
+    }
+
     func setupAppearance() {
         UIPageControl.appearance().currentPageIndicatorTintColor = .systemBlue
         UIPageControl.appearance().pageIndicatorTintColor = UIColor.systemBlue.withAlphaComponent(0.3)
@@ -136,7 +169,6 @@ struct OnboardingContentScreen: View {
         .padding()
     }
 }
-
 
 #Preview {
     OnboardingView()
