@@ -32,6 +32,7 @@ struct LoginView: View {
                         } else {
                             SecureField("Enter your password", text: $password)
                         }
+                        Spacer() // Add a spacer to push the button to the edge
                         Button(action: {
                             isPasswordVisible.toggle()
                         }) {
@@ -41,6 +42,8 @@ struct LoginView: View {
                                 .frame(width: 20, height: 20)
                                 .foregroundColor(.accentColor)
                         }
+                        .buttonStyle(PlainButtonStyle()) // Apply plain button style
+                        //.padding(8) // Add padding around the button
                     }
                 }
 

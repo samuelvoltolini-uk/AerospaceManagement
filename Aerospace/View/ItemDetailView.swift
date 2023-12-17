@@ -16,10 +16,21 @@ import ARKit
         var body: some View {
             List {
                 Group {
+                    detailRow(icon: "info.square.fill", title: "Item", value: item.name)
                     if let fileData = item.fileData {
-                                    Button("View in AR") {
-                                        showingARView = true
-                                    }
+                        HStack {
+                            detailRow(icon: "rotate.3d.fill", title: "AR View", value: "Click to view in AR")
+                                .foregroundStyle(Color.accentColor)
+                            Button("") {
+                                showingARView = true
+                            }
+                            Spacer()
+                            Image(systemName: "view.3d")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 25, height: 25)
+                                .foregroundColor(Color.orange)
+                        }
                                     .sheet(isPresented: $showingARView) {
                                         VStack {
                                             // Displaying the name of the product with an icon
@@ -28,7 +39,7 @@ import ARKit
                                                     .renderingMode(.original)
                                                     .resizable()
                                                     .scaledToFit()
-                                                    .frame(width: 25, height: 25)
+                                                    .frame(width: 20, height: 20)
                                                     .foregroundStyle(Color.accentColor)
                                                     .padding(.horizontal, 2)
                                                 
@@ -82,32 +93,35 @@ import ARKit
                                             .padding()
                                             
                                         }
-                                    
-                                
-                                    
                                 }
-                    
-                    detailRow(icon: "info.square.fill", title: "Item", value: item.name)
                     detailRow(icon: "barcode", title: "Barcode", value: item.barcode)
-                    ForEach(item.SKU, id: \.self) { sku in
-                        detailRow(icon: "shippingbox.fill", title: "SKU", value: sku)
+                    ForEach(Array(item.SKU.enumerated()), id: \.element) { index, sku in
+                        HStack {
+                            detailRow(icon: "shippingbox.fill", title: "SKU", value: sku)
+                            Spacer()
+                            Image(systemName: "\(String(format: "%02d", index + 1)).circle.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(Color.accentColor)
+                        }
                     }
                     detailRow(icon: "square.text.square.fill", title: "Description", value: item.description)
                     detailRow(icon: "building.2.fill", title: "Manufacturer", value: item.manufacturer)
                     detailRow(icon: "flag.square.fill", title: "Status", value: item.status)
                     detailRow(icon: "globe", title: "Origin", value: item.origin)
                 }
-                .padding(.top, 5)
+                .padding(3)
                 Group {
                     detailRow(icon: "person.fill", title: "Client", value: item.client)
                     detailRow(icon: "hammer.fill", title: "Material", value: item.material)
-                    detailRow(icon: "wrench.fill", title: "Repair Company 1", value: item.repairCompanyOne)
-                    detailRow(icon: "wrench.and.screwdriver.fill", title: "Repair Company 2", value: item.repairCompanyTwo)
+                    detailRow(icon: "wrench.fill", title: "Repair Company I", value: item.repairCompanyOne)
+                    detailRow(icon: "wrench.and.screwdriver.fill", title: "Repair Company II", value: item.repairCompanyTwo)
                     detailRow(icon: "clock.arrow.2.circlepath", title: "History Number", value: String(item.historyNumber))
                     detailRow(icon: "text.bubble.fill", title: "Comments", value: item.comments)
                     detailRow(icon: "tag.fill", title: "Tag Name", value: item.tagName)
                 }
-                .padding(.top, 5)
+                .padding(3)
                 
                 Group {
                     detailRow(icon: "star.square.fill", title: "Is Favorite", value: item.isFavorite ? "Yes" : "No")
@@ -118,7 +132,7 @@ import ARKit
                     detailRow(icon: "person.text.rectangle.fill", title: "Created By", value: item.createdBy)
                     detailRow(icon: "calendar", title: "Creation Date", value: item.creationDate)
                 }
-                .padding(.top, 5)
+                .padding(3)
             }
             .navigationBarTitle("Item Details", displayMode: .inline)
             .scrollIndicators(.hidden)
@@ -148,6 +162,13 @@ import ARKit
 
         }
     }
+        
+        private func iconName(for sku: String) -> String {
+            guard let skuNumber = Int(sku), skuNumber >= 1, skuNumber <= 10 else {
+                return "circle.fill" // Default icon
+            }
+            return "\(String(format: "%02d", skuNumber)).circle.fill"
+        }
 
     private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()

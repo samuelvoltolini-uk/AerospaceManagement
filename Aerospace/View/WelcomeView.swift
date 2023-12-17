@@ -7,7 +7,7 @@ struct WelcomeView: View {
         NavigationView {
             VStack {
                 List {
-                    Section(header: Text("Inventory"), footer: Text("Manage your inventory items, including adding, editing, and deleting items.")) {
+                    Section(header: Text("Inventory"), footer: Text("Manage your inventory items, which includes the ability to add, edit, and delete items. Additionally, you can also view products flagged as favorites and as priority.")) {
                         NavigationLink(destination: ViewItemView()) {
                             HStack {
                                 Image(systemName: "archivebox.fill")
@@ -44,9 +44,36 @@ struct WelcomeView: View {
                                 Text("Edit Item")
                             }
                         }
+                        
+                        NavigationLink(destination: Text("")) {
+                            HStack {
+                                Image(systemName: "star.square.fill")
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
+                                Text("Favorite View")
+                            }
+                        }
+                        
+                        NavigationLink(destination: Text("")) {
+                            HStack {
+                                Image(systemName: "arrow.clockwise.square.fill")
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
+                                Text("Priority View")
+                            }
+                        }
+                        
                         NavigationLink(destination: Text("Delete Item View")) {
                             HStack {
-                                Image(systemName: "trash.square.fill")
+                                Image(systemName: "minus.square.fill")
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
@@ -56,6 +83,20 @@ struct WelcomeView: View {
                                 Text("Delete Item")
                             }
                         }
+                        
+                        NavigationLink(destination: Text("Delete Item View")) {
+                            HStack {
+                                Image(systemName: "minus.diamond.fill")
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(Color.accentColor)
+                                
+                                Text("Delete SKU")
+                            }
+                        }
+
                     }
                     
                     Section(header: Text("Tags"), footer: Text("Organize your inventory with tags, allowing for easier item categorization and retrieval.")) {
@@ -85,7 +126,7 @@ struct WelcomeView: View {
                         }
                         NavigationLink(destination: DeleteTagView()) {
                             HStack {
-                                Image(systemName: "trash.square.fill")
+                                Image(systemName: "minus.square.fill")
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
@@ -113,7 +154,7 @@ struct WelcomeView: View {
                         }
                         NavigationLink(destination: ManufacturerDeleteView()) {
                             HStack {
-                                Image(systemName: "trash.square.fill")
+                                Image(systemName: "minus.square.fill")
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
@@ -142,7 +183,7 @@ struct WelcomeView: View {
                         }
                         NavigationLink(destination: StatusDeleteView()) {
                             HStack {
-                                Image(systemName: "trash.square.fill")
+                                Image(systemName: "minus.square.fill")
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
@@ -168,9 +209,12 @@ struct WelcomeView: View {
                                 Text("Insert Country")
                             }
                         }
+                        
+                        
+                        
                         NavigationLink(destination: Text("Delete Customer")) {
                             HStack {
-                                Image(systemName: "trash.square.fill")
+                                Image(systemName: "minus.square.fill")
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
@@ -198,7 +242,7 @@ struct WelcomeView: View {
                         }
                         NavigationLink(destination: ClientDeleteView()) {
                             HStack {
-                                Image(systemName: "trash.square.fill")
+                                Image(systemName: "minus.square.fill")
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()

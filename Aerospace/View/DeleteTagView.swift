@@ -23,10 +23,11 @@ struct DeleteTagView: View {
                     ForEach(fulltags, id: \.id) { tag in
                         VStack(alignment: .leading) {
                             HStack {
-                                Image(tag.imageName)
+                                Image(systemName: "tag.square.fill")
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 20, height: 20)
+                                    .foregroundColor(colorFromString(tag.imageName)) // Use a custom function to convert string to Color
                                 
                                 Text(tag.name)
                                     .font(.headline)
@@ -54,6 +55,18 @@ struct DeleteTagView: View {
         .navigationTitle("Delete Tags")
         .onAppear {
             fulltags = databaseManager.fetchAllTags()
+        }
+    }
+    
+    private func colorFromString(_ colorName: String) -> Color {
+        switch colorName.lowercased() {
+        case "red": return .red
+        case "orange": return .orange
+        case "yellow": return .yellow
+        case "green": return .green
+        case "blue": return .blue
+        // Add more cases as needed
+        default: return .gray // Default color
         }
     }
 

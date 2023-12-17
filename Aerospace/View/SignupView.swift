@@ -31,15 +31,23 @@ struct SignupView: View {
                     HStack {
                         if isPasswordVisible {
                             TextField("Password", text: $password)
+                                .textInputAutocapitalization(.never)
+                                .disableAutocorrection(true)
                         } else {
                             SecureField("Password", text: $password)
                         }
-                        Spacer()
+                        Spacer() // Push the button to the edge
                         Button(action: {
                             isPasswordVisible.toggle()
                         }) {
                             Image(systemName: isPasswordVisible ? "eye.slash.fill" : "eye.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(.accentColor)
                         }
+                        .buttonStyle(PlainButtonStyle()) // Apply plain button style
+                        //.padding(8) // Add padding around the button
                     }
                 }
 
