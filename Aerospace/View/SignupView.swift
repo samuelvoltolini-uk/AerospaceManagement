@@ -43,7 +43,7 @@ struct SignupView: View {
                             Image(systemName: isPasswordVisible ? "eye.slash.fill" : "eye.fill")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 25, height: 25)
                                 .foregroundColor(.accentColor)
                         }
                         .buttonStyle(PlainButtonStyle()) // Apply plain button style
@@ -122,7 +122,7 @@ struct SignupView: View {
                 .renderingMode(.original)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 20, height: 20)
+                .frame(width: 25, height: 25)
                 .foregroundStyle(Color.accentColor)
             
             Text(text)

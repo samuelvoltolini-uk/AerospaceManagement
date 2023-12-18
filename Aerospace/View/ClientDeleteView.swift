@@ -29,7 +29,7 @@ struct ClientDeleteView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text(client.name).font(.headline)
@@ -41,7 +41,7 @@ struct ClientDeleteView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text(client.code).font(.footnote)
@@ -53,7 +53,7 @@ struct ClientDeleteView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text(client.phoneNumber).font(.footnote)
@@ -65,7 +65,7 @@ struct ClientDeleteView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text(client.email).font(.footnote)
@@ -77,7 +77,7 @@ struct ClientDeleteView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text(client.registeredBy).font(.footnote)
@@ -90,7 +90,7 @@ struct ClientDeleteView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text(client.registrationDate).font(.footnote)

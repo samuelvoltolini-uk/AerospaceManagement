@@ -26,7 +26,7 @@ struct ManufacturerDeleteView: View {
                                 .renderingMode(.original)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 25, height: 25)
                                 .foregroundStyle(Color.accentColor)
                             
                             Text(manufacturer.name)
@@ -39,7 +39,7 @@ struct ManufacturerDeleteView: View {
                                 .renderingMode(.original)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 25, height: 25)
                                 .foregroundStyle(Color.accentColor)
                             
                             Text(manufacturer.code)
@@ -52,7 +52,7 @@ struct ManufacturerDeleteView: View {
                                 .renderingMode(.original)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 25, height: 25)
                                 .foregroundStyle(Color.accentColor)
                             
                             Text(manufacturer.country + ", " + manufacturer.stateOrProvince + ", " + manufacturer.postCode)
@@ -65,7 +65,7 @@ struct ManufacturerDeleteView: View {
                                 .renderingMode(.original)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 25, height: 25)
                                 .foregroundStyle(Color.accentColor)
                             
                             Text(manufacturer.email)
@@ -78,7 +78,7 @@ struct ManufacturerDeleteView: View {
                                 .renderingMode(.original)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 25, height: 25)
                                 .foregroundStyle(Color.accentColor)
                             
                             Text(manufacturer.createdBy)
@@ -92,7 +92,7 @@ struct ManufacturerDeleteView: View {
                                 .renderingMode(.original)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 25, height: 25)
                                 .foregroundStyle(Color.accentColor)
                             
                             Text(manufacturer.creationDate)

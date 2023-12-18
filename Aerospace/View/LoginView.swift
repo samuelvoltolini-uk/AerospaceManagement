@@ -39,7 +39,7 @@ struct LoginView: View {
                             Image(systemName: isPasswordVisible ? "eye.slash.fill" : "eye.fill")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 25, height: 25)
                                 .foregroundColor(.accentColor)
                         }
                         .buttonStyle(PlainButtonStyle()) // Apply plain button style
@@ -100,7 +100,7 @@ struct LoginView: View {
             Image(systemName: image)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 20, height: 20)
+                .frame(width: 25, height: 25)
                 .foregroundColor(.accentColor)
             Text(text)
         }

@@ -1,11 +1,13 @@
+
 import SwiftUI
 
-struct ViewItemView: View {
+struct EditItemView: View {
     
     @State private var items: [ItemFetch] = []
     @State private var searchText = ""
 
     let databaseManager = DatabaseManager()
+    let user: User
     
     var body: some View {
         // Check if the items array is empty
@@ -24,23 +26,9 @@ struct ViewItemView: View {
                 loadItems()
             }
         } else {
-            // Existing list view implementation
             List(filteredItems, id: \.id) { item in
-                NavigationLink(destination: ItemDetailView(item: item)) {
-                    HStack {
+                NavigationLink(destination: EditItemViewDetails(user: user, item: item)) {
                         VStack(alignment: .leading) {
-                            HStack {
-                                Image(systemName: "info.square.fill")
-                                    .renderingMode(.original)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 25, height: 25)
-                                    .foregroundStyle(Color.accentColor)
-                                Text(item.name)
-                                    .font(.subheadline)
-                            }
-                            .padding(.top, 5)
-                            
                             HStack {
                                 Image(systemName: "barcode")
                                     .renderingMode(.original)
@@ -51,8 +39,7 @@ struct ViewItemView: View {
                                 Text(item.barcode)
                                     .font(.subheadline)
                             }
-                            .padding(.top, 5)
-                            
+
                             HStack {
                                 Image(systemName: "\(min(max(item.quantity, 1), 10)).square.fill")
                                     .renderingMode(.original)
@@ -63,46 +50,17 @@ struct ViewItemView: View {
                                 Text("Quantity")
                                     .font(.subheadline)
                                     .foregroundStyle(Color.gray)
-                                
-                                    .padding(.trailing, 10)
-                                
-                                Image(systemName: item.isFavorite ? "star.square.fill" : "")
-                                    .renderingMode(.original)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 25, height: 25)
-                                    .foregroundColor(Color.orange)
-                                
-                                Text(item.isFavorite ? "Favorite" : "")
-                                    .font(.subheadline)
-                                    .foregroundStyle(Color.gray)
-                                
-                                    .padding(.trailing, 10)
-                                
-                                Image(systemName: item.isPriority ? "arrow.clockwise.square.fill" : "")
-                                    .renderingMode(.original)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 25, height: 25)
-                                    .foregroundColor(Color.purple)
-                                
-                                Text(item.isPriority ? "Priority" : "")
-                                    .font(.subheadline)
-                                    .foregroundStyle(Color.gray)
-                                
-                                    .padding(.trailing, 10)
-
                             }
                             .padding(.top, 5)
+
                         }
-                    }
                 }
             }
             .onAppear {
                 loadItems()
             }
             .navigationBarTitle("Items")
-            .searchable(text: $searchText, prompt: "Search by Name or Barcode")
+            .searchable(text: $searchText, prompt: "Search by Barcode")
         }
     }
 
@@ -111,7 +69,6 @@ struct ViewItemView: View {
             return items
         } else {
             return items.filter { item in
-                item.name.lowercased().contains(searchText.lowercased()) ||
                 item.barcode.lowercased().contains(searchText.lowercased())
             }
         }
@@ -140,6 +97,9 @@ struct ViewItemView: View {
 }
 
 
-#Preview {
-    ViewItemView()
+struct EditItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        let mockUser = User(id: 1, name: "", email: "", password: "")
+        EditItemView(user: mockUser)
+    }
 }

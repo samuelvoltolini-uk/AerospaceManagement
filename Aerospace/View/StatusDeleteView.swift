@@ -26,7 +26,7 @@ struct StatusDeleteView: View {
                                 .renderingMode(.original)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 25, height: 25)
                                 .foregroundStyle(Color.accentColor)
                             
                             Text(status.name).font(.headline)
@@ -38,7 +38,7 @@ struct StatusDeleteView: View {
                                 .renderingMode(.original)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 25, height: 25)
                                 .foregroundStyle(Color.accentColor)
                             
                             Text(status.description)
@@ -51,7 +51,7 @@ struct StatusDeleteView: View {
                                 .renderingMode(.original)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 25, height: 25)
                                 .foregroundStyle(Color.accentColor)
                             
                             Text(status.user)
@@ -65,7 +65,7 @@ struct StatusDeleteView: View {
                                 .renderingMode(.original)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 25, height: 25)
                                 .foregroundStyle(Color.accentColor)
                             
                             Text(formattedDate(from: status.date))

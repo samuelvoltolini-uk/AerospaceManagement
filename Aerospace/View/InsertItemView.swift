@@ -52,6 +52,7 @@ struct InsertItemView: View {
         Form {
             Section(header: labelWithIcon("Item Details", image: "info.square.fill")) {
                 TextField("Name", text: $itemName)
+                    .textInputAutocapitalization(.words)
                 TextField("Barcode", text: $barcode)
                     .textInputAutocapitalization(.characters)
                 
@@ -86,7 +87,7 @@ struct InsertItemView: View {
                 .foregroundStyle(Color.gray)
             }
             
-            Section(header: labelWithIcon("Select Country of Origin", image: "globe")) {
+            Section(header: labelWithIcon("Select Origin", image: "globe")) {
                 Picker("Select Country of Origin", selection: $origin) {
                     ForEach(countriesOfOrigin, id: \.id) { country in
                         Text(country.name).tag(country.name)
@@ -265,6 +266,9 @@ struct InsertItemView: View {
                     dbManager.createItemsTable()
                     dbManager.insertItem(item: newItem)
                     
+                    dbManager.createHistoryTable()
+                    dbManager.insertHistoryRecord(name: itemName, barcode: barcode, status: status, comments: comments, user: loggedInUser.name)
+                    
                     isSaving = true
                     
                     let delay = 0.5 + (Double(Int(quantity)) * 0.1)
@@ -417,7 +421,7 @@ struct InsertItemView: View {
                 .renderingMode(.original)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 20, height: 20)
+                .frame(width: 25, height: 25)
                 .foregroundStyle(Color.accentColor)
             
             Text(text)

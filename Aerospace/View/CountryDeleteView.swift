@@ -25,7 +25,7 @@ struct CountryDeleteView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text(country.name).font(.headline)
@@ -37,7 +37,7 @@ struct CountryDeleteView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text(country.userName)
@@ -51,7 +51,7 @@ struct CountryDeleteView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text(country.creationDate)

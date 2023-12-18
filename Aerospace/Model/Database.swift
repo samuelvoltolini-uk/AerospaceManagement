@@ -127,6 +127,32 @@ struct ItemFetch: Identifiable {
     var creationDate: String
 }
 
+struct ItemFetchEdit {
+    var id: Int
+    var name: String
+    var barcode: String
+    var sku: String
+    var description: String
+    var manufacturer: String
+    var status: String
+    var origin: String
+    var client: String
+    var material: String
+    var repairCompanyOne: String
+    var repairCompanyTwo: String
+    var historyNumber: Int
+    var comments: String
+    var tagName: String
+    var isFavorite: Bool
+    var isPriority: Bool
+    var quantity: Double
+    var receiveDate: String
+    var expectedDate: String
+    var file: Data? // Assuming BLOB is used for binary data
+    var createdBy: String
+    var creationDate: String
+}
+
 
 struct ManufacturerPicker: Hashable {
     var id: Int
@@ -1240,4 +1266,199 @@ extension DatabaseManager {
         }
     }
 }
+
+extension DatabaseManager {
+    
+    func createHistoryTable() {
+        let createTableString = """
+        CREATE TABLE IF NOT EXISTS History(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        barcode TEXT,
+        status TEXT,
+        comments TEXT,
+        date TEXT,
+        user TEXT);
+        """
+        // Execute the statement to create the table
+        executeStatement(sqlStatement: createTableString)
+    }
+    
+    func insertHistoryRecord(name: String, barcode: String, status: String, comments: String, user: String) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        let currentDate = dateFormatter.string(from: Date())
+
+        let insertStatementString = """
+        INSERT INTO History (name, barcode, status, comments, date, user) VALUES (?, ?, ?, ?, ?, ?);
+        """
+        
+        // Prepare SQLite statement and bind values
+        var insertStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(insertStatement, 1, (name as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 2, (barcode as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, (status as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, (comments as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, (currentDate as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 6, (user as NSString).utf8String, -1, nil)
+            
+            // Execute the statement
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                print("Successfully inserted row.")
+            } else {
+                print("Could not insert row.")
+            }
+        } else {
+            print("INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    
+    private func executeStatement(sqlStatement sql: String) {
+        var statement: OpaquePointer?
+        if sqlite3_prepare_v2(db, sql, -1, &statement, nil) == SQLITE_OK {
+            if sqlite3_step(statement) == SQLITE_DONE {
+                print("Successfully executed statement.")
+            } else {
+                print("Could not execute statement.")
+            }
+        } else {
+            print("Statement could not be prepared.")
+        }
+        sqlite3_finalize(statement)
+    }
+}
+
+extension DatabaseManager {
+    
+    func updateItem(barcode: String, tagName: String, manufacturer: String, status: String, origin: String, client: String, material: String, repairCompanyOne: String, repairCompanyTwo: String, comments: String) {
+        let updateStatementString = """
+        UPDATE Items SET tagName = ?, manufacturer = ?, status = ?, origin = ?, client = ?, material = ?, repairCompanyOne = ?, repairCompanyTwo = ?, comments = ? WHERE barcode = ?;
+        """
+
+        var updateStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, updateStatementString, -1, &updateStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(updateStatement, 1, (tagName as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(updateStatement, 2, (manufacturer as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(updateStatement, 3, (status as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(updateStatement, 4, (origin as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(updateStatement, 5, (client as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(updateStatement, 6, (material as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(updateStatement, 7, (repairCompanyOne as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(updateStatement, 8, (repairCompanyTwo as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(updateStatement, 9, (comments as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(updateStatement, 10, (barcode as NSString).utf8String, -1, nil)
+
+            if sqlite3_step(updateStatement) == SQLITE_DONE {
+                print("Successfully updated row.")
+            } else {
+                print("Could not update row.")
+            }
+        } else {
+            print("UPDATE statement could not be prepared.")
+        }
+        sqlite3_finalize(updateStatement)
+    }
+}
+
+
+extension DatabaseManager {
+    
+    func appendToHistory(name: String, itemBarcode: String, newStatus: String, newComments: String, user: User) {
+        let currentDate = getCurrentDateString()
+
+        // Fetch the existing history data for the item
+        let fetchStatementString = "SELECT name, status, comments, date, user FROM History WHERE barcode = ?;"
+        var fetchStatement: OpaquePointer?
+        var existingName = ""
+        var existingStatus = ""
+        var existingComments = ""
+        var existingDate = ""
+        var existingUser = ""
+        if sqlite3_prepare_v2(db, fetchStatementString, -1, &fetchStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(fetchStatement, 1, (itemBarcode as NSString).utf8String, -1, nil)
+            
+            if sqlite3_step(fetchStatement) == SQLITE_ROW {
+                existingName = String(cString: sqlite3_column_text(fetchStatement, 0))
+                existingStatus = String(cString: sqlite3_column_text(fetchStatement, 1))
+                existingComments = String(cString: sqlite3_column_text(fetchStatement, 2))
+                existingDate = String(cString: sqlite3_column_text(fetchStatement, 3))
+                existingUser = String(cString: sqlite3_column_text(fetchStatement, 4))
+            }
+        }
+        sqlite3_finalize(fetchStatement)
+
+        // Append the new information to each column
+        let updatedName = existingName + ", " + name
+        let updatedStatus = existingStatus + ", " + newStatus
+        let updatedComments = existingComments + ", " + newComments
+        let updatedDate = existingDate + ", " + currentDate
+        let updatedUser = existingUser + ", " + user.name
+
+        // Update the history row with the appended data
+        let updateStatementString = """
+        UPDATE History SET name = ?, status = ?, comments = ?, date = ?, user = ? WHERE barcode = ?;
+        """
+        var updateStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, updateStatementString, -1, &updateStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(updateStatement, 1, (updatedName as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(updateStatement, 2, (updatedStatus as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(updateStatement, 3, (updatedComments as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(updateStatement, 4, (updatedDate as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(updateStatement, 5, (updatedUser as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(updateStatement, 6, (itemBarcode as NSString).utf8String, -1, nil)
+
+            if sqlite3_step(updateStatement) == SQLITE_DONE {
+                print("Successfully updated history.")
+            } else {
+                print("Could not update history.")
+            }
+        } else {
+            print("UPDATE statement could not be prepared.")
+        }
+        sqlite3_finalize(updateStatement)
+    }
+
+    private func getCurrentDateString() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        return dateFormatter.string(from: Date())
+    }
+}
+
+extension DatabaseManager {
+    
+    func fetchStatusHistoryForItem(itemBarcode: String) -> [String] {
+        var statusHistory = [String]()
+
+        let queryStatementString = "SELECT status FROM History WHERE barcode = ?;"
+        var queryStatement: OpaquePointer?
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(queryStatement, 1, (itemBarcode as NSString).utf8String, -1, nil)
+            
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                if let queryResultCol = sqlite3_column_text(queryStatement, 0) {
+                    let status = String(cString: queryResultCol)
+                    statusHistory.append(contentsOf: status.components(separatedBy: ", "))
+                }
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+
+        sqlite3_finalize(queryStatement)
+        return statusHistory
+    }
+}
+
+
+
+
+
+
+
 

@@ -25,7 +25,7 @@ struct InsertCountryView: View {
                         .renderingMode(.original)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 20, height: 20)
+                        .frame(width: 25, height: 25)
                         .foregroundStyle(Color.accentColor)
                     
                         Text("Country Details")
@@ -41,7 +41,7 @@ struct InsertCountryView: View {
                         .renderingMode(.original)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 20, height: 20)
+                        .frame(width: 25, height: 25)
                         .foregroundStyle(Color.accentColor)
                     
                         Text("User and Date")

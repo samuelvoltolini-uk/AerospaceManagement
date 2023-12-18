@@ -94,7 +94,7 @@ struct InsertStatusView: View {
                 .renderingMode(.original)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 20, height: 20)
+                .frame(width: 25, height: 25)
                 .foregroundStyle(Color.accentColor)
             
             Text(title)

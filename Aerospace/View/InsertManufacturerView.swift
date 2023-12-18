@@ -34,7 +34,7 @@ struct InsertManufacturerView: View {
                     .renderingMode(.original)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 20, height: 20)
+                    .frame(width: 25, height: 25)
                     .foregroundStyle(Color.accentColor)
                 
                 Text("Manufacturer Identification")
@@ -52,7 +52,7 @@ struct InsertManufacturerView: View {
                     .renderingMode(.original)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 20, height: 20)
+                    .frame(width: 25, height: 25)
                     .foregroundStyle(Color.accentColor)
                 
                 Text("Address")
@@ -81,7 +81,7 @@ struct InsertManufacturerView: View {
                     .renderingMode(.original)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 20, height: 20)
+                    .frame(width: 25, height: 25)
                     .foregroundStyle(Color.accentColor)
                 
                 Text("Contact")
@@ -100,7 +100,7 @@ struct InsertManufacturerView: View {
                     .renderingMode(.original)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 20, height: 20)
+                    .frame(width: 25, height: 25)
                     .foregroundStyle(Color.accentColor)
                 
                 Text("User")

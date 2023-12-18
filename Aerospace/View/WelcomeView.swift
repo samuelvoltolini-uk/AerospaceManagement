@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct WelcomeView: View {
+    
     let user: User
     
     var body: some View {
@@ -14,7 +15,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("Overview")
@@ -26,22 +27,37 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("Insert Item")
                             }
                         }
-                        NavigationLink(destination: Text("Edit Item View")) {
+                        
+                        NavigationLink(destination: EditItemView(user: user)) {
                             HStack {
                                 Image(systemName: "square.text.square.fill")
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("Edit Item")
+                            }
+                        }
+                        
+                        
+                        NavigationLink(destination: Text("")) {
+                            HStack {
+                                Image(systemName: "arrow.down.left.arrow.up.right.square.fill")
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.purple)
+                                
+                                Text("Favorite & Priority Change")
                             }
                         }
                         
@@ -51,7 +67,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("Favorite View")
@@ -64,7 +80,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("Priority View")
@@ -77,26 +93,42 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("Delete Item")
                             }
                         }
+                    }
+                        
+                    
+                    Section(header: Text("SKU Change"), footer: Text("Access to delete or add new SKU")) {
+                        
+                        NavigationLink(destination: Text("")) {
+                            HStack {
+                                Image(systemName: "plus.app.fill")
+                                    //.renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.accentColor)
+                                
+                                Text("Insert SKU")
+                            }
+                        }
                         
                         NavigationLink(destination: Text("Delete Item View")) {
                             HStack {
-                                Image(systemName: "minus.diamond.fill")
+                                Image(systemName: "minus.square.fill")
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("Delete SKU")
                             }
                         }
-
                     }
                     
                     Section(header: Text("Tags"), footer: Text("Organize your inventory with tags, allowing for easier item categorization and retrieval.")) {
@@ -106,7 +138,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("Overview")
@@ -118,7 +150,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("Insert Tag")
@@ -130,7 +162,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("Delete Tag")
@@ -146,7 +178,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("Insert Manufacturer")
@@ -158,7 +190,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("View & Delete")
@@ -175,7 +207,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("Insert Status")
@@ -187,7 +219,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("View & Delete")
@@ -203,7 +235,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("Insert Country")
@@ -218,7 +250,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("View & Delete")
@@ -234,7 +266,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("Insert Customer")
@@ -246,7 +278,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("View & Delete")
@@ -262,7 +294,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("History View")
@@ -274,7 +306,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                             
                                 Text("History Update")
@@ -290,7 +322,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("Scan Item")
@@ -305,7 +337,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("Overview")
@@ -320,7 +352,7 @@ struct WelcomeView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("Settings")
@@ -334,7 +366,7 @@ struct WelcomeView: View {
                                 .renderingMode(.original)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 25, height: 25)
                                 .foregroundStyle(Color.accentColor)
                             
                             Text("\(user.name)")
@@ -345,7 +377,7 @@ struct WelcomeView: View {
                                 .renderingMode(.original)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 25, height: 25)
                                 .foregroundStyle(Color.accentColor)
                             
                             Text(currentDateTime)

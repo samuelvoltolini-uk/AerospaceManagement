@@ -26,7 +26,7 @@ struct DeleteTagView: View {
                                 Image(systemName: "tag.square.fill")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundColor(colorFromString(tag.imageName)) // Use a custom function to convert string to Color
                                 
                                 Text(tag.name)
@@ -39,7 +39,7 @@ struct DeleteTagView: View {
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text(tag.description)
