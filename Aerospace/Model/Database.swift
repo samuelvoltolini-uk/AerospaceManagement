@@ -187,6 +187,16 @@ struct TagPicker: Hashable {
     var name: String
 }
 
+struct ItemFetchFavoriteView: Identifiable {
+    var id: Int
+    var name: String
+    var barcode: String
+    var quantity: Double
+    var isFavorite: Bool
+    // Add other properties as needed
+}
+
+
 
 
 class DatabaseManager {
@@ -1530,6 +1540,38 @@ extension DatabaseManager {
         sqlite3_finalize(updateStatement)
     }
 }
+
+extension DatabaseManager {
+
+    func fetchFavoriteItems() -> [ItemFetchFavoriteView] {
+        var items: [ItemFetchFavoriteView] = []
+        let queryStatementString = "SELECT * FROM Items WHERE isFavorite = 1;"
+
+        var queryStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = sqlite3_column_int(queryStatement, 0)
+                guard let nameCString = sqlite3_column_text(queryStatement, 1) else { continue }
+                guard let barcodeCString = sqlite3_column_text(queryStatement, 2) else { continue }
+                let quantity = sqlite3_column_double(queryStatement, 17) // Fetching double value
+                let isFavorite = sqlite3_column_int(queryStatement, 15) != 0 // Assuming 5th column is isFavorite
+
+                let name = String(cString: nameCString)
+                let barcode = String(cString: barcodeCString)
+
+                let item = ItemFetchFavoriteView(id: Int(id), name: name, barcode: barcode, quantity: quantity, isFavorite: isFavorite)
+                items.append(item)
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+        
+        return items
+    }
+}
+
+
 
 
 

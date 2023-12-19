@@ -61,7 +61,7 @@ struct WelcomeView: View {
                             }
                         }
                         
-                        NavigationLink(destination: Text("")) {
+                        NavigationLink(destination: FavoriteView()) {
                             HStack {
                                 Image(systemName: "star.square.fill")
                                     .renderingMode(.original)
