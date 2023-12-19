@@ -74,14 +74,13 @@ struct WelcomeView: View {
                             }
                         }
                         
-                        NavigationLink(destination: Text("")) {
+                        NavigationLink(destination: PriorityView()) {
                             HStack {
-                                Image(systemName: "arrow.clockwise.square.fill")
-                                    .renderingMode(.original)
+                                Image(systemName: "exclamationmark.square.fill")
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 25, height: 25)
-                                    .foregroundStyle(Color.accentColor)
+                                    .foregroundStyle(Color.green)
                                 
                                 Text("Priority View")
                             }

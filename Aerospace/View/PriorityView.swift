@@ -1,13 +1,13 @@
 import SwiftUI
 
-struct FavoriteView: View {
-    @State private var items: [ItemFetchFavoriteView] = []
-    
+struct PriorityView: View {
+    @State private var items: [ItemFetchPriorityView] = [] 
+    // Assuming ItemFetchPriorityView has similar structure to ItemFetchFavoriteView
     @State private var searchText = ""
     
     let databaseManager = DatabaseManager()
 
-    var filteredItems: [ItemFetchFavoriteView] {
+    var filteredItems: [ItemFetchPriorityView] {
         if searchText.isEmpty {
             return items
         } else {
@@ -28,24 +28,24 @@ struct FavoriteView: View {
                             quantityView(item.quantity)
                         }
                         
-                        Spacer() // This will push the icon to the right
+                        Spacer()
                         
-                        Image(systemName: "star.square.fill") // Icon for favorite items
+                        Image(systemName: "exclamationmark.square.fill") // Icon for priority items
                             .resizable()
                             .scaledToFit()
                             .frame(width: 25, height: 25)
-                            .foregroundColor(.orange)
+                            .foregroundColor(.green)
                     }
                 }
                 .searchable(text: $searchText, prompt: "Search by Name or Barcode")
             }
         }
-        .navigationBarTitle("Favorite Items", displayMode: .inline)
+        .navigationBarTitle("Priority Items", displayMode: .inline)
         .onAppear {
-            fetchFavoriteItems()
+            fetchPriorityItems()
         }
     }
-
+    
     private var emptyView: some View {
         VStack {
             Image("NothingHere") // Replace with your 'Nothing to see here' image
@@ -57,8 +57,8 @@ struct FavoriteView: View {
         }
     }
 
-    private func fetchFavoriteItems() {
-        items = databaseManager.fetchFavoriteItems()
+    private func fetchPriorityItems() {
+        items = databaseManager.fetchPriorityItems()
     }
 
     private func itemDetailView(_ iconName: String, text: String) -> some View {
@@ -110,5 +110,5 @@ struct FavoriteView: View {
 }
 
 #Preview {
-    FavoriteView()
+    PriorityView()
 }

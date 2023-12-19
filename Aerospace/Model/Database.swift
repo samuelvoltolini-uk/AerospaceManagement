@@ -196,6 +196,15 @@ struct ItemFetchFavoriteView: Identifiable {
     // Add other properties as needed
 }
 
+struct ItemFetchPriorityView: Identifiable {
+    var id: Int
+    var name: String
+    var barcode: String
+    var quantity: Double
+    var isPriority: Bool
+    // Add other properties as needed
+}
+
 
 
 
@@ -1560,6 +1569,37 @@ extension DatabaseManager {
                 let barcode = String(cString: barcodeCString)
 
                 let item = ItemFetchFavoriteView(id: Int(id), name: name, barcode: barcode, quantity: quantity, isFavorite: isFavorite)
+                items.append(item)
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+        
+        return items
+    }
+}
+
+extension DatabaseManager {
+
+    func fetchPriorityItems() -> [ItemFetchPriorityView] {
+        var items: [ItemFetchPriorityView] = []
+        let queryStatementString = "SELECT * FROM Items WHERE isPriority = 1;"
+
+        var queryStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                // Similar logic as in fetchFavoriteItems
+                let id = sqlite3_column_int(queryStatement, 0)
+                guard let nameCString = sqlite3_column_text(queryStatement, 1) else { continue }
+                guard let barcodeCString = sqlite3_column_text(queryStatement, 2) else { continue }
+                let quantity = sqlite3_column_double(queryStatement, 17)
+                let isPriority = sqlite3_column_int(queryStatement, 16) != 0 // Assuming 5th column is isPriority
+
+                let name = String(cString: nameCString)
+                let barcode = String(cString: barcodeCString)
+
+                let item = ItemFetchPriorityView(id: Int(id), name: name, barcode: barcode, quantity: quantity, isPriority: isPriority)
                 items.append(item)
             }
         } else {

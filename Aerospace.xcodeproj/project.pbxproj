@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		D01AB6802B30E5AF003C2A2A /* FavoritePriorityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01AB67F2B30E5AF003C2A2A /* FavoritePriorityView.swift */; };
 		D01AB6822B31E56A003C2A2A /* FavoriteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01AB6812B31E56A003C2A2A /* FavoriteView.swift */; };
+		D01AB6842B31FAD6003C2A2A /* PriorityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01AB6832B31FAD6003C2A2A /* PriorityView.swift */; };
 		D04207A12B2B70F000DEE395 /* CountryDeleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04207A02B2B70F000DEE395 /* CountryDeleteView.swift */; };
 		D04207A32B2B772300DEE395 /* InsertClientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04207A22B2B772300DEE395 /* InsertClientView.swift */; };
 		D04207A52B2BD9DE00DEE395 /* ClientDeleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04207A42B2BD9DE00DEE395 /* ClientDeleteView.swift */; };
@@ -43,6 +44,7 @@
 /* Begin PBXFileReference section */
 		D01AB67F2B30E5AF003C2A2A /* FavoritePriorityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritePriorityView.swift; sourceTree = "<group>"; };
 		D01AB6812B31E56A003C2A2A /* FavoriteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteView.swift; sourceTree = "<group>"; };
+		D01AB6832B31FAD6003C2A2A /* PriorityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriorityView.swift; sourceTree = "<group>"; };
 		D04207A02B2B70F000DEE395 /* CountryDeleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryDeleteView.swift; sourceTree = "<group>"; };
 		D04207A22B2B772300DEE395 /* InsertClientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsertClientView.swift; sourceTree = "<group>"; };
 		D04207A42B2BD9DE00DEE395 /* ClientDeleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientDeleteView.swift; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 				D0A1F3D42B2F9EC2003B316E /* EditItemViewDetails.swift */,
 				D01AB67F2B30E5AF003C2A2A /* FavoritePriorityView.swift */,
 				D01AB6812B31E56A003C2A2A /* FavoriteView.swift */,
+				D01AB6832B31FAD6003C2A2A /* PriorityView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -241,6 +244,7 @@
 			files = (
 				D04207A32B2B772300DEE395 /* InsertClientView.swift in Sources */,
 				D0560A5D2B29218C00F93E84 /* DisplayTagsView.swift in Sources */,
+				D01AB6842B31FAD6003C2A2A /* PriorityView.swift in Sources */,
 				D0F78CD22B2DF78500DCF50C /* ViewItemView.swift in Sources */,
 				D04207A92B2C9CA900DEE395 /* DocumentPicker.swift in Sources */,
 				D04207A12B2B70F000DEE395 /* CountryDeleteView.swift in Sources */,
