@@ -318,7 +318,7 @@ struct WelcomeView: View {
                     }
                     
                     Section(header: Text("Scan"), footer: Text("Quickly scan and update inventory items using barcode scanning.")) {
-                        NavigationLink(destination: Text("Scan Item View")) {
+                        NavigationLink(destination: ScanView()) {
                             HStack {
                                 Image(systemName: "qrcode")
                                     .renderingMode(.original)
