@@ -216,6 +216,21 @@ struct ItemFetchForSKU: Equatable {
     }
 }
 
+struct ItemFetchForSKUDelete {
+    var id: Int
+    var SKU: [String]
+    // Add other properties as needed based on your database schema
+
+    init(id: Int, SKU: [String]) {
+        self.id = id
+        self.SKU = SKU
+        // Initialize other properties here
+    }
+}
+
+
+
+
 
 
 class DatabaseManager {
@@ -1686,6 +1701,55 @@ extension DatabaseManager {
         return items
     }
 }
+
+extension DatabaseManager {
+    func removeSKUs(for itemId: Int, newSKUs: [String]) {
+        let joinedSKUs = newSKUs.joined(separator: ",")
+        let updateStatementString = "UPDATE Items SET SKU = ? WHERE id = ?;"
+
+        var updateStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, updateStatementString, -1, &updateStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(updateStatement, 1, joinedSKUs, -1, nil)
+            sqlite3_bind_int(updateStatement, 2, Int32(itemId))
+
+            if sqlite3_step(updateStatement) == SQLITE_DONE {
+                print("Successfully updated SKUs.")
+            } else {
+                print("Could not update SKUs.")
+            }
+        } else {
+            print("UPDATE statement could not be prepared.")
+        }
+        sqlite3_finalize(updateStatement)
+    }
+}
+
+extension DatabaseManager {
+
+    func fetchItemByIDForDelete(_ id: Int) -> ItemFetchForSKUDelete? {
+        let queryStatementString = "SELECT * FROM Items WHERE id = \(id);"
+        var queryStatement: OpaquePointer?
+        var item: ItemFetchForSKUDelete?
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            if sqlite3_step(queryStatement) == SQLITE_ROW {
+                // Assuming SKUs are stored in a specific column (e.g., 5th column)
+                let skuString = String(cString: sqlite3_column_text(queryStatement, 3)) // Adjust the column index as needed
+                let skus = skuString.components(separatedBy: ",")
+                item = ItemFetchForSKUDelete(id: id, SKU: skus)
+                // Populate other properties as needed
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+
+        return item
+    }
+}
+
+
+
 
 
 
