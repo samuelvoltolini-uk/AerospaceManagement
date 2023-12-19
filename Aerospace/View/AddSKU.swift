@@ -93,8 +93,7 @@ struct AddSKUSheet: View {
     var body: some View {
         NavigationView {
             Form {
-                
-                Section(header: labelWithIcon("New SKU", image: "barcode.viewfinder")) {
+                Section(header: labelWithIcon("New SKU", image: "barcode.viewfinder"),footer: Text("If you input a SKU that is already in use, it will not be saved automatically.")) {
                     TextField("", text: $newSKU)
                         .keyboardType(.numberPad)
                 }
@@ -103,18 +102,25 @@ struct AddSKUSheet: View {
                     Button(action: saveSKU) {
                         Text("Save")
                     }
-                    .disabled(newSKU.isEmpty)
+                    .disabled(!isSKUValid)
                     .frame(maxWidth: .infinity)
                     .foregroundColor(.accentColor)
                     .fontWeight(.semibold)
                 }
-                
             }
             .navigationBarTitle("Add SKU to \(item.barcode)", displayMode: .inline)
             .navigationBarItems(trailing: Button("Cancel") {
                 presentationMode.wrappedValue.dismiss()
             })
         }
+    }
+    
+    private var isSKUValid: Bool {
+        // Check if the SKU contains only numbers and is not already in the item's SKUs
+        let skuCharacterSet = CharacterSet(charactersIn: newSKU)
+        let isNumeric = CharacterSet.decimalDigits.isSuperset(of: skuCharacterSet)
+        let isUnique = !item.SKU.contains(newSKU)
+        return isNumeric && isUnique && !newSKU.isEmpty
     }
     
     private func labelWithIcon(_ text: String, image: String) -> some View {
@@ -130,13 +136,15 @@ struct AddSKUSheet: View {
         }
     }
 
-    
     private func saveSKU() {
-        let updatedSKUs = item.SKU + (newSKU.isEmpty ? [] : [newSKU])
-        databaseManager.updateSKUs(for: item.id, newSKUs: updatedSKUs)
-        presentationMode.wrappedValue.dismiss()
+        if isSKUValid {
+            let updatedSKUs = item.SKU + [newSKU]
+            databaseManager.updateSKUs(for: item.id, newSKUs: updatedSKUs)
+            presentationMode.wrappedValue.dismiss()
+        }
     }
 }
+
 
 #Preview {
     AddSKU()
