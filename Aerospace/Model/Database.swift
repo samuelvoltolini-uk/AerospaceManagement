@@ -205,6 +205,16 @@ struct ItemFetchPriorityView: Identifiable {
     // Add other properties as needed
 }
 
+struct ItemFetchForSKU: Equatable {
+    var id: Int
+    var name: String
+    var barcode: String
+    var SKU: [String] // Assuming you have an array of SKUs
+
+    static func == (lhs: ItemFetchForSKU, rhs: ItemFetchForSKU) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
 
 
 
@@ -1631,6 +1641,52 @@ extension DatabaseManager {
         sqlite3_finalize(deleteStatement)
     }
 }
+
+extension DatabaseManager {
+    func updateSKUs(for itemId: Int, newSKUs: [String]) {
+        let skusString = newSKUs.joined(separator: ",")
+        let updateStatementString = "UPDATE Items SET SKU = '\(skusString)' WHERE id = \(itemId);"
+
+        var updateStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, updateStatementString, -1, &updateStatement, nil) == SQLITE_OK {
+            if sqlite3_step(updateStatement) == SQLITE_DONE {
+                print("Successfully updated SKUs.")
+            } else {
+                print("Could not update SKUs.")
+            }
+        } else {
+            print("UPDATE statement could not be prepared.")
+        }
+        sqlite3_finalize(updateStatement)
+    }
+}
+
+extension DatabaseManager {
+    func fetchItemsForSKU() -> [ItemFetchForSKU] {
+        var items: [ItemFetchForSKU] = []
+        let queryStatementString = "SELECT id, name, barcode, SKU FROM Items;"
+
+        var queryStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(queryStatement, 0))
+                let name = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let barcode = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let SKUString = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let SKU = SKUString.split(separator: ",").map(String.init) // Assuming SKU is a comma-separated string
+
+                let item = ItemFetchForSKU(id: id, name: name, barcode: barcode, SKU: SKU)
+                items.append(item)
+            }
+        } else {
+            print("SELECT statement could not be prepared.")
+        }
+        sqlite3_finalize(queryStatement)
+        
+        return items
+    }
+}
+
 
 
 

@@ -140,8 +140,9 @@ struct FavoritePriorityView: View {
                             .tint(.green)
                         }
                     }
+                    .navigationBarTitle("Priority & Favorite")
                 }
-                .navigationBarTitle("Priority & Favorite")
+                
                 .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Barcode or Item")
                 .onAppear {
                     items = databaseManager.fetchItems()

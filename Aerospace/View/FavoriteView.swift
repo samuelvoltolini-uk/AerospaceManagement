@@ -40,7 +40,7 @@ struct FavoriteView: View {
                 .searchable(text: $searchText, prompt: "Search by Name or Barcode")
             }
         }
-        .navigationBarTitle("Favorite Items", displayMode: .inline)
+        .navigationBarTitle("Favorite Items")
         .onAppear {
             fetchFavoriteItems()
         }

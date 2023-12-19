@@ -87,7 +87,7 @@ struct WelcomeView: View {
                         }
                     }
                     
-                    Section(header: Text("Delete Full Item Invesntory"), footer: Text("Deleting an item will remove it entirely, including all quantities. Item history will not be deleted.").foregroundStyle(Color.purple)) {
+                    Section(header: Text("Delete Full Item Inventory"), footer: Text("Deleting an item will remove it entirely, including all quantities. Item history will not be deleted.").foregroundStyle(Color.purple)) {
                         
                         NavigationLink(destination: DeleteItemView()) {
                             HStack {
@@ -106,7 +106,7 @@ struct WelcomeView: View {
                     
                     Section(header: Text("Update SKU"), footer: Text("Access to delete or add new SKU")) {
                         
-                        NavigationLink(destination: Text("")) {
+                        NavigationLink(destination: AddSKU()) {
                             HStack {
                                 Image(systemName: "plus.app.fill")
                                     //.renderingMode(.original)
@@ -119,7 +119,7 @@ struct WelcomeView: View {
                             }
                         }
                         
-                        NavigationLink(destination: Text("Delete Item View")) {
+                        NavigationLink(destination: DeleteSKU()) {
                             HStack {
                                 Image(systemName: "minus.square.fill")
                                     .renderingMode(.original)

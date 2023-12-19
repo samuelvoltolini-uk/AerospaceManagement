@@ -40,7 +40,7 @@ struct PriorityView: View {
                 .searchable(text: $searchText, prompt: "Search by Name or Barcode")
             }
         }
-        .navigationBarTitle("Priority Items", displayMode: .inline)
+        .navigationBarTitle("Priority Items")
         .onAppear {
             fetchPriorityItems()
         }
