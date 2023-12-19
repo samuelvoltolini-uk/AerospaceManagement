@@ -30,6 +30,17 @@ struct EditItemView: View {
                 NavigationLink(destination: EditItemViewDetails(user: user, item: item)) {
                         VStack(alignment: .leading) {
                             HStack {
+                                Image(systemName: "info.square.fill")
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.accentColor)
+                                Text(item.name)
+                                    .font(.subheadline)
+                            }
+                            .padding(.top, 5)
+                            HStack {
                                 Image(systemName: "barcode")
                                     .renderingMode(.original)
                                     .resizable()
@@ -39,6 +50,7 @@ struct EditItemView: View {
                                 Text(item.barcode)
                                     .font(.subheadline)
                             }
+                            .padding(.top, 5)
 
                             HStack {
                                 Image(systemName: "\(min(max(item.quantity, 1), 10)).square.fill")
@@ -60,7 +72,7 @@ struct EditItemView: View {
                 loadItems()
             }
             .navigationBarTitle("Items")
-            .searchable(text: $searchText, prompt: "Search by Barcode")
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Barcode")
         }
     }
 

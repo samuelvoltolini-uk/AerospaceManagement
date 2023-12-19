@@ -153,6 +153,14 @@ struct ItemFetchEdit {
     var creationDate: String
 }
 
+struct ItemFetchFavoritePriority {
+    var name: String
+    var barcode: String
+    var isFavorite: Bool
+    var isPriority: Bool
+    var quantity: Double
+}
+
 
 struct ManufacturerPicker: Hashable {
     var id: Int
@@ -1454,6 +1462,79 @@ extension DatabaseManager {
         return statusHistory
     }
 }
+
+extension DatabaseManager {
+    func fetchItems() -> [ItemFetchFavoritePriority] {
+        var items = [ItemFetchFavoritePriority]()
+        let queryStatementString = "SELECT name, barcode, quantity, isFavorite, isPriority FROM Items;"
+        var queryStatement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let name = String(cString: sqlite3_column_text(queryStatement, 0))
+                let barcode = String(cString: sqlite3_column_text(queryStatement, 1))
+                let quantity = sqlite3_column_double(queryStatement, 2)
+                let isFavorite = sqlite3_column_int(queryStatement, 3) != 0
+                let isPriority = sqlite3_column_int(queryStatement, 4) != 0
+                
+                items.append(ItemFetchFavoritePriority(name: name, barcode: barcode, isFavorite: isFavorite, isPriority: isPriority, quantity: quantity))
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        
+        sqlite3_finalize(queryStatement)
+        return items
+    }
+}
+
+extension DatabaseManager {
+
+    func toggleFavorite(for itemBarcode: String) {
+        let updateStatementString = """
+        UPDATE Items SET isFavorite = CASE WHEN isFavorite = 1 THEN 0 ELSE 1 END WHERE barcode = ?;
+        """
+
+        var updateStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, updateStatementString, -1, &updateStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(updateStatement, 1, (itemBarcode as NSString).utf8String, -1, nil)
+            
+            if sqlite3_step(updateStatement) == SQLITE_DONE {
+                print("Successfully toggled favorite.")
+            } else {
+                print("Could not toggle favorite.")
+            }
+        } else {
+            print("UPDATE statement for isFavorite could not be prepared.")
+        }
+        sqlite3_finalize(updateStatement)
+    }
+    
+    func togglePriority(for itemBarcode: String) {
+        let updateStatementString = """
+        UPDATE Items SET isPriority = CASE WHEN isPriority = 1 THEN 0 ELSE 1 END WHERE barcode = ?;
+        """
+
+        var updateStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, updateStatementString, -1, &updateStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(updateStatement, 1, (itemBarcode as NSString).utf8String, -1, nil)
+            
+            if sqlite3_step(updateStatement) == SQLITE_DONE {
+                print("Successfully toggled priority.")
+            } else {
+                print("Could not toggle priority.")
+            }
+        } else {
+            print("UPDATE statement for isPriority could not be prepared.")
+        }
+        sqlite3_finalize(updateStatement)
+    }
+}
+
+
+
+
+
 
 
 

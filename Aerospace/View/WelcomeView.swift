@@ -48,7 +48,7 @@ struct WelcomeView: View {
                         }
                         
                         
-                        NavigationLink(destination: Text("")) {
+                        NavigationLink(destination: FavoritePriorityView()) {
                             HStack {
                                 Image(systemName: "arrow.down.left.arrow.up.right.square.fill")
                                     .renderingMode(.original)

@@ -102,7 +102,7 @@ struct ViewItemView: View {
                 loadItems()
             }
             .navigationBarTitle("Items")
-            .searchable(text: $searchText, prompt: "Search by Name or Barcode")
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Name or Barcode")
         }
     }
 

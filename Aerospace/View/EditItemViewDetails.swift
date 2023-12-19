@@ -1,4 +1,5 @@
 import SwiftUI
+import PartialSheet
 
 struct EditItemViewDetails: View {
     
@@ -6,6 +7,9 @@ struct EditItemViewDetails: View {
     
     let user: User
     
+    @State private var showPartialSheet = false
+    @State private var errorMessage: String = ""
+
     @State private var itemName: String = ""
     @State private var barcode: String = ""
     @State private var description: String = ""
@@ -20,9 +24,9 @@ struct EditItemViewDetails: View {
     @State private var repairCompanyTwo: String = ""
     @State private var historyNumber: Int = 0
     @State private var comments: String = ""
-  
+    
     @State private var skus: [String] = []
-
+    
     @State private var manufacturers: [ManufacturerPicker] = []
     @State private var statuses: [StatusPicker] = []
     @State private var countriesOfOrigin: [CountryOfOriginPicker] = []
@@ -32,9 +36,9 @@ struct EditItemViewDetails: View {
     private var currentDate: String {
         formatDate(Date())
     }
-
+    
     @State var item: ItemFetch
-
+    
     var body: some View {
         Form {
             Section(
@@ -55,11 +59,11 @@ struct EditItemViewDetails: View {
                     Text(formatDate(item.expectedDate))
                 }
                 HStack {
-                                Text("History")
-                                Spacer()
-                                Text("\(historyNumber)")
-                                    .fontWeight(.bold)
-                            }
+                    Text("History")
+                    Spacer()
+                    Text("\(historyNumber)")
+                        .fontWeight(.bold)
+                }
             }
             .disabled(true)
             .foregroundStyle(Color.gray)
@@ -78,19 +82,19 @@ struct EditItemViewDetails: View {
                 }
                 .disabled(true)
             }
-
+            
             
             Section(header: labelWithIcon("Assign Tag", image: "tag.square.fill"), footer: Text("Current: " + item.tagName)) {
-                Picker("Change to", selection: $tagName) {
+                Picker("", selection: $tagName) {
                     ForEach(tags, id: \.id) { tag in
-                        Text(item.tagName).tag(tag.name)
+                        Text(tag.name).tag(tag.name)
                     }
                 }
                 .foregroundStyle(Color.gray)
             }
             
             Section(header: labelWithIcon("Select Manufacturer", image: "building.2.fill"), footer: Text("Current: " + item.manufacturer)) {
-                Picker("Change to", selection: $manufacturer) {
+                Picker("", selection: $manufacturer) {
                     ForEach(manufacturers, id: \.id) { option in
                         Text(option.name).tag(option.name)
                     }
@@ -99,7 +103,7 @@ struct EditItemViewDetails: View {
             }
             
             Section(header: labelWithIcon("Select Status", image: "arrow.left.arrow.right.square.fill"), footer: Text("Current: " + item.status)) {
-                Picker("Change to", selection: $status) {
+                Picker("", selection: $status) {
                     ForEach(statuses, id: \.id) { status in
                         Text(status.name).tag(status.name)
                     }
@@ -108,7 +112,7 @@ struct EditItemViewDetails: View {
             }
             
             Section(header: labelWithIcon("Select Country of Origin", image: "globe"), footer: Text("Current: " + item.origin)) {
-                Picker("Change to", selection: $origin) {
+                Picker("", selection: $origin) {
                     ForEach(countriesOfOrigin, id: \.id) { country in
                         Text(country.name).tag(country.name)
                     }
@@ -117,7 +121,7 @@ struct EditItemViewDetails: View {
             }
             
             Section(header: labelWithIcon("Select Client", image: "airplane"), footer: Text("Current: " + item.client)) {
-                Picker("Change to", selection: $client) {
+                Picker("", selection: $client) {
                     ForEach(clients, id: \.id) { client in
                         Text(client.name).tag(client.name)
                     }
@@ -125,20 +129,20 @@ struct EditItemViewDetails: View {
                 .foregroundStyle(Color.gray)
             }
             
-            Section(header: labelWithIcon("Material", image: "diamond.fill")) {
-                TextField(item.material, text: $material)
+            Section(header: labelWithIcon("Material", image: "diamond.fill"), footer: Text("Current: " + item.material)) {
+                TextField("", text: $material)
             }
             
-            Section(header: labelWithIcon("Repair Company", image: "wrench.adjustable.fill")) {
-                TextField(item.repairCompanyOne, text: $repairCompanyOne)
-                TextField(item.repairCompanyTwo, text: $repairCompanyTwo)
+            Section(header: labelWithIcon("Repair Company", image: "wrench.adjustable.fill"), footer: Text("Current: " + item.repairCompanyOne + " - " + item.repairCompanyTwo)) {
+                TextField("", text: $repairCompanyOne)
+                TextField("", text: $repairCompanyTwo)
             }
             
-            Section(header: labelWithIcon("Comments", image: "bubble.left.and.text.bubble.right.fill")) {
-                TextField("Comments", text: $comments)
+            Section(header: labelWithIcon("Comments", image: "bubble.left.and.text.bubble.right.fill"), footer: Text("Current: " + item.comments)) {
+                TextField("", text: $comments)
             }
             
-
+            
             Section(header: labelWithIcon("Created By", image: "person.text.rectangle.fill")) {
                 HStack {
                     Text("Current User")
@@ -154,14 +158,14 @@ struct EditItemViewDetails: View {
             .foregroundStyle(Color.gray)
             
             Section {
-                            // Add other content here if needed
-                            Button(action: handleSubmit) {
-                                Text("Save")
-                                    .frame(maxWidth: .infinity)
-                                    .foregroundColor(.accentColor)
-                                    .fontWeight(.semibold)
-                            }
-                        }
+                // Add other content here if needed
+                Button(action: validateAndSave) {
+                    Text("Save")
+                        .frame(maxWidth: .infinity)
+                        .foregroundColor(.accentColor)
+                        .fontWeight(.semibold)
+                }
+            }
             
             
         }
@@ -171,10 +175,28 @@ struct EditItemViewDetails: View {
             let statusHistory = databaseManager.fetchStatusHistoryForItem(itemBarcode: item.barcode)
             historyNumber = statusHistory.count
         }
+        .partialSheet(isPresented: $showPartialSheet) {
+            VStack {
+                Image(systemName: "questionmark.square.fill")
+                    .renderingMode(.original)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 50, height: 50)
+                    .foregroundColor(.accentColor)
+                    .padding(.top, 5)
+                
+                Text(errorMessage)
+                    .foregroundColor(.gray)
+                    .font(.footnote)
+                    .multilineTextAlignment(.center)
+                    .padding(.top, 10)
+            }
+        }
+        .attachPartialSheetToRoot()
     }
     
     private func handleSubmit() {
-        // Call the update function with the updated values
+        print("Updating item...")
         databaseManager.updateItem(
             barcode: item.barcode,
             tagName: tagName,
@@ -188,16 +210,18 @@ struct EditItemViewDetails: View {
             comments: comments
         )
         
-        databaseManager.appendToHistory(name: item.name, itemBarcode: item.barcode, newStatus: status, newComments: comments, user: user)
-        
-        print("Item updated and history appended successfully")
+        print("Appending to history...")
+        databaseManager.appendToHistory(
+            name: item.name,
+            itemBarcode: item.barcode,
+            newStatus: status,
+            newComments: comments,
+            user: user
+        )
 
-
-        // Implement any necessary logic after the update
-        print("Item updated successfully")
+        print("Operation completed.")
     }
-
-
+    
     private func detailRow(icon: String, title: String, value: String) -> some View {
         HStack {
             Image(systemName: icon)
@@ -264,6 +288,23 @@ struct EditItemViewDetails: View {
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
         return formatter.string(from: date)
+    }
+    
+    private func validateAndSave() {
+        // Check if any required field is blank
+        if tagName.isEmpty || manufacturer.isEmpty || status.isEmpty || origin.isEmpty || client.isEmpty || material.isEmpty || repairCompanyOne.isEmpty || comments.isEmpty {
+            errorMessage = "All fields are required. Please fill out the missing information."
+            showPartialSheet = true
+            return
+        }
+
+        // If all fields are filled, call the save function
+        handleSubmit()
+        
+        material = ""
+        repairCompanyOne = ""
+        repairCompanyTwo = ""
+        comments = ""
     }
 }
 

@@ -70,7 +70,7 @@ struct InsertItemView: View {
             }
             
             Section(header: labelWithIcon("Select Manufacturer", image: "building.2.fill")) {
-                Picker("Select Manufacturer", selection: $manufacturer) {
+                Picker("Manufacturer Name", selection: $manufacturer) {
                     ForEach(manufacturers, id: \.id) { option in
                         Text(option.name).tag(option.name)
                     }
@@ -79,7 +79,7 @@ struct InsertItemView: View {
             }
             
             Section(header: labelWithIcon("Select Status", image: "arrow.left.arrow.right.square.fill")) {
-                Picker("Select Status", selection: $status) {
+                Picker("Status Name", selection: $status) {
                     ForEach(statuses, id: \.id) { status in
                         Text(status.name).tag(status.name)
                     }
@@ -88,7 +88,7 @@ struct InsertItemView: View {
             }
             
             Section(header: labelWithIcon("Select Origin", image: "globe")) {
-                Picker("Select Country of Origin", selection: $origin) {
+                Picker("Country of Origin", selection: $origin) {
                     ForEach(countriesOfOrigin, id: \.id) { country in
                         Text(country.name).tag(country.name)
                     }
@@ -97,7 +97,7 @@ struct InsertItemView: View {
             }
             
             Section(header: labelWithIcon("Select Client", image: "airplane")) {
-                Picker("Select Client", selection: $client) {
+                Picker("Client Name", selection: $client) {
                     ForEach(clients, id: \.id) { client in
                         Text(client.name).tag(client.name)
                     }
