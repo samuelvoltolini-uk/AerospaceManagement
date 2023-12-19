@@ -1611,6 +1611,27 @@ extension DatabaseManager {
     }
 }
 
+extension DatabaseManager {
+
+    func deleteItem(_ id: Int) {
+        let deleteStatementString = "DELETE FROM Items WHERE id = ?;"
+
+        var deleteStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, deleteStatementString, -1, &deleteStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(deleteStatement, 1, Int32(id))
+
+            if sqlite3_step(deleteStatement) == SQLITE_DONE {
+                print("Successfully deleted item.")
+            } else {
+                print("Could not delete item.")
+            }
+        } else {
+            print("DELETE statement could not be prepared.")
+        }
+        sqlite3_finalize(deleteStatement)
+    }
+}
+
 
 
 

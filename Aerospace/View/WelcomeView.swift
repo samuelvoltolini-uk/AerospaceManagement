@@ -85,8 +85,11 @@ struct WelcomeView: View {
                                 Text("Priority View")
                             }
                         }
+                    }
+                    
+                    Section(header: Text("Delete Full Item Invesntory"), footer: Text("Deleting an item will remove it entirely, including all quantities. Item history will not be deleted.").foregroundStyle(Color.purple)) {
                         
-                        NavigationLink(destination: Text("Delete Item View")) {
+                        NavigationLink(destination: DeleteItemView()) {
                             HStack {
                                 Image(systemName: "minus.square.fill")
                                     .renderingMode(.original)
@@ -101,7 +104,7 @@ struct WelcomeView: View {
                     }
                         
                     
-                    Section(header: Text("SKU Change"), footer: Text("Access to delete or add new SKU")) {
+                    Section(header: Text("Update SKU"), footer: Text("Access to delete or add new SKU")) {
                         
                         NavigationLink(destination: Text("")) {
                             HStack {

@@ -98,7 +98,7 @@ struct FavoritePriorityView: View {
                         HStack {
                             VStack(alignment: .leading) {
                                 itemDetailView("info.square.fill", text: item.name)
-                                itemDetailView("barcode", text: item.barcode)
+                                itemDetailView("barcode.viewfinder", text: item.barcode)
                                 quantityView(item.quantity)
                             }
                             

@@ -94,7 +94,7 @@ struct ItemDetailView: View {
                         
                     }
                 }
-                detailRow(icon: "barcode", title: "Barcode", value: item.barcode)
+                detailRow(icon: "barcode.viewfinder", title: "Barcode", value: item.barcode)
                 ForEach(Array(item.SKU.enumerated()), id: \.element) { index, sku in
                     HStack {
                         detailRow(icon: "shippingbox.fill", title: "SKU", value: sku)

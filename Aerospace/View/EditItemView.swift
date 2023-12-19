@@ -41,7 +41,7 @@ struct EditItemView: View {
                             }
                             .padding(.top, 5)
                             HStack {
-                                Image(systemName: "barcode")
+                                Image(systemName: "barcode.viewfinder")
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
