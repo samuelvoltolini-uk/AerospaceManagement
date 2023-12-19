@@ -228,9 +228,15 @@ struct ItemFetchForSKUDelete {
     }
 }
 
-
-
-
+struct HistoryRecord: Identifiable {
+    var id: Int
+    var name: [String]
+    var barcode: String
+    var status: [String]
+    var comments: [String]
+    var dates: [String]
+    var users: [String]
+}
 
 
 class DatabaseManager {
@@ -1004,8 +1010,9 @@ extension DatabaseManager {
         if sqlite3_prepare_v2(db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
             sqlite3_bind_text(insertStatement, 1, (item.name as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 2, (item.barcode as NSString).utf8String, -1, nil)
-            let skusString = item.SKU.joined(separator: ",")
-            sqlite3_bind_text(insertStatement, 3, (skusString as NSString).utf8String, -1, nil)
+            let uniqueSKUs = Set(item.SKU)
+                   let skusString = Array(uniqueSKUs).joined(separator: ",")
+                   sqlite3_bind_text(insertStatement, 3, (skusString as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 4, (item.description as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 5, (item.manufacturer as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 6, (item.status as NSString).utf8String, -1, nil)
@@ -1443,11 +1450,11 @@ extension DatabaseManager {
         sqlite3_finalize(fetchStatement)
 
         // Append the new information to each column
-        let updatedName = existingName + ", " + name
-        let updatedStatus = existingStatus + ", " + newStatus
-        let updatedComments = existingComments + ", " + newComments
-        let updatedDate = existingDate + ", " + currentDate
-        let updatedUser = existingUser + ", " + user.name
+        let updatedName = existingName + "; " + name
+        let updatedStatus = existingStatus + "; " + newStatus
+        let updatedComments = existingComments + "; " + newComments
+        let updatedDate = existingDate + "; " + currentDate
+        let updatedUser = existingUser + "; " + user.name
 
         // Update the history row with the appended data
         let updateStatementString = """
@@ -1747,6 +1754,44 @@ extension DatabaseManager {
         return item
     }
 }
+
+
+extension DatabaseManager {
+    func fetchHistoryRecords() -> [HistoryRecord] {
+        var historyRecords: [HistoryRecord] = []
+        let queryStatementString = "SELECT * FROM History;"
+
+        var queryStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = sqlite3_column_int(queryStatement, 0)
+                let nameString = String(cString: sqlite3_column_text(queryStatement, 1))
+                let barcode = String(cString: sqlite3_column_text(queryStatement, 2))
+                let statusString = String(cString: sqlite3_column_text(queryStatement, 3))
+                let commentsString = String(cString: sqlite3_column_text(queryStatement, 4))
+                let dateString = String(cString: sqlite3_column_text(queryStatement, 5))
+                let userString = String(cString: sqlite3_column_text(queryStatement, 6))
+
+                let record = HistoryRecord(
+                    id: Int(id),
+                    name: nameString.components(separatedBy: ";"),
+                    barcode: barcode,
+                    status: statusString.components(separatedBy: ";"),
+                    comments: commentsString.components(separatedBy: ";"),
+                    dates: dateString.components(separatedBy: ";"),
+                    users: userString.components(separatedBy: ";")
+                )
+                historyRecords.append(record)
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+
+        return historyRecords
+    }
+}
+
 
 
 

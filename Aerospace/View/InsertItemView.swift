@@ -143,7 +143,7 @@ struct InsertItemView: View {
                     .tint(.accentColor)
             }
             
-            Section(header: labelWithIcon("Quantity", image: "shippingbox.fill")) {
+            Section(header: labelWithIcon("Quantity", image: "shippingbox.fill"), footer: Text("A duplicate SKU will only be saved once automatically.").foregroundStyle(Color.purple)) {
                 Slider(value: $quantity, in: 1...10, step: 1, onEditingChanged: quantityChanged)
                 Text("\(Int(quantity))")
                     .fontWeight(.bold)
@@ -151,14 +151,21 @@ struct InsertItemView: View {
             }
             
             Section(header: labelWithIcon("SKU (Stock Keeping Unit)", image: "qrcode.viewfinder")) {
-                ForEach(0..<Int(quantity), id: \.self) { index in
-                    TextField("SKU for item \(index + 1)", text: Binding(
-                        get: { self.skus.count > index ? self.skus[index] : "" },
-                        set: { self.skus[index] = $0 }
-                    ))
-                    .keyboardType(.numberPad)
-                }
-            }
+                            ForEach(0..<Int(quantity), id: \.self) { index in
+                                TextField("SKU for item \(index + 1)", text: Binding(
+                                    get: { self.skus.count > index ? self.skus[index] : "" },
+                                    set: { newValue in
+                                        // Safely update the SKUs array
+                                        if self.skus.count > index {
+                                            self.skus[index] = newValue
+                                        } else {
+                                            self.skus.append(newValue)
+                                        }
+                                    }
+                                ))
+                                .keyboardType(.numberPad)
+                            }
+                        }
             
             
             Section(header: labelWithIcon("File", image: "photo.on.rectangle.angled")) {
@@ -328,13 +335,17 @@ struct InsertItemView: View {
             return false
         }
         
-        // Validate SKUs
-        if skus.contains(where: { $0.isEmpty }) || skus.count < Int(quantity) {
-            errorMessage = "Please provide SKUs for all items."
+        // Adjust the SKUs array to match the quantity
+        adjustSKUsArray()
+        
+        // Check for duplicate SKUs
+        let uniqueSKUs = Set(skus)
+        if uniqueSKUs.count < skus.count {
+            errorMessage = "Duplicate SKUs detected. Each SKU must be unique."
             showErrorSheet = true
             return false
         }
-        
+
         // Check if barcode or SKUs already exist in the database
         let dbManager = DatabaseManager()
         if dbManager.barcodeExists(barcode) {
@@ -342,7 +353,7 @@ struct InsertItemView: View {
             showErrorSheet = true
             return false
         }
-        
+
         for sku in skus {
             if dbManager.skuExists(sku) {
                 errorMessage = "SKU \(sku) is already in the system."
@@ -350,8 +361,15 @@ struct InsertItemView: View {
                 return false
             }
         }
-        
+
         return true
+    }
+
+    private func adjustSKUsArray() {
+        skus = Array(skus.prefix(Int(quantity)))
+        while skus.count < Int(quantity) {
+            skus.append("")
+        }
     }
     
     private func resetFormFields() {
@@ -400,13 +418,7 @@ struct InsertItemView: View {
         }
     }
     
-    
-    private func adjustSKUsArray() {
-        skus = Array(skus.prefix(Int(quantity)))
-        while skus.count < Int(quantity) {
-            skus.append("")
-        }
-    }
+
     
     private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()

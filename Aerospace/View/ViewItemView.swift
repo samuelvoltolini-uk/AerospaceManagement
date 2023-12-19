@@ -64,7 +64,7 @@ struct ViewItemView: View {
                                     .font(.subheadline)
                                     .foregroundStyle(Color.gray)
                                 
-                                    .padding(.trailing, 10)
+                                    .padding(.trailing, 15)
                                 
                                 Image(systemName: item.isFavorite ? "star.square.fill" : "")
                                     .renderingMode(.original)
@@ -77,7 +77,7 @@ struct ViewItemView: View {
                                     .font(.subheadline)
                                     .foregroundStyle(Color.gray)
                                 
-                                    .padding(.trailing, 10)
+                                    .padding(.trailing, 15)
                                 
                                 Image(systemName: item.isPriority ? "arrow.clockwise.square.fill" : "")
                                     .renderingMode(.original)
@@ -90,7 +90,7 @@ struct ViewItemView: View {
                                     .font(.subheadline)
                                     .foregroundStyle(Color.gray)
                                 
-                                    .padding(.trailing, 10)
+                                    .padding(.trailing, 15)
 
                             }
                             .padding(.top, 5)

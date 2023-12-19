@@ -246,7 +246,7 @@ struct WelcomeView: View {
                         
                         
                         
-                        NavigationLink(destination: Text("Delete Customer")) {
+                        NavigationLink(destination: CountryDeleteView()) {
                             HStack {
                                 Image(systemName: "minus.square.fill")
                                     .renderingMode(.original)
@@ -290,7 +290,7 @@ struct WelcomeView: View {
                     }
                     
                     Section(header: Text("History"), footer: Text("View the history and log of all item transactions and modifications.")) {
-                        NavigationLink(destination: Text("History View")) {
+                        NavigationLink(destination: HistoryView()) {
                             HStack {
                                 Image(systemName: "calendar.badge.checkmark")
                                     .renderingMode(.original)
