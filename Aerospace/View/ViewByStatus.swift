@@ -2,40 +2,40 @@ import SwiftUI
 
 struct ViewByStatus: View {
     
-    @State private var allItems: [ItemByManufacturer] = [] // All items fetched from the database
-    @State private var filteredItems: [ItemByManufacturer] = [] // Items filtered by the selected tag
+    @State private var allItems: [ItemByStatus] = [] // All items fetched from the database
+    @State private var filteredItems: [ItemByStatus] = [] // Items filtered by the selected tag
     @State private var searchText = ""
     
-    @State private var selectedManufacturer: String?
+    @State private var selectedStatus: String?
 
-    @State private var manufacturers: [ManufacturerPicker] = []
+    @State private var statuses: [StatusPicker] = []
 
     let databaseManager = DatabaseManager() // Your database manager instance
 
     var body: some View {
             VStack {
                 HStack {
-                    Image(systemName: "lightswitch.on.square.fill")
+                    Image(systemName: "flag.square.fill")
                         .renderingMode(.original)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 25, height: 25)
-                        .foregroundStyle(Color.purple)
+                        .foregroundStyle(Color.orange)
                     
-                    Text("Select Manufacturer")
+                    Text("Select Status")
                     
                     Spacer()
                     
-                    Picker("Select Manufacturer", selection: $selectedManufacturer) {
+                    Picker("Select Status", selection: $selectedStatus) {
                         Text("All").tag(String?.none)
-                        ForEach(manufacturers, id: \.id) { tag in
+                        ForEach(statuses, id: \.id) { tag in
                             Text(tag.name).tag(tag.name as String?)
                         }
                     }
                 }
                 .padding(.horizontal, 20)
                 .pickerStyle(MenuPickerStyle())
-                .onChange(of: selectedManufacturer) { oldValue, newValue in
+                .onChange(of: selectedStatus) { oldValue, newValue in
                     filterItemsBySelectedManufacturer()
                 }
 
@@ -66,23 +66,23 @@ struct ViewByStatus: View {
     }
 
     private func fetchAllItems() {
-        allItems = databaseManager.fetchItemsByManufacturer()
+        allItems = databaseManager.fetchItemsByStatus()
         filteredItems = allItems
     }
 
     private func loadPickerData() {
-        manufacturers = databaseManager.fetchManufacturersPicker()
+        statuses = databaseManager.fetchStatusesPicker()
     }
 
     private func filterItemsBySelectedManufacturer() {
-        if let selectedTag = selectedManufacturer, !selectedTag.isEmpty, selectedTag != "All" {
-            filteredItems = allItems.filter { $0.manufacturer.contains(selectedTag) }
+        if let selectedTag = selectedStatus, !selectedTag.isEmpty, selectedTag != "All" {
+            filteredItems = allItems.filter { $0.status.contains(selectedTag) }
         } else {
             filteredItems = allItems
         }
     }
 
-    private var displayItems: [ItemByManufacturer] {
+    private var displayItems: [ItemByStatus] {
         if searchText.isEmpty {
             return filteredItems
         } else {
@@ -92,7 +92,7 @@ struct ViewByStatus: View {
 
     private var emptyView: some View {
         VStack {
-            Image("NothingHere3") // Placeholder image for empty state
+            Image("NothingHere4") // Placeholder image for empty state
                 .resizable()
                 .scaledToFit()
                 .frame(width: 300, height: 300)

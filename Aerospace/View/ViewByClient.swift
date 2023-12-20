@@ -1,41 +1,41 @@
 import SwiftUI
 
-struct ViewByManufacturer: View {
+struct ViewByClient: View {
     
-    @State private var allItems: [ItemByManufacturer] = [] // All items fetched from the database
-    @State private var filteredItems: [ItemByManufacturer] = [] // Items filtered by the selected tag
+    @State private var allItems: [ItemByClient] = [] // All items fetched from the database
+    @State private var filteredItems: [ItemByClient] = [] // Items filtered by the selected tag
     @State private var searchText = ""
     
-    @State private var selectedManufacturer: String?
+    @State private var selectedClient: String?
 
-    @State private var manufacturers: [ManufacturerPicker] = []
+    @State private var clients: [ClientPicker] = []
 
     let databaseManager = DatabaseManager() // Your database manager instance
 
     var body: some View {
             VStack {
                 HStack {
-                    Image(systemName: "lightswitch.on.square.fill")
+                    Image(systemName: "square.grid.2x2.fill")
                         .renderingMode(.original)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 25, height: 25)
-                        .foregroundStyle(Color.indigo)
+                        .foregroundStyle(Color.orange)
                     
-                    Text("Select Manufacturer")
+                    Text("Select Client")
                     
                     Spacer()
                     
-                    Picker("Select Manufacturer", selection: $selectedManufacturer) {
+                    Picker("Select Client", selection: $selectedClient) {
                         Text("All").tag(String?.none)
-                        ForEach(manufacturers, id: \.id) { tag in
+                        ForEach(clients, id: \.id) { tag in
                             Text(tag.name).tag(tag.name as String?)
                         }
                     }
                 }
                 .padding(.horizontal, 20)
                 .pickerStyle(MenuPickerStyle())
-                .onChange(of: selectedManufacturer) { oldValue, newValue in
+                .onChange(of: selectedClient) { oldValue, newValue in
                     filterItemsBySelectedManufacturer()
                 }
 
@@ -66,23 +66,23 @@ struct ViewByManufacturer: View {
     }
 
     private func fetchAllItems() {
-        allItems = databaseManager.fetchItemsByManufacturer()
+        allItems = databaseManager.fetchItemsByClient()
         filteredItems = allItems
     }
 
     private func loadPickerData() {
-        manufacturers = databaseManager.fetchManufacturersPicker()
+        clients = databaseManager.fetchClientsPicker()
     }
 
     private func filterItemsBySelectedManufacturer() {
-        if let selectedTag = selectedManufacturer, !selectedTag.isEmpty, selectedTag != "All" {
-            filteredItems = allItems.filter { $0.manufacturer.contains(selectedTag) }
+        if let selectedTag = selectedClient, !selectedTag.isEmpty, selectedTag != "All" {
+            filteredItems = allItems.filter { $0.client.contains(selectedTag) }
         } else {
             filteredItems = allItems
         }
     }
 
-    private var displayItems: [ItemByManufacturer] {
+    private var displayItems: [ItemByClient] {
         if searchText.isEmpty {
             return filteredItems
         } else {
@@ -92,7 +92,7 @@ struct ViewByManufacturer: View {
 
     private var emptyView: some View {
         VStack {
-            Image("NothingHere3") // Placeholder image for empty state
+            Image("NothingHere5") // Placeholder image for empty state
                 .resizable()
                 .scaledToFit()
                 .frame(width: 300, height: 300)
@@ -116,8 +116,6 @@ struct ViewByManufacturer: View {
     }
 }
 
-
-
 #Preview {
-    ViewByManufacturer()
+    ViewByClient()
 }

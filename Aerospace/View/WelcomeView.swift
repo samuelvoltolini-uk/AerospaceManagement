@@ -130,7 +130,7 @@ struct WelcomeView: View {
                         }
 
                         
-                        NavigationLink(destination: Text("View by Origin")) {
+                        NavigationLink(destination: ViewByOrigin()) {
                             HStack {
                                 Image(systemName: "mappin.square.fill")
                                     .renderingMode(.original)
@@ -144,7 +144,7 @@ struct WelcomeView: View {
                         }
 
                         
-                        NavigationLink(destination: Text("View by Client")) {
+                        NavigationLink(destination: ViewByClient()) {
                             HStack {
                                 Image(systemName: "square.grid.2x2.fill")
                                     .renderingMode(.original)

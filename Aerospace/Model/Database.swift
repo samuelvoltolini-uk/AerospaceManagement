@@ -273,6 +273,83 @@ struct ItemByManufacturer: Identifiable {
 }
 
 
+struct ItemByStatus: Identifiable {
+    var id: Int
+    var name: String
+    var barcode: String
+    var quantity: Double
+    var status: String
+
+    // Initialize the struct with values
+    init(id: Int, name: String, barcode: String, quantity: Double, status: String) {
+        self.id = id
+        self.name = name
+        self.barcode = barcode
+        self.quantity = quantity
+        self.status = status
+    }
+}
+
+struct ItemByOrigin: Identifiable {
+    var id: Int
+    var name: String
+    var barcode: String
+    var quantity: Double
+    var origin: String
+
+    // Initialize the struct with values
+    init(id: Int, name: String, barcode: String, quantity: Double, origin: String) {
+        self.id = id
+        self.name = name
+        self.barcode = barcode
+        self.quantity = quantity
+        self.origin = origin
+    }
+}
+
+struct ItemByClient: Identifiable {
+    var id: Int
+    var name: String
+    var barcode: String
+    var quantity: Double
+    var client: String
+
+    // Initialize the struct with values
+    init(id: Int, name: String, barcode: String, quantity: Double, client: String) {
+        self.id = id
+        self.name = name
+        self.barcode = barcode
+        self.quantity = quantity
+        self.client = client
+    }
+}
+
+struct ItemScan {
+    var id: Int
+    var name: String
+    var barcode: String
+    var sku: String
+    var description: String
+    var manufacturer: String
+    var status: String
+    var origin: String
+    var client: String
+    var material: String
+    var repairCompanyOne: String
+    var repairCompanyTwo: String
+    var historyNumber: Int
+    var comments: String
+    var tagName: String
+    var isFavorite: Bool
+    var isPriority: Bool
+    var quantity: Double
+    var receiveDate: String
+    var expectedDate: String
+    var createdBy: String
+    var creationDate: String
+}
+
+
 class DatabaseManager {
     var db: OpaquePointer?
     
@@ -1878,9 +1955,139 @@ extension DatabaseManager {
     }
 }
 
+extension DatabaseManager {
+    func fetchItemsByStatus() -> [ItemByStatus] {
+        var items: [ItemByStatus] = []
+        let queryStatementString = "SELECT * FROM Items;"
+
+        var queryStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = sqlite3_column_int(queryStatement, 0)
+                let name = String(cString: sqlite3_column_text(queryStatement, 1))
+                let barcode = String(cString: sqlite3_column_text(queryStatement, 2))
+                let quantity = sqlite3_column_double(queryStatement, 17)
+                let status = String(cString: sqlite3_column_text(queryStatement, 6))
+                
+                let item = ItemByStatus(id: Int(id), name: name, barcode: barcode, quantity: quantity, status: status)
+                items.append(item)
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+        
+        return items
+    }
+}
+
+extension DatabaseManager {
+    func fetchItemsByOrigin() -> [ItemByOrigin] {
+        var items: [ItemByOrigin] = []
+        let queryStatementString = "SELECT * FROM Items;"
+
+        var queryStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = sqlite3_column_int(queryStatement, 0)
+                let name = String(cString: sqlite3_column_text(queryStatement, 1))
+                let barcode = String(cString: sqlite3_column_text(queryStatement, 2))
+                let quantity = sqlite3_column_double(queryStatement, 17)
+                let origin = String(cString: sqlite3_column_text(queryStatement, 7))
+                
+                let item = ItemByOrigin(id: Int(id), name: name, barcode: barcode, quantity: quantity, origin: origin)
+                items.append(item)
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+        
+        return items
+    }
+}
 
 
+extension DatabaseManager {
+    func fetchItemsByClient() -> [ItemByClient] {
+        var items: [ItemByClient] = []
+        let queryStatementString = "SELECT * FROM Items;"
 
+        var queryStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = sqlite3_column_int(queryStatement, 0)
+                let name = String(cString: sqlite3_column_text(queryStatement, 1))
+                let barcode = String(cString: sqlite3_column_text(queryStatement, 2))
+                let quantity = sqlite3_column_double(queryStatement, 17)
+                let client = String(cString: sqlite3_column_text(queryStatement, 8))
+                
+                let item = ItemByClient(id: Int(id), name: name, barcode: barcode, quantity: quantity, client: client)
+                items.append(item)
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+        
+        return items
+    }
+}
+
+extension DatabaseManager {
+    func fetchItemByBarcode(barcode: String) -> ItemScan? {
+        var item: ItemScan?
+        let queryStatementString = "SELECT * FROM Items WHERE barcode = ?;"
+
+        var queryStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(queryStatement, 1, (barcode as NSString).utf8String, -1, nil)
+
+            if sqlite3_step(queryStatement) == SQLITE_ROW {
+                // Assuming that all the columns are correctly indexed and the data types are as expected.
+                let id = Int(sqlite3_column_int(queryStatement, 0))
+                let name = String(cString: sqlite3_column_text(queryStatement, 1))
+                let barcode = String(cString: sqlite3_column_text(queryStatement, 2))
+                let sku = String(cString: sqlite3_column_text(queryStatement, 3))
+                let description = String(cString: sqlite3_column_text(queryStatement, 4))
+                let manufacturer = String(cString: sqlite3_column_text(queryStatement, 5))
+                let status = String(cString: sqlite3_column_text(queryStatement, 6))
+                let origin = String(cString: sqlite3_column_text(queryStatement, 7))
+                let client = String(cString: sqlite3_column_text(queryStatement, 8))
+                let material = String(cString: sqlite3_column_text(queryStatement, 9))
+                let repairCompanyOne = String(cString: sqlite3_column_text(queryStatement, 10))
+                let repairCompanyTwo = String(cString: sqlite3_column_text(queryStatement, 11))
+                let historyNumber = Int(sqlite3_column_int(queryStatement, 12))
+                let comments = String(cString: sqlite3_column_text(queryStatement, 13))
+                let tagName = String(cString: sqlite3_column_text(queryStatement, 14))
+                let isFavorite = sqlite3_column_int(queryStatement, 15) != 0
+                let isPriority = sqlite3_column_int(queryStatement, 16) != 0
+                let quantity = Double(sqlite3_column_double(queryStatement, 17))
+                let receiveDate = String(cString: sqlite3_column_text(queryStatement, 18))
+                let expectedDate = String(cString: sqlite3_column_text(queryStatement, 19))
+                let createdBy = String(cString: sqlite3_column_text(queryStatement, 21))
+                let creationDate = String(cString: sqlite3_column_text(queryStatement, 22))
+
+                item = ItemScan(id: id, name: name, barcode: barcode, sku: sku, description: description,
+                            manufacturer: manufacturer, status: status, origin: origin, client: client,
+                            material: material, repairCompanyOne: repairCompanyOne, repairCompanyTwo: repairCompanyTwo,
+                            historyNumber: historyNumber, comments: comments, tagName: tagName,
+                            isFavorite: isFavorite, isPriority: isPriority, quantity: quantity,
+                            receiveDate: receiveDate, expectedDate: expectedDate, createdBy: createdBy,
+                            creationDate: creationDate)
+                
+            } else {
+                print("No item found with barcode: \(barcode)")
+            }
+        } else {
+            let errmsg = String(cString: sqlite3_errmsg(db))
+            print("SELECT statement could not be prepared: \(errmsg)")
+        }
+
+        sqlite3_finalize(queryStatement)
+        return item
+    }
+}
 
 
 
