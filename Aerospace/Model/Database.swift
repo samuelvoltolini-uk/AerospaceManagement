@@ -238,6 +238,23 @@ struct HistoryRecord: Identifiable {
     var users: [String]
 }
 
+struct ItemByTags: Identifiable {
+    var id: Int
+    var name: String
+    var barcode: String
+    var quantity: Double
+    var tagName: String
+
+    // Initialize the struct with values
+    init(id: Int, name: String, barcode: String, quantity: Double, tagName: String) {
+        self.id = id
+        self.name = name
+        self.barcode = barcode
+        self.quantity = quantity
+        self.tagName = tagName
+    }
+}
+
 
 class DatabaseManager {
     var db: OpaquePointer?
@@ -1789,6 +1806,32 @@ extension DatabaseManager {
         sqlite3_finalize(queryStatement)
 
         return historyRecords
+    }
+}
+
+extension DatabaseManager {
+    func fetchItemsByTags() -> [ItemByTags] {
+        var items: [ItemByTags] = []
+        let queryStatementString = "SELECT * FROM Items;"
+
+        var queryStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = sqlite3_column_int(queryStatement, 0)
+                let name = String(cString: sqlite3_column_text(queryStatement, 1))
+                let barcode = String(cString: sqlite3_column_text(queryStatement, 2))
+                let quantity = sqlite3_column_double(queryStatement, 3)
+                let tagName = String(cString: sqlite3_column_text(queryStatement, 4))
+                
+                let item = ItemByTags(id: Int(id), name: name, barcode: barcode, quantity: quantity, tagName: tagName)
+                items.append(item)
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+        
+        return items
     }
 }
 

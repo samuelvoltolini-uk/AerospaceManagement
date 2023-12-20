@@ -77,14 +77,86 @@ struct WelcomeView: View {
                         NavigationLink(destination: PriorityView()) {
                             HStack {
                                 Image(systemName: "exclamationmark.square.fill")
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 25, height: 25)
-                                    .foregroundStyle(Color.green)
+                                    //.foregroundStyle(Color.green)
                                 
                                 Text("Priority View")
                             }
                         }
+                    }
+                    
+                    Section(header: Text("View By"), footer: Text("Access to view items by diferente metrics")) {
+                        
+                        NavigationLink(destination: Text("View by Tags")) {
+                            HStack {
+                                Image(systemName: "tag.square.fill")
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.pink)
+                                
+                                Text("View by Tags")
+                            }
+                        }
+                        
+                        NavigationLink(destination: Text("View by Manufacturer")) {
+                            HStack {
+                                Image(systemName: "lightswitch.on.square.fill")
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.indigo)
+                                
+                                Text("View by Manufacturer")
+                            }
+                        }
+                        
+                        NavigationLink(destination: Text("View by Status")) {
+                            HStack {
+                                Image(systemName: "flag.square.fill")
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.accentColor)
+                                
+                                Text("View by Status")
+                            }
+                        }
+
+                        
+                        NavigationLink(destination: Text("View by Origin")) {
+                            HStack {
+                                Image(systemName: "mappin.square.fill")
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.accentColor)
+                                
+                                Text("View by Origin")
+                            }
+                        }
+
+                        
+                        NavigationLink(destination: Text("View by Client")) {
+                            HStack {
+                                Image(systemName: "square.grid.2x2.fill")
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.accentColor)
+                                
+                                Text("View by Client")
+                            }
+                        }
+
                     }
                     
                     Section(header: Text("Delete Full Item Inventory"), footer: Text("Deleting an item will remove it entirely, including all quantities. Item history will not be deleted.").foregroundStyle(Color.purple)) {
@@ -109,7 +181,7 @@ struct WelcomeView: View {
                         NavigationLink(destination: AddSKU()) {
                             HStack {
                                 Image(systemName: "plus.app.fill")
-                                    //.renderingMode(.original)
+                                    .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 25, height: 25)

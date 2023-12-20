@@ -16,6 +16,7 @@
 		D01AB68E2B3242D0003C2A2A /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01AB68D2B3242D0003C2A2A /* HistoryView.swift */; };
 		D01AB6902B325955003C2A2A /* ScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01AB68F2B325955003C2A2A /* ScanView.swift */; };
 		D01AB6922B325A76003C2A2A /* QRScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01AB6912B325A76003C2A2A /* QRScannerView.swift */; };
+		D01AB6942B3269D0003C2A2A /* ViewByTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01AB6932B3269D0003C2A2A /* ViewByTags.swift */; };
 		D04207A12B2B70F000DEE395 /* CountryDeleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04207A02B2B70F000DEE395 /* CountryDeleteView.swift */; };
 		D04207A32B2B772300DEE395 /* InsertClientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04207A22B2B772300DEE395 /* InsertClientView.swift */; };
 		D04207A52B2BD9DE00DEE395 /* ClientDeleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04207A42B2BD9DE00DEE395 /* ClientDeleteView.swift */; };
@@ -57,6 +58,7 @@
 		D01AB68D2B3242D0003C2A2A /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		D01AB68F2B325955003C2A2A /* ScanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanView.swift; sourceTree = "<group>"; };
 		D01AB6912B325A76003C2A2A /* QRScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerView.swift; sourceTree = "<group>"; };
+		D01AB6932B3269D0003C2A2A /* ViewByTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewByTags.swift; sourceTree = "<group>"; };
 		D04207A02B2B70F000DEE395 /* CountryDeleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryDeleteView.swift; sourceTree = "<group>"; };
 		D04207A22B2B772300DEE395 /* InsertClientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsertClientView.swift; sourceTree = "<group>"; };
 		D04207A42B2BD9DE00DEE395 /* ClientDeleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientDeleteView.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				D01AB68B2B321D32003C2A2A /* DeleteSKU.swift */,
 				D01AB68D2B3242D0003C2A2A /* HistoryView.swift */,
 				D01AB68F2B325955003C2A2A /* ScanView.swift */,
+				D01AB6932B3269D0003C2A2A /* ViewByTags.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -286,6 +289,7 @@
 				D0420CD42B2B1DC1007710E6 /* InsertCountryView.swift in Sources */,
 				D0560A4C2B2893B400F93E84 /* LoginView.swift in Sources */,
 				D04207A72B2C742800DEE395 /* InsertItemView.swift in Sources */,
+				D01AB6942B3269D0003C2A2A /* ViewByTags.swift in Sources */,
 				D0A1F3D12B2F8B35003B316E /* EditItemView.swift in Sources */,
 				D0A1F3D52B2F9EC2003B316E /* EditItemViewDetails.swift in Sources */,
 				D0560A612B29F10500F93E84 /* InsertManufacturerView.swift in Sources */,

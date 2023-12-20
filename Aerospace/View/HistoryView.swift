@@ -2,6 +2,7 @@ import SwiftUI
 
 struct HistoryView: View {
     @State private var historyRecords: [HistoryRecord] = []
+    @State private var searchText = ""
     @State private var selectedRecord: HistoryRecord?
 
     let databaseManager = DatabaseManager()
@@ -9,10 +10,10 @@ struct HistoryView: View {
     var body: some View {
 
             VStack {
-                if historyRecords.isEmpty {
+                if filteredRecords.isEmpty {
                     emptyView
                 } else {
-                    List(historyRecords, id: \.id) { record in
+                    List(filteredRecords, id: \.id) { record in
                         Button(action: {
                             self.selectedRecord = record
                         }) {
@@ -25,6 +26,7 @@ struct HistoryView: View {
                     .navigationBarTitle("History", displayMode: .inline)
                 }
             }
+            .searchable(text: $searchText, prompt: "Search by Barcode")
             .sheet(item: $selectedRecord) { record in
                 HistoryDetailsView(record: record)
             }
@@ -33,6 +35,15 @@ struct HistoryView: View {
             }
     }
 
+    private var filteredRecords: [HistoryRecord] {
+        if searchText.isEmpty {
+            return historyRecords
+        } else {
+            return historyRecords.filter { record in
+                record.name.contains(searchText) || record.barcode.contains(searchText.uppercased())
+            }
+        }
+    }
 
     private var emptyView: some View {
         VStack {
@@ -55,7 +66,7 @@ struct HistoryView: View {
                 .foregroundStyle(Color.accentColor)
             Text(text)
                 .font(.footnote)
-                .foregroundStyle(Color.black)
+                .foregroundStyle(Color.accentColor)
         }
     }
 
