@@ -255,6 +255,23 @@ struct ItemByTags: Identifiable {
     }
 }
 
+struct ItemByManufacturer: Identifiable {
+    var id: Int
+    var name: String
+    var barcode: String
+    var quantity: Double
+    var manufacturer: String
+
+    // Initialize the struct with values
+    init(id: Int, name: String, barcode: String, quantity: Double, manufacturer: String) {
+        self.id = id
+        self.name = name
+        self.barcode = barcode
+        self.quantity = quantity
+        self.manufacturer = manufacturer
+    }
+}
+
 
 class DatabaseManager {
     var db: OpaquePointer?
@@ -1820,10 +1837,36 @@ extension DatabaseManager {
                 let id = sqlite3_column_int(queryStatement, 0)
                 let name = String(cString: sqlite3_column_text(queryStatement, 1))
                 let barcode = String(cString: sqlite3_column_text(queryStatement, 2))
-                let quantity = sqlite3_column_double(queryStatement, 3)
-                let tagName = String(cString: sqlite3_column_text(queryStatement, 4))
+                let quantity = sqlite3_column_double(queryStatement, 17)
+                let tagName = String(cString: sqlite3_column_text(queryStatement, 14))
                 
                 let item = ItemByTags(id: Int(id), name: name, barcode: barcode, quantity: quantity, tagName: tagName)
+                items.append(item)
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+        
+        return items
+    }
+}
+
+extension DatabaseManager {
+    func fetchItemsByManufacturer() -> [ItemByManufacturer] {
+        var items: [ItemByManufacturer] = []
+        let queryStatementString = "SELECT * FROM Items;"
+
+        var queryStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = sqlite3_column_int(queryStatement, 0)
+                let name = String(cString: sqlite3_column_text(queryStatement, 1))
+                let barcode = String(cString: sqlite3_column_text(queryStatement, 2))
+                let quantity = sqlite3_column_double(queryStatement, 17)
+                let manufacturer = String(cString: sqlite3_column_text(queryStatement, 5))
+                
+                let item = ItemByManufacturer(id: Int(id), name: name, barcode: barcode, quantity: quantity, manufacturer: manufacturer)
                 items.append(item)
             }
         } else {

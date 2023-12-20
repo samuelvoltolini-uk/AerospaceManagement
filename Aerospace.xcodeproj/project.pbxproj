@@ -17,6 +17,8 @@
 		D01AB6902B325955003C2A2A /* ScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01AB68F2B325955003C2A2A /* ScanView.swift */; };
 		D01AB6922B325A76003C2A2A /* QRScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01AB6912B325A76003C2A2A /* QRScannerView.swift */; };
 		D01AB6942B3269D0003C2A2A /* ViewByTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01AB6932B3269D0003C2A2A /* ViewByTags.swift */; };
+		D03D27C42B3308B8004364F8 /* ViewByManufacturer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03D27C32B3308B8004364F8 /* ViewByManufacturer.swift */; };
+		D03D27C62B3314D8004364F8 /* ViewByStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03D27C52B3314D8004364F8 /* ViewByStatus.swift */; };
 		D04207A12B2B70F000DEE395 /* CountryDeleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04207A02B2B70F000DEE395 /* CountryDeleteView.swift */; };
 		D04207A32B2B772300DEE395 /* InsertClientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04207A22B2B772300DEE395 /* InsertClientView.swift */; };
 		D04207A52B2BD9DE00DEE395 /* ClientDeleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04207A42B2BD9DE00DEE395 /* ClientDeleteView.swift */; };
@@ -59,6 +61,8 @@
 		D01AB68F2B325955003C2A2A /* ScanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanView.swift; sourceTree = "<group>"; };
 		D01AB6912B325A76003C2A2A /* QRScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerView.swift; sourceTree = "<group>"; };
 		D01AB6932B3269D0003C2A2A /* ViewByTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewByTags.swift; sourceTree = "<group>"; };
+		D03D27C32B3308B8004364F8 /* ViewByManufacturer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewByManufacturer.swift; sourceTree = "<group>"; };
+		D03D27C52B3314D8004364F8 /* ViewByStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewByStatus.swift; sourceTree = "<group>"; };
 		D04207A02B2B70F000DEE395 /* CountryDeleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryDeleteView.swift; sourceTree = "<group>"; };
 		D04207A22B2B772300DEE395 /* InsertClientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsertClientView.swift; sourceTree = "<group>"; };
 		D04207A42B2BD9DE00DEE395 /* ClientDeleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientDeleteView.swift; sourceTree = "<group>"; };
@@ -134,6 +138,8 @@
 				D01AB68D2B3242D0003C2A2A /* HistoryView.swift */,
 				D01AB68F2B325955003C2A2A /* ScanView.swift */,
 				D01AB6932B3269D0003C2A2A /* ViewByTags.swift */,
+				D03D27C32B3308B8004364F8 /* ViewByManufacturer.swift */,
+				D03D27C52B3314D8004364F8 /* ViewByStatus.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -283,8 +289,10 @@
 				D0F78CD42B2DF96700DCF50C /* ItemDetailView.swift in Sources */,
 				D01AB68E2B3242D0003C2A2A /* HistoryView.swift in Sources */,
 				D0F78CD62B2E1AA700DCF50C /* USDZFileView.swift in Sources */,
+				D03D27C42B3308B8004364F8 /* ViewByManufacturer.swift in Sources */,
 				D0560A632B2A28BB00F93E84 /* ManufacturerDeleteView.swift in Sources */,
 				D0560A592B28FB9700F93E84 /* InsertTagsView.swift in Sources */,
+				D03D27C62B3314D8004364F8 /* ViewByStatus.swift in Sources */,
 				D0560A4A2B288A3400F93E84 /* Database.swift in Sources */,
 				D0420CD42B2B1DC1007710E6 /* InsertCountryView.swift in Sources */,
 				D0560A4C2B2893B400F93E84 /* LoginView.swift in Sources */,

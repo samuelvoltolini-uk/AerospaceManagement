@@ -1,40 +1,42 @@
 import SwiftUI
 
-struct ViewByTags: View {
-    @State private var allItems: [ItemByTags] = [] // All items fetched from the database
-    @State private var filteredItems: [ItemByTags] = [] // Items filtered by the selected tag
+struct ViewByManufacturer: View {
+    
+    @State private var allItems: [ItemByManufacturer] = [] // All items fetched from the database
+    @State private var filteredItems: [ItemByManufacturer] = [] // Items filtered by the selected tag
     @State private var searchText = ""
-    @State private var selectedTag: String?
+    
+    @State private var selectedManufacturer: String?
 
-    @State private var tags: [TagPicker] = [] // Array of TagPicker objects
+    @State private var manufacturers: [ManufacturerPicker] = []
 
     let databaseManager = DatabaseManager() // Your database manager instance
 
     var body: some View {
             VStack {
                 HStack {
-                    Image(systemName: "tag.square.fill")
+                    Image(systemName: "lightswitch.on.square.fill")
                         .renderingMode(.original)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 25, height: 25)
-                        .foregroundStyle(Color.pink)
+                        .foregroundStyle(Color.purple)
                     
-                    Text("Select Tag")
+                    Text("Select Manufacturer")
                     
                     Spacer()
                     
-                    Picker("Select Tag", selection: $selectedTag) {
+                    Picker("Select Manufacturer", selection: $selectedManufacturer) {
                         Text("All").tag(String?.none)
-                        ForEach(tags, id: \.id) { tag in
+                        ForEach(manufacturers, id: \.id) { tag in
                             Text(tag.name).tag(tag.name as String?)
                         }
                     }
                 }
                 .padding(.horizontal, 20)
                 .pickerStyle(MenuPickerStyle())
-                .onChange(of: selectedTag) { oldValue, newValue in
-                    filterItemsBySelectedTag()
+                .onChange(of: selectedManufacturer) { oldValue, newValue in
+                    filterItemsBySelectedManufacturer()
                 }
 
                 Divider().padding(.horizontal, 20)
@@ -64,23 +66,23 @@ struct ViewByTags: View {
     }
 
     private func fetchAllItems() {
-        allItems = databaseManager.fetchItemsByTags()
+        allItems = databaseManager.fetchItemsByManufacturer()
         filteredItems = allItems
     }
 
     private func loadPickerData() {
-        tags = databaseManager.fetchTagPicker()
+        manufacturers = databaseManager.fetchManufacturersPicker()
     }
 
-    private func filterItemsBySelectedTag() {
-        if let selectedTag = selectedTag, !selectedTag.isEmpty, selectedTag != "All" {
-            filteredItems = allItems.filter { $0.tagName.contains(selectedTag) }
+    private func filterItemsBySelectedManufacturer() {
+        if let selectedTag = selectedManufacturer, !selectedTag.isEmpty, selectedTag != "All" {
+            filteredItems = allItems.filter { $0.manufacturer.contains(selectedTag) }
         } else {
             filteredItems = allItems
         }
     }
 
-    private var displayItems: [ItemByTags] {
+    private var displayItems: [ItemByManufacturer] {
         if searchText.isEmpty {
             return filteredItems
         } else {
@@ -117,5 +119,5 @@ struct ViewByTags: View {
 
 
 #Preview {
-    ViewByTags()
+    ViewByManufacturer()
 }

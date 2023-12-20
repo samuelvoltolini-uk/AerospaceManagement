@@ -90,7 +90,7 @@ struct WelcomeView: View {
                     
                     Section(header: Text("View By"), footer: Text("Access to view items by diferente metrics")) {
                         
-                        NavigationLink(destination: Text("View by Tags")) {
+                        NavigationLink(destination: ViewByTags()) {
                             HStack {
                                 Image(systemName: "tag.square.fill")
                                     .renderingMode(.original)
@@ -103,7 +103,7 @@ struct WelcomeView: View {
                             }
                         }
                         
-                        NavigationLink(destination: Text("View by Manufacturer")) {
+                        NavigationLink(destination: ViewByManufacturer()) {
                             HStack {
                                 Image(systemName: "lightswitch.on.square.fill")
                                     .renderingMode(.original)
@@ -116,7 +116,7 @@ struct WelcomeView: View {
                             }
                         }
                         
-                        NavigationLink(destination: Text("View by Status")) {
+                        NavigationLink(destination: ViewByStatus()) {
                             HStack {
                                 Image(systemName: "flag.square.fill")
                                     .renderingMode(.original)
