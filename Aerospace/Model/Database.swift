@@ -2570,6 +2570,29 @@ extension DatabaseManager {
     }
 }
 
+extension DatabaseManager {
+    func deleteHistoryForBarcode(_ barcode: String) {
+        let deleteStatementString = "DELETE FROM History WHERE barcode = ?;"
+
+        var deleteStatement: OpaquePointer?
+        // Prepare the DELETE statement
+        if sqlite3_prepare_v2(db, deleteStatementString, -1, &deleteStatement, nil) == SQLITE_OK {
+            // Bind the barcode to the statement
+            sqlite3_bind_text(deleteStatement, 1, (barcode as NSString).utf8String, -1, nil)
+
+            // Execute the statement
+            if sqlite3_step(deleteStatement) == SQLITE_DONE {
+                print("Successfully deleted history records for barcode: \(barcode)")
+            } else {
+                print("Could not delete history records. Error: \(String(describing: sqlite3_errmsg(db)))")
+            }
+        } else {
+            print("DELETE statement could not be prepared. Error: \(String(describing: sqlite3_errmsg(db)))")
+        }
+        sqlite3_finalize(deleteStatement)
+    }
+}
+
 
 
 

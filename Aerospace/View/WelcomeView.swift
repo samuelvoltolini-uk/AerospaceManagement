@@ -159,7 +159,7 @@ struct WelcomeView: View {
 
                     }
                     
-                    Section(header: Text("Delete Full Item Inventory"), footer: Text("Deleting an item will remove it entirely, including all quantities. Item history will not be deleted.").foregroundStyle(Color.purple)) {
+                    Section(header: Text("Delete Full Item Inventory"), footer: Text("Deleting an item will remove it entirely, including all quantities.").foregroundStyle(Color.purple)) {
                         
                         NavigationLink(destination: DeleteItemView()) {
                             HStack {
@@ -171,6 +171,19 @@ struct WelcomeView: View {
                                     .foregroundStyle(Color.accentColor)
                                 
                                 Text("Delete Item")
+                            }
+                        }
+                        
+                        NavigationLink(destination: DeleteItemAndHistory()) {
+                            HStack {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.accentColor)
+                                
+                                Text("Delete Item & History")
                             }
                         }
                     }
