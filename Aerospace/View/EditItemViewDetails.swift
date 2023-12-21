@@ -131,15 +131,19 @@ struct EditItemViewDetails: View {
             
             Section(header: labelWithIcon("Material", image: "diamond.fill"), footer: Text("Current: " + item.material)) {
                 TextField("", text: $material)
+                    .textInputAutocapitalization(.words)
             }
             
             Section(header: labelWithIcon("Repair Company", image: "wrench.adjustable.fill"), footer: Text("Current: " + item.repairCompanyOne + " - " + item.repairCompanyTwo)) {
                 TextField("", text: $repairCompanyOne)
+                    .textInputAutocapitalization(.words)
                 TextField("", text: $repairCompanyTwo)
+                    .textInputAutocapitalization(.words)
             }
             
             Section(header: labelWithIcon("Comments", image: "bubble.left.and.text.bubble.right.fill"), footer: Text("Current: " + item.comments)) {
                 TextField("", text: $comments)
+                    .textInputAutocapitalization(.sentences)
             }
             
             

@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct HistoryView: View {
+    
     @State private var historyRecords: [HistoryRecord] = []
     @State private var searchText = ""
     @State private var selectedRecord: HistoryRecord?

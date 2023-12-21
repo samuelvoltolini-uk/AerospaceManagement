@@ -387,7 +387,7 @@ struct WelcomeView: View {
                                 Text("History View")
                             }
                         }
-                        NavigationLink(destination: Text("History View")) {
+                        NavigationLink(destination: HistoryUpdateView()) {
                             HStack {
                                 Image(systemName: "calendar.badge.plus")
                                     .renderingMode(.original)

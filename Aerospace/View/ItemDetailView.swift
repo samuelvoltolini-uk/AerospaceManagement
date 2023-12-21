@@ -9,6 +9,8 @@ struct ItemDetailView: View {
     
     @State private var showingARView = false
     
+    @State private var historyNumber: Int = 0
+    
     @State private var selectedRotationAxis: Axis = .y
     
     let databaseManager = DatabaseManager()
@@ -117,7 +119,7 @@ struct ItemDetailView: View {
                 detailRow(icon: "hammer.fill", title: "Material", value: item.material)
                 detailRow(icon: "wrench.fill", title: "Repair Company I", value: item.repairCompanyOne)
                 detailRow(icon: "wrench.and.screwdriver.fill", title: "Repair Company II", value: item.repairCompanyTwo)
-                detailRow(icon: "clock.arrow.2.circlepath", title: "History Number", value: String(item.historyNumber))
+                detailRow(icon: "clock.arrow.2.circlepath", title: "History Number", value: String(historyNumber))
                 detailRow(icon: "text.bubble.fill", title: "Comments", value: item.comments)
                 detailRow(icon: "tag.fill", title: "Tag Name", value: item.tagName)
             }
@@ -133,9 +135,14 @@ struct ItemDetailView: View {
                 detailRow(icon: "calendar", title: "Creation Date", value: item.creationDate)
             }
             .padding(3)
+            
         }
         .navigationBarTitle("Item Details", displayMode: .inline)
         .scrollIndicators(.hidden)
+        .onAppear {
+            let statusHistory = databaseManager.fetchStatusHistoryForItem(itemBarcode: item.barcode)
+            historyNumber = statusHistory.count
+        }
         
         
         

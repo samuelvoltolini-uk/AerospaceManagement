@@ -2593,6 +2593,71 @@ extension DatabaseManager {
     }
 }
 
+extension DatabaseManager {
+    func updateSpecificHistoryRecord(recordId: Int, newRecordData: HistoryRecord) {
+        let newStatus = newRecordData.status.joined(separator: ";")
+        let newComments = newRecordData.comments.joined(separator: ";")
+        let newUsers = newRecordData.users.joined(separator: ";")
+        let newDates = newRecordData.dates.joined(separator: ";")
+
+        let updateStatementString = """
+        UPDATE History SET status = ?, comments = ?, user = ?, date = ?
+        WHERE id = ?;
+        """
+
+        var updateStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, updateStatementString, -1, &updateStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(updateStatement, 1, (newStatus as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(updateStatement, 2, (newComments as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(updateStatement, 3, (newUsers as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(updateStatement, 4, (newDates as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(updateStatement, 5, Int32(recordId))
+
+            if sqlite3_step(updateStatement) == SQLITE_DONE {
+                print("Successfully updated history record.")
+            } else {
+                print("Could not update history record. Error: \(String(describing: sqlite3_errmsg(db)))")
+            }
+        } else {
+            print("UPDATE statement could not be prepared. Error: \(String(describing: sqlite3_errmsg(db)))")
+        }
+        sqlite3_finalize(updateStatement)
+    }
+}
+
+extension DatabaseManager {
+    func fetchSpecificHistoryRecord(recordId: Int) -> HistoryRecord {
+        let queryStatementString = "SELECT * FROM History WHERE id = \(recordId);"
+        var queryStatement: OpaquePointer?
+        var record: HistoryRecord?
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(queryStatement, 0))
+                let nameString = String(cString: sqlite3_column_text(queryStatement, 1))
+                let barcode = String(cString: sqlite3_column_text(queryStatement, 2))
+                let statusString = String(cString: sqlite3_column_text(queryStatement, 3))
+                let commentsString = String(cString: sqlite3_column_text(queryStatement, 4))
+                let usersString = String(cString: sqlite3_column_text(queryStatement, 5))
+                let datesString = String(cString: sqlite3_column_text(queryStatement, 6))
+
+                // Assuming data is separated by semicolons
+                let name = nameString.components(separatedBy: ";")
+                let status = statusString.components(separatedBy: ";")
+                let comments = commentsString.components(separatedBy: ";")
+                let users = usersString.components(separatedBy: ";")
+                let dates = datesString.components(separatedBy: ";")
+
+                record = HistoryRecord(id: id, name: name, barcode: barcode, status: status, comments: comments, dates: dates, users: users)
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+
+        sqlite3_finalize(queryStatement)
+        return record ?? HistoryRecord(id: -1, name: [], barcode: "", status: [], comments: [], dates: [], users: [])
+    }
+}
 
 
 
