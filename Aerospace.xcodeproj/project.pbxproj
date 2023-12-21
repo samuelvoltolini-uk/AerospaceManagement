@@ -21,6 +21,8 @@
 		D03D27C62B3314D8004364F8 /* ViewByStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03D27C52B3314D8004364F8 /* ViewByStatus.swift */; };
 		D03D27C82B33174F004364F8 /* ViewByOrigin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03D27C72B33174F004364F8 /* ViewByOrigin.swift */; };
 		D03D27CA2B331AE1004364F8 /* ViewByClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03D27C92B331AE1004364F8 /* ViewByClient.swift */; };
+		D03D27CC2B336CCF004364F8 /* OverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03D27CB2B336CCF004364F8 /* OverviewView.swift */; };
+		D03D27CE2B339493004364F8 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03D27CD2B339493004364F8 /* Color.swift */; };
 		D04207A12B2B70F000DEE395 /* CountryDeleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04207A02B2B70F000DEE395 /* CountryDeleteView.swift */; };
 		D04207A32B2B772300DEE395 /* InsertClientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04207A22B2B772300DEE395 /* InsertClientView.swift */; };
 		D04207A52B2BD9DE00DEE395 /* ClientDeleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04207A42B2BD9DE00DEE395 /* ClientDeleteView.swift */; };
@@ -67,6 +69,8 @@
 		D03D27C52B3314D8004364F8 /* ViewByStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewByStatus.swift; sourceTree = "<group>"; };
 		D03D27C72B33174F004364F8 /* ViewByOrigin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewByOrigin.swift; sourceTree = "<group>"; };
 		D03D27C92B331AE1004364F8 /* ViewByClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewByClient.swift; sourceTree = "<group>"; };
+		D03D27CB2B336CCF004364F8 /* OverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewView.swift; sourceTree = "<group>"; };
+		D03D27CD2B339493004364F8 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		D04207A02B2B70F000DEE395 /* CountryDeleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryDeleteView.swift; sourceTree = "<group>"; };
 		D04207A22B2B772300DEE395 /* InsertClientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsertClientView.swift; sourceTree = "<group>"; };
 		D04207A42B2BD9DE00DEE395 /* ClientDeleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientDeleteView.swift; sourceTree = "<group>"; };
@@ -146,6 +150,7 @@
 				D03D27C52B3314D8004364F8 /* ViewByStatus.swift */,
 				D03D27C72B33174F004364F8 /* ViewByOrigin.swift */,
 				D03D27C92B331AE1004364F8 /* ViewByClient.swift */,
+				D03D27CB2B336CCF004364F8 /* OverviewView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -157,6 +162,7 @@
 				D04207A82B2C9CA900DEE395 /* DocumentPicker.swift */,
 				D0F78CD52B2E1AA700DCF50C /* USDZFileView.swift */,
 				D01AB6912B325A76003C2A2A /* QRScannerView.swift */,
+				D03D27CD2B339493004364F8 /* Color.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -288,6 +294,7 @@
 				D01AB6862B31FDEC003C2A2A /* DeleteItemView.swift in Sources */,
 				D01AB68C2B321D32003C2A2A /* DeleteSKU.swift in Sources */,
 				D0810B1F2B286C93005825D6 /* SignupView.swift in Sources */,
+				D03D27CE2B339493004364F8 /* Color.swift in Sources */,
 				D01AB6922B325A76003C2A2A /* QRScannerView.swift in Sources */,
 				D01AB6822B31E56A003C2A2A /* FavoriteView.swift in Sources */,
 				D01AB6802B30E5AF003C2A2A /* FavoritePriorityView.swift in Sources */,
@@ -300,6 +307,7 @@
 				D03D27C42B3308B8004364F8 /* ViewByManufacturer.swift in Sources */,
 				D0560A632B2A28BB00F93E84 /* ManufacturerDeleteView.swift in Sources */,
 				D0560A592B28FB9700F93E84 /* InsertTagsView.swift in Sources */,
+				D03D27CC2B336CCF004364F8 /* OverviewView.swift in Sources */,
 				D03D27C62B3314D8004364F8 /* ViewByStatus.swift in Sources */,
 				D0560A4A2B288A3400F93E84 /* Database.swift in Sources */,
 				D0420CD42B2B1DC1007710E6 /* InsertCountryView.swift in Sources */,

@@ -2089,6 +2089,249 @@ extension DatabaseManager {
     }
 }
 
+extension DatabaseManager {
+    func fetchItemsPerStatus() -> [String: Int] {
+        var itemsPerStatus = [String: Int]()
+
+
+            let query = "SELECT Status, COUNT(*) FROM Items GROUP BY Status"
+            var queryStatement: OpaquePointer? = nil
+
+            if sqlite3_prepare_v2(db, query, -1, &queryStatement, nil) == SQLITE_OK {
+                while sqlite3_step(queryStatement) == SQLITE_ROW {
+                    if let queryResultCol1 = sqlite3_column_text(queryStatement, 0) {
+                        let status = String(cString: queryResultCol1)
+                        let count = Int(sqlite3_column_int(queryStatement, 1))
+                        itemsPerStatus[status] = count
+                    }
+                }
+            } else {
+                print("SELECT statement could not be prepared")
+            }
+            sqlite3_finalize(queryStatement)
+      
+        sqlite3_close(db)
+
+        return itemsPerStatus
+    }
+}
+
+extension DatabaseManager {
+    func fetchItemsCreatedPerDay() -> [String: Int] {
+        var itemsCreatedPerDay = [String: Int]()
+
+        let query = "SELECT creationDate, COUNT(*) FROM Items GROUP BY creationDate"
+        var queryStatement: OpaquePointer? = nil
+
+        if sqlite3_prepare_v2(db, query, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                if let queryResultCol1 = sqlite3_column_text(queryStatement, 0) {
+                    let creationDateString = String(cString: queryResultCol1)
+                    let count = Int(sqlite3_column_int(queryStatement, 1))
+
+                    if let date = parseDate(creationDateString) {
+                        let formattedDate = formatDate(date)
+                        itemsCreatedPerDay[formattedDate, default: 0] += count
+                    }
+                }
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+
+        return itemsCreatedPerDay
+    }
+
+    private func parseDate(_ dateString: String) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "dd MMM yyyy 'at' HH:mm"
+        return dateFormatter.date(from: dateString)
+    }
+
+    private func formatDate(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd MMM yyyy"
+        return dateFormatter.string(from: date)
+    }
+}
+
+
+extension DatabaseManager {
+    func fetchItemsCreatedPerMonth() -> [String: Int] {
+        var itemsCreatedPerMonth = [String: Int]()
+
+        let query = "SELECT creationDate, COUNT(*) FROM Items GROUP BY creationDate"
+        var queryStatement: OpaquePointer? = nil
+
+        if sqlite3_prepare_v2(db, query, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                if let queryResultCol1 = sqlite3_column_text(queryStatement, 0) {
+                    let creationDateString = String(cString: queryResultCol1)
+                    let count = Int(sqlite3_column_int(queryStatement, 1))
+
+                    if let date = parseDateYear(creationDateString) {
+                        let monthYear = formatMonthYear(date)
+                        itemsCreatedPerMonth[monthYear, default: 0] += count
+                    }
+                }
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+
+        return itemsCreatedPerMonth
+    }
+
+    private func parseDateYear(_ dateString: String) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "dd MMM yyyy 'at' HH:mm"
+        return dateFormatter.date(from: dateString)
+    }
+
+    private func formatMonthYear(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM yyyy"
+        return dateFormatter.string(from: date)
+    }
+}
+
+
+extension DatabaseManager {
+    func fetchItemsCountByTagName() -> [String: Int] {
+        var tagNameCounts: [String: Int] = [:]
+        let query = "SELECT tagName, COUNT(*) FROM Items GROUP BY tagName"
+        var queryStatement: OpaquePointer? = nil
+
+        if sqlite3_prepare_v2(db, query, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                if let tagNameCString = sqlite3_column_text(queryStatement, 0) {
+                    let tagName = String(cString: tagNameCString)
+                    let count = Int(sqlite3_column_int(queryStatement, 1))
+                    tagNameCounts[tagName] = count
+                }
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+
+        return tagNameCounts
+    }
+}
+
+extension DatabaseManager {
+    func fetchItemsCountByManufacturer() -> [String: Int] {
+        var manufacturerCounts: [String: Int] = [:]
+        let query = "SELECT Manufacturer, COUNT(*) FROM Items GROUP BY Manufacturer"
+        var queryStatement: OpaquePointer? = nil
+
+        if sqlite3_prepare_v2(db, query, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                if let manufacturerCString = sqlite3_column_text(queryStatement, 0) {
+                    let manufacturer = String(cString: manufacturerCString)
+                    let count = Int(sqlite3_column_int(queryStatement, 1))
+                    manufacturerCounts[manufacturer] = count
+                }
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+
+        return manufacturerCounts
+    }
+}
+
+extension DatabaseManager {
+    func fetchItemsCountByOrigin() -> [String: Int] {
+        var originCounts: [String: Int] = [:]
+        let query = "SELECT Origin, COUNT(*) FROM Items GROUP BY Origin"
+        var queryStatement: OpaquePointer? = nil
+
+        if sqlite3_prepare_v2(db, query, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                if let originCString = sqlite3_column_text(queryStatement, 0) {
+                    let origin = String(cString: originCString)
+                    let count = Int(sqlite3_column_int(queryStatement, 1))
+                    originCounts[origin] = count
+                }
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+
+        return originCounts
+    }
+}
+
+extension DatabaseManager {
+    func fetchItemsCountByClient() -> [String: Int] {
+        var clientCounts: [String: Int] = [:]
+        let query = "SELECT Client, COUNT(*) FROM Items GROUP BY Client"
+        var queryStatement: OpaquePointer? = nil
+
+        if sqlite3_prepare_v2(db, query, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                if let clientCString = sqlite3_column_text(queryStatement, 0) {
+                    let client = String(cString: clientCString)
+                    let count = Int(sqlite3_column_int(queryStatement, 1))
+                    clientCounts[client] = count
+                }
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+
+        return clientCounts
+    }
+}
+
+extension DatabaseManager {
+    func fetchProductCategoriesCount() -> [String: Int] {
+        var categoryCounts: [String: Int] = ["Favorite": 0, "Priority": 0, "Both": 0, "Neither": 0]
+
+        let queryFavorite = "SELECT COUNT(*) FROM Items WHERE isFavorite = 1 AND isPriority = 0"
+        let queryPriority = "SELECT COUNT(*) FROM Items WHERE isPriority = 1 AND isFavorite = 0"
+        let queryBoth = "SELECT COUNT(*) FROM Items WHERE isFavorite = 1 AND isPriority = 1"
+        let queryNeither = "SELECT COUNT(*) FROM Items WHERE isFavorite = 0 AND isPriority = 0"
+
+        // Execute each query and populate the categoryCounts dictionary
+        categoryCounts["Favorite"] = executeCountQuery(queryFavorite)
+        categoryCounts["Priority"] = executeCountQuery(queryPriority)
+        categoryCounts["Both"] = executeCountQuery(queryBoth)
+        categoryCounts["Neither"] = executeCountQuery(queryNeither)
+
+        return categoryCounts
+    }
+
+    private func executeCountQuery(_ query: String) -> Int {
+        var queryStatement: OpaquePointer? = nil
+               var count = 0
+
+               if sqlite3_prepare_v2(db, query, -1, &queryStatement, nil) == SQLITE_OK {
+                   if sqlite3_step(queryStatement) == SQLITE_ROW {
+                       count = Int(sqlite3_column_int(queryStatement, 0))
+                   }
+               } else {
+                   print("SELECT statement could not be prepared")
+               }
+               sqlite3_finalize(queryStatement)
+
+               return count
+           }
+       }
+
+
+
+
+
+
 
 
 

@@ -405,7 +405,7 @@ struct WelcomeView: View {
                     }
                     
                     Section(header: Text("Warehouse Statistics"), footer: Text("Access detailed statistics and reports about your inventory.")) {
-                        NavigationLink(destination: Text("Statistics View")) {
+                        NavigationLink(destination: OverviewView()) {
                             HStack {
                                 Image(systemName: "chart.bar.fill")
                                     .renderingMode(.original)
