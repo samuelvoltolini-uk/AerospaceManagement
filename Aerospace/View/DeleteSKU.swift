@@ -134,11 +134,28 @@ struct DeleteSKUSheet: View {
             SKUs = updatedItem.SKU
         }
     }
-
+    
     private func deleteSKU(at offsets: IndexSet) {
+        // Check if there's at least one SKU to delete
+        guard !SKUs.isEmpty, let _ = offsets.first else { return }
+
+        // Remove the SKU from the array
         SKUs.remove(atOffsets: offsets)
+
+        // Decrease the quantity of the item by 1
+        if let updatedItem = databaseManager.fetchItemByIDForDelete(item.id) {
+            let newQuantity = max(updatedItem.quantity - 1.0, 0) // Ensure quantity doesn't go below zero
+            databaseManager.updateItemQuantity(for: item.id, newQuantity: newQuantity)
+        }
+
+        // Update the SKUs in the database
         databaseManager.updateSKUs(for: item.id, newSKUs: SKUs)
     }
+
+//    private func deleteSKU(at offsets: IndexSet) {
+//        SKUs.remove(atOffsets: offsets)
+//        databaseManager.updateSKUs(for: item.id, newSKUs: SKUs)
+//    }
 
     private func labelWithIcon(_ text: String, image: String) -> some View {
         HStack {

@@ -69,7 +69,7 @@ struct ItemDetailView: View {
                             .padding(.trailing, 15)
                             
                             // Quantity Indicator
-                            Image(systemName: "\(min(max(item.quantity, 1), 10)).square.fill")
+                            Image(systemName: "\(min(max(item.quantity, 1), 50)).square.fill")
                                 .renderingMode(.original)
                                 .resizable()
                                 .scaledToFit()
@@ -182,7 +182,7 @@ struct ItemDetailView: View {
 
 func colorForQuantity(_ quantity: Int) -> Color {
     switch quantity {
-    case 1...2:
+    case 0...2:
         return .red
     case 3...4:
         return .orange
@@ -193,7 +193,7 @@ func colorForQuantity(_ quantity: Int) -> Color {
     case 9...10:
         return .blue
     default:
-        return .gray
+        return .accentColor
     }
 }
 

@@ -53,7 +53,7 @@ struct EditItemView: View {
                             .padding(.top, 5)
 
                             HStack {
-                                Image(systemName: "\(min(max(item.quantity, 1), 10)).square.fill")
+                                Image(systemName: "\(min(max(item.quantity, 1), 50)).square.fill")
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
@@ -92,7 +92,7 @@ struct EditItemView: View {
 
     private func colorForQuantity(_ quantity: Int) -> Color {
         switch quantity {
-        case 1...2:
+        case 0...2:
             return .red
         case 3...4:
             return .orange
@@ -103,7 +103,7 @@ struct EditItemView: View {
         case 9...10:
             return .blue
         default:
-            return .gray
+            return .accentColor
         }
     }
 }

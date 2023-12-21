@@ -107,11 +107,14 @@ struct InsertItemView: View {
             
             Section(header: labelWithIcon("Material", image: "diamond.fill")) {
                 TextField("Item Material", text: $material)
+                    .textInputAutocapitalization(.words)
             }
             
             Section(header: labelWithIcon("Repair Company", image: "wrench.adjustable.fill")) {
                 TextField("Repair Company 1", text: $repairCompanyOne)
+                    .textInputAutocapitalization(.words)
                 TextField("Repair Company 2", text: $repairCompanyTwo)
+                    .textInputAutocapitalization(.words)
             }
             
             Section(header: labelWithIcon("History", image: "clock.fill")) {
@@ -122,6 +125,7 @@ struct InsertItemView: View {
             
             Section(header: labelWithIcon("Comments", image: "bubble.left.and.text.bubble.right.fill")) {
                 TextField("Comments", text: $comments)
+                    .textInputAutocapitalization(.sentences)
             }
             
             Section(header: labelWithIcon("Assign Tag", image: "tag.square.fill")) {

@@ -209,7 +209,7 @@ struct ItemFetchForSKU: Equatable {
     var id: Int
     var name: String
     var barcode: String
-    var SKU: [String] // Assuming you have an array of SKUs
+    var SKU: [String]
 
     static func == (lhs: ItemFetchForSKU, rhs: ItemFetchForSKU) -> Bool {
         return lhs.id == rhs.id
@@ -219,11 +219,12 @@ struct ItemFetchForSKU: Equatable {
 struct ItemFetchForSKUDelete {
     var id: Int
     var SKU: [String]
-    // Add other properties as needed based on your database schema
+    var quantity: Double // Add this property
 
-    init(id: Int, SKU: [String]) {
+    init(id: Int, SKU: [String], quantity: Double) {
         self.id = id
         self.SKU = SKU
+        self.quantity = quantity
         // Initialize other properties here
     }
 }
@@ -1873,19 +1874,19 @@ extension DatabaseManager {
 }
 
 extension DatabaseManager {
-
     func fetchItemByIDForDelete(_ id: Int) -> ItemFetchForSKUDelete? {
-        let queryStatementString = "SELECT * FROM Items WHERE id = \(id);"
+        let queryStatementString = "SELECT id, SKU, quantity FROM Items WHERE id = \(id);" // Update the query
         var queryStatement: OpaquePointer?
         var item: ItemFetchForSKUDelete?
 
         if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
             if sqlite3_step(queryStatement) == SQLITE_ROW {
-                // Assuming SKUs are stored in a specific column (e.g., 5th column)
-                let skuString = String(cString: sqlite3_column_text(queryStatement, 3)) // Adjust the column index as needed
+                // Assuming SKU is in the 2nd column and quantity in the 3rd column
+                let skuString = String(cString: sqlite3_column_text(queryStatement, 1))
                 let skus = skuString.components(separatedBy: ",")
-                item = ItemFetchForSKUDelete(id: id, SKU: skus)
-                // Populate other properties as needed
+                let quantity = sqlite3_column_double(queryStatement, 2) // Fetch quantity
+
+                item = ItemFetchForSKUDelete(id: id, SKU: skus, quantity: quantity) // Set quantity here
             }
         } else {
             print("SELECT statement could not be prepared")
@@ -2418,6 +2419,99 @@ extension DatabaseManager {
         return orders
     }
 }
+
+extension DatabaseManager {
+    func fetchTotalItemCount() -> Int {
+        let query = "SELECT COUNT(*) FROM Items"
+        var queryStatement: OpaquePointer? = nil
+        var itemCount = 0
+
+        if sqlite3_prepare_v2(db, query, -1, &queryStatement, nil) == SQLITE_OK {
+            if sqlite3_step(queryStatement) == SQLITE_ROW {
+                itemCount = Int(sqlite3_column_int(queryStatement, 0))
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+        
+        return itemCount
+    }
+}
+
+extension DatabaseManager {
+    func fetchTotalUserCount() -> Int {
+        let query = "SELECT COUNT(*) FROM Users"
+        var queryStatement: OpaquePointer? = nil
+        var userCount = 0
+
+        if sqlite3_prepare_v2(db, query, -1, &queryStatement, nil) == SQLITE_OK {
+            if sqlite3_step(queryStatement) == SQLITE_ROW {
+                userCount = Int(sqlite3_column_int(queryStatement, 0))
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+        
+        return userCount
+    }
+    
+    func fetchTotalCount(tableName: String) -> Int {
+            let query = "SELECT COUNT(*) FROM \(tableName)"
+            var queryStatement: OpaquePointer? = nil
+            var count = 0
+
+            if sqlite3_prepare_v2(db, query, -1, &queryStatement, nil) == SQLITE_OK {
+                if sqlite3_step(queryStatement) == SQLITE_ROW {
+                    count = Int(sqlite3_column_int(queryStatement, 0))
+                }
+            } else {
+                print("SELECT statement could not be prepared for table \(tableName)")
+            }
+            sqlite3_finalize(queryStatement)
+            
+            return count
+        }
+    
+    func fetchTotalItemQuantity() -> Double {
+           let query = "SELECT SUM(Quantity) FROM Items"
+           var queryStatement: OpaquePointer? = nil
+           var totalQuantity: Double = 0.0
+
+           if sqlite3_prepare_v2(db, query, -1, &queryStatement, nil) == SQLITE_OK {
+               if sqlite3_step(queryStatement) == SQLITE_ROW {
+                   totalQuantity = sqlite3_column_double(queryStatement, 0)
+               }
+           } else {
+               print("SELECT statement could not be prepared for summing quantity")
+           }
+           sqlite3_finalize(queryStatement)
+           
+           return totalQuantity
+       }
+   }
+
+extension DatabaseManager {
+
+    func updateItemQuantity(for itemId: Int, newQuantity: Double) {
+        let updateQuery = "UPDATE Items SET quantity = ? WHERE id = ?"
+        var updateStatement: OpaquePointer? = nil
+
+        if sqlite3_prepare_v2(db, updateQuery, -1, &updateStatement, nil) == SQLITE_OK {
+            sqlite3_bind_double(updateStatement, 1, newQuantity)
+            sqlite3_bind_int(updateStatement, 2, Int32(itemId))
+
+            if sqlite3_step(updateStatement) != SQLITE_DONE {
+                print("Error updating quantity.")
+            }
+        } else {
+            print("UPDATE statement could not be prepared.")
+        }
+        sqlite3_finalize(updateStatement)
+    }
+}
+
 
 
 
