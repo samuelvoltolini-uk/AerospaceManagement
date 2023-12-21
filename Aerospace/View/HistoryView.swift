@@ -31,7 +31,7 @@ struct HistoryView: View {
                 HistoryDetailsView(record: record)
             }
             .onAppear {
-                historyRecords = databaseManager.fetchHistoryRecords()
+                historyRecords = databaseManager.fetchHistoryRecords().sorted(by: { $0.barcode < $1.barcode })
             }
     }
 

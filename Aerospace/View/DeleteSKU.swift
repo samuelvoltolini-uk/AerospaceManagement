@@ -70,7 +70,7 @@ struct DeleteSKU: View {
                     .foregroundStyle(Color.accentColor)
                 Text(item.name)
                     .font(.footnote)
-                    .foregroundStyle(Color.black)
+                    .foregroundStyle(Color.accentColor)
             }
             .padding(.top, 5)
             HStack {
@@ -82,7 +82,7 @@ struct DeleteSKU: View {
                     .foregroundStyle(Color.accentColor)
                 Text(item.barcode)
                     .font(.footnote)
-                    .foregroundStyle(Color.black)
+                    .foregroundStyle(Color.accentColor)
             }
             .padding(.top, 5)
         }
@@ -151,11 +151,6 @@ struct DeleteSKUSheet: View {
         // Update the SKUs in the database
         databaseManager.updateSKUs(for: item.id, newSKUs: SKUs)
     }
-
-//    private func deleteSKU(at offsets: IndexSet) {
-//        SKUs.remove(atOffsets: offsets)
-//        databaseManager.updateSKUs(for: item.id, newSKUs: SKUs)
-//    }
 
     private func labelWithIcon(_ text: String, image: String) -> some View {
         HStack {

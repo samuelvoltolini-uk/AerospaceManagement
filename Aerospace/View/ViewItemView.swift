@@ -107,19 +107,15 @@ struct ViewItemView: View {
     }
 
     private var filteredItems: [ItemFetch] {
-        if searchText.isEmpty {
-            return items
-        } else {
-            return items.filter { item in
-                item.name.lowercased().contains(searchText.lowercased()) ||
-                item.barcode.lowercased().contains(searchText.lowercased())
-            }
+            searchText.isEmpty
+                ? items.sorted { $0.barcode < $1.barcode }
+                : items.filter { $0.name.lowercased().contains(searchText.lowercased()) || $0.barcode.lowercased().contains(searchText.lowercased()) }
+                      .sorted { $0.barcode < $1.barcode }
         }
-    }
 
-    private func loadItems() {
-        items = databaseManager.fetchAllItems()
-    }
+        private func loadItems() {
+            items = databaseManager.fetchAllItems().sorted { $0.barcode < $1.barcode }
+        }
 
     private func colorForQuantity(_ quantity: Int) -> Color {
         switch quantity {

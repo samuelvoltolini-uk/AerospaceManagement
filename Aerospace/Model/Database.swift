@@ -1808,22 +1808,80 @@ extension DatabaseManager {
 
 extension DatabaseManager {
     func updateSKUs(for itemId: Int, newSKUs: [String]) {
-        let skusString = newSKUs.joined(separator: ",")
-        let updateStatementString = "UPDATE Items SET SKU = '\(skusString)' WHERE id = \(itemId);"
+        var currentSKUs = fetchCurrentSKUs(for: itemId)
+        let currentQuantity = fetchCurrentQuantity(for: itemId)
+        var isNewSKUAdded = false
+
+        for sku in newSKUs {
+            if !currentSKUs.contains(sku) {
+                currentSKUs.append(sku)
+                isNewSKUAdded = true
+            }
+        }
+
+        let skusString = currentSKUs.joined(separator: ",")
+        let newQuantity = isNewSKUAdded ? currentQuantity + 1.0 : currentQuantity
+        let updateStatementString = "UPDATE Items SET SKU = ?, Quantity = ? WHERE id = ?;"
 
         var updateStatement: OpaquePointer?
         if sqlite3_prepare_v2(db, updateStatementString, -1, &updateStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(updateStatement, 1, (skusString as NSString).utf8String, -1, nil)
+            sqlite3_bind_double(updateStatement, 2, newQuantity)
+            sqlite3_bind_int(updateStatement, 3, Int32(itemId))
+
             if sqlite3_step(updateStatement) == SQLITE_DONE {
-                print("Successfully updated SKUs.")
+                print("Successfully updated SKUs and Quantity.")
             } else {
-                print("Could not update SKUs.")
+                print("Could not update SKUs and Quantity. Error: \(String(describing: sqlite3_errmsg(db)))")
             }
         } else {
-            print("UPDATE statement could not be prepared.")
+            print("UPDATE statement could not be prepared. Error: \(String(describing: sqlite3_errmsg(db)))")
         }
         sqlite3_finalize(updateStatement)
     }
+
+    private func fetchCurrentQuantity(for itemId: Int) -> Double {
+        let queryStatementString = "SELECT Quantity FROM Items WHERE id = \(itemId);"
+        var queryStatement: OpaquePointer?
+        var quantity: Double = 0.0
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            if sqlite3_step(queryStatement) == SQLITE_ROW {
+                quantity = sqlite3_column_double(queryStatement, 0)
+            }
+        } else {
+            print("SELECT statement could not be prepared.")
+        }
+        sqlite3_finalize(queryStatement)
+
+        return quantity
+    }
 }
+
+extension DatabaseManager {
+    private func fetchCurrentSKUs(for itemId: Int) -> [String] {
+        let queryStatementString = "SELECT SKU FROM Items WHERE id = \(itemId);"
+        var queryStatement: OpaquePointer?
+        var skus = [String]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            if sqlite3_step(queryStatement) == SQLITE_ROW {
+                if let skuCString = sqlite3_column_text(queryStatement, 0) {
+                    let skuString = String(cString: skuCString)
+                    skus = skuString.components(separatedBy: ",")
+                }
+            }
+        } else {
+            print("SELECT statement could not be prepared.")
+        }
+        sqlite3_finalize(queryStatement)
+
+        return skus
+    }
+
+}
+
+
 
 extension DatabaseManager {
     func fetchItemsForSKU() -> [ItemFetchForSKU] {

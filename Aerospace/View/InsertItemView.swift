@@ -289,6 +289,7 @@ struct InsertItemView: View {
                                 adjustSKUsArray()
                                 // End saving state
                                 isSaving = false
+                                
                             }
                 }
                 .frame(maxWidth: .infinity)
@@ -386,7 +387,7 @@ struct InsertItemView: View {
         historyNumber = 1
         comments = ""
         selectedFile = nil
-        skus = []
+        skus = [""]
         isFavorite = false
         isPriority = false
         quantity = 1

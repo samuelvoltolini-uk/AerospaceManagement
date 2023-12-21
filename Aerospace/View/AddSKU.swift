@@ -27,7 +27,7 @@ struct AddSKU: View {
                                     .foregroundStyle(Color.accentColor)
                                 Text(item.name)
                                     .font(.footnote)
-                                    .foregroundStyle(Color.black)
+                                    .foregroundStyle(Color.accentColor)
                             }
                             .padding(.top, 5)
                             HStack {
@@ -39,7 +39,7 @@ struct AddSKU: View {
                                     .foregroundStyle(Color.accentColor)
                                 Text(item.barcode)
                                     .font(.footnote)
-                                    .foregroundStyle(Color.black)
+                                    .foregroundStyle(Color.accentColor)
                             }
                             .padding(.top, 5)
                         }
@@ -142,6 +142,7 @@ struct AddSKUSheet: View {
             databaseManager.updateSKUs(for: item.id, newSKUs: updatedSKUs)
             presentationMode.wrappedValue.dismiss()
         }
+     
     }
 }
 
