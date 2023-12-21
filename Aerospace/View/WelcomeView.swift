@@ -405,18 +405,133 @@ struct WelcomeView: View {
                     }
                     
                     Section(header: Text("Warehouse Statistics"), footer: Text("Access detailed statistics and reports about your inventory.")) {
-                        NavigationLink(destination: OverviewView()) {
+                        
+                        NavigationLink(destination: NumberStatistics()) {
                             HStack {
-                                Image(systemName: "chart.bar.fill")
+                                Image(systemName: "shared.with.you")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.purple)
+                                
+                                Text("Express Data")
+                            }
+                        }
+                        
+                        NavigationLink(destination: ProductPerStatus()) {
+                            HStack {
+                                Image(systemName: "chart.pie.fill")
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 25, height: 25)
                                     .foregroundStyle(Color.accentColor)
                                 
-                                Text("Overview")
+                                Text("Item Per Status")
                             }
                         }
+                        
+                        NavigationLink(destination: ProductFavoritePriority()) {
+                            HStack {
+                                Image(systemName: "chart.pie.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.orange)
+                                
+                                Text("Item Per Favortite & Priority")
+                            }
+                        }
+
+                        NavigationLink(destination: Item7Days()) {
+                            HStack {
+                                Image(systemName: "chart.bar.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.cyan)
+                                
+                                Text("Item Created Per Day")
+                            }
+                        }
+
+                        
+                        NavigationLink(destination: ItemMonth()) {
+                            HStack {
+                                Image(systemName: "chart.bar.xaxis.ascending")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.accentColor, Color.pink)
+                                
+                                Text("Item Created Per Month")
+                            }
+                        }
+
+                        
+                        NavigationLink(destination: ItemPerTag()) {
+                            HStack {
+                                Image(systemName: "chart.bar.xaxis")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.orange, Color.indigo)
+                                
+                                Text("Item Per Tag")
+                            }
+                        }
+
+                        
+                        NavigationLink(destination: ItemManufacturer()) {
+                            HStack {
+                                Image(systemName: "chart.bar.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.green)
+                                
+                                Text("Item Per Manufacturer")
+                            }
+                        }
+
+                        
+                        NavigationLink(destination: ItemOrigin()) {
+                            HStack {
+                                Image(systemName: "chart.dots.scatter")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.accentColor, Color.pink)
+                                
+                                Text("Item Per Origin")
+                            }
+                        }
+
+                        
+                        NavigationLink(destination: ItemClient()) {
+                            HStack {
+                                Image(systemName: "chart.bar.xaxis.ascending.badge.clock")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.accentColor, Color.pink)
+                                
+                                Text("Item Per Client")
+                            }
+                        }
+                        
+                        NavigationLink(destination: OverviewView()) {
+                            HStack {
+                                Image(systemName: "person.fill.and.arrow.left.and.arrow.right")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.accentColor, Color.orange)
+                                
+                                Text("Item Per Employee")
+                            }
+                        }
+
                     }
                     
                     Section(header: Text("Account and Configuration"), footer: Text("Configure settings and account preferences.")) {

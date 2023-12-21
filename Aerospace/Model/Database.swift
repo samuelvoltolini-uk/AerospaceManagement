@@ -349,6 +349,36 @@ struct ItemScan {
     var creationDate: String
 }
 
+struct StatusData: Identifiable {
+    let id: String // Use 'status' as the unique identifier
+    let status: String
+    let count: Int
+    
+    init(status: String, count: Int) {
+        self.id = status
+        self.status = status
+        self.count = count
+    }
+}
+
+struct DailyCreationData: Identifiable {
+    let id = UUID()
+    let day: String
+    let count: Int
+}
+
+struct MonthlyCreationData: Identifiable {
+    let id = UUID()
+    let month: String
+    let count: Int
+}
+
+struct CategoryData: Identifiable {
+    let id = UUID()
+    let category: String
+    let proportion: Double
+}
+
 
 class DatabaseManager {
     var db: OpaquePointer?
@@ -2327,7 +2357,67 @@ extension DatabaseManager {
            }
        }
 
+struct Order {
+    let id: UUID = UUID()
+    let amount: Int
+    let day: Int
+    let user: String
+}
 
+extension DatabaseManager {
+    func fetchProductCreationByUserForLast30Days() -> [Order] {
+        var orders: [Order] = []
+        let query = """
+        SELECT creationDate, createdBy FROM Items
+        """
+        var queryStatement: OpaquePointer? = nil
+
+        var rawOrders: [(String, String)] = []
+
+        if sqlite3_prepare_v2(db, query, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let dateCString = sqlite3_column_text(queryStatement, 0)
+                let userCString = sqlite3_column_text(queryStatement, 1)
+                if let dateCString = dateCString, let userCString = userCString {
+                    let dateString = String(cString: dateCString)
+                    let user = String(cString: userCString)
+                    rawOrders.append((dateString, user))
+                }
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+
+        // Process the raw data
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "dd MMM yyyy 'at' HH:mm"
+        let thirtyDaysAgo = Calendar.current.date(byAdding: .day, value: -30, to: Date())!
+
+        var userDailyCounts: [String: [Int: Int]] = [:]
+
+        for (dateString, user) in rawOrders {
+            if let date = dateFormatter.date(from: dateString), date >= thirtyDaysAgo {
+                let day = Calendar.current.component(.day, from: date)
+
+                userDailyCounts[user, default: [:]][day, default: 0] += 1
+            }
+        }
+
+        // Convert the grouped data into Order objects
+        for (user, dailyCounts) in userDailyCounts {
+            for (day, count) in dailyCounts {
+                orders.append(Order(amount: count, day: day, user: user))
+            }
+        }
+
+        // Sort the orders by day in ascending order
+        orders.sort { $0.day < $1.day }
+
+        return orders
+    }
+}
 
 
 
