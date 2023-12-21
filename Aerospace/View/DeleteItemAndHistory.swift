@@ -64,7 +64,7 @@ struct DeleteItemAndHistory: View {
         } message: { item in
             Text("Are you sure you want to delete the item '\(item.name)' and all its history?")
         }
-        .navigationBarTitle("Delete Items", displayMode: .inline)
+        .navigationBarTitle("Delete Items & History", displayMode: .inline)
         .onAppear(perform: fetchItems)
     }
 

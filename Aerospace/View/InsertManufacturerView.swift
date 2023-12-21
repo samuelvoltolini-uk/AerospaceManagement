@@ -90,9 +90,9 @@ struct InsertManufacturerView: View {
                     .keyboardType(.numberPad)
                 
                 TextField("Email", text: $email)
+                    .keyboardType(.emailAddress)
                     .textInputAutocapitalization(.never)
                     .disableAutocorrection(true)
-                    .keyboardType(.emailAddress)
             }
             
             Section(header: HStack {
