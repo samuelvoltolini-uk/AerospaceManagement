@@ -140,7 +140,7 @@ struct ItemDetailView: View {
         .navigationBarTitle("Item Details", displayMode: .inline)
         .scrollIndicators(.hidden)
         .onAppear {
-            let statusHistory = databaseManager.fetchStatusHistoryForItem(itemBarcode: item.barcode)
+            let statusHistory = databaseManager.fetchStatusHistoryForItem(itemBarcode: item.status)
             historyNumber = statusHistory.count
         }
         

@@ -20,7 +20,7 @@ struct ProductPerStatus: View {
                                     Double(data.count)
                                 ),
                                 innerRadius: .ratio(0.6),
-                                angularInset: 10
+                                angularInset: 5
                             )
                             .cornerRadius(10.0)
                             .foregroundStyle(

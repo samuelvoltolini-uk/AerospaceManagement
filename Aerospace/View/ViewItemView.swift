@@ -113,9 +113,10 @@ struct ViewItemView: View {
                       .sorted { $0.barcode < $1.barcode }
         }
 
-        private func loadItems() {
-            items = databaseManager.fetchAllItems().sorted { $0.barcode < $1.barcode }
-        }
+    private func loadItems() {
+        databaseManager.updateQuantityBasedOnSKUs()
+        items = databaseManager.fetchAllItems().sorted { $0.barcode < $1.barcode }
+    }
 
     private func colorForQuantity(_ quantity: Int) -> Color {
         switch quantity {

@@ -1644,7 +1644,7 @@ extension DatabaseManager {
             while sqlite3_step(queryStatement) == SQLITE_ROW {
                 if let queryResultCol = sqlite3_column_text(queryStatement, 0) {
                     let status = String(cString: queryResultCol)
-                    statusHistory.append(contentsOf: status.components(separatedBy: ", "))
+                    statusHistory.append(contentsOf: status.components(separatedBy: "; "))
                 }
             }
         } else {
@@ -2656,6 +2656,44 @@ extension DatabaseManager {
 
         sqlite3_finalize(queryStatement)
         return record ?? HistoryRecord(id: -1, name: [], barcode: "", status: [], comments: [], dates: [], users: [])
+    }
+}
+
+extension DatabaseManager {
+    func updateQuantityBasedOnSKUs() {
+        let fetchStatementString = "SELECT id, SKU FROM Items;"
+        var fetchStatement: OpaquePointer?
+
+        if sqlite3_prepare_v2(db, fetchStatementString, -1, &fetchStatement, nil) == SQLITE_OK {
+            while sqlite3_step(fetchStatement) == SQLITE_ROW {
+                let itemId = sqlite3_column_int(fetchStatement, 0)
+                if let skuCString = sqlite3_column_text(fetchStatement, 1) {
+                    let skuString = String(cString: skuCString)
+                    let skuCount = Double(skuString.split(separator: ",").count)
+                    updateQuantity(for: Int(itemId), quantity: skuCount)
+                }
+            }
+        } else {
+            print("SELECT statement could not be prepared.")
+        }
+        sqlite3_finalize(fetchStatement)
+    }
+
+    private func updateQuantity(for itemId: Int, quantity: Double) {
+        let updateStatementString = "UPDATE Items SET Quantity = ? WHERE id = ?;"
+        var updateStatement: OpaquePointer?
+
+        if sqlite3_prepare_v2(db, updateStatementString, -1, &updateStatement, nil) == SQLITE_OK {
+            sqlite3_bind_double(updateStatement, 1, quantity)
+            sqlite3_bind_int(updateStatement, 2, Int32(itemId))
+
+            if sqlite3_step(updateStatement) != SQLITE_DONE {
+                print("Error updating quantity: \(String(describing: sqlite3_errmsg(db)))")
+            }
+        } else {
+            print("UPDATE statement could not be prepared.")
+        }
+        sqlite3_finalize(updateStatement)
     }
 }
 

@@ -64,10 +64,13 @@ struct QRScannerView: UIViewRepresentable {
         previewLayer.videoGravity = .resizeAspectFill
         view.layer.addSublayer(previewLayer)
 
-        captureSession.startRunning()
+        // Start the capture session on a background thread to avoid blocking the UI
+        DispatchQueue.global(qos: .userInitiated).async {
+            captureSession.startRunning()
+        }
 
         return view
     }
-
+    
     func updateUIView(_ uiView: UIView, context: Context) {}
 }

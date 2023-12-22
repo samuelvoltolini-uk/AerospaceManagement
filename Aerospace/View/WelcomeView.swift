@@ -415,6 +415,19 @@ struct WelcomeView: View {
                                 Text("Scan Item")
                             }
                         }
+                        
+                        NavigationLink(destination: MLView()) {
+                            HStack {
+                                Image(systemName: "scale.3d")
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.accentColor)
+                                
+                                Text("AI Detect Item")
+                            }
+                        }
                     }
                     
                     Section(header: Text("Warehouse Statistics"), footer: Text("Access detailed statistics and reports about your inventory.")) {
