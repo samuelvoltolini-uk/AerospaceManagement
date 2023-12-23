@@ -88,6 +88,34 @@ struct WelcomeView: View {
                         }
                     }
                     
+                    Section(header: Text("Scan"), footer: Text("Efficiently review and verify inventory items with the added capability of machine learning. Users can effortlessly identify item names by simply pointing the camera at them.")) {
+                        NavigationLink(destination: ScanView()) {
+                            HStack {
+                                Image(systemName: "qrcode")
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.accentColor)
+                                
+                                Text("Scan Item")
+                            }
+                        }
+                        
+                        NavigationLink(destination: MLView()) {
+                            HStack {
+                                Image(systemName: "scale.3d")
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.accentColor)
+                                
+                                Text("Machine Learning Inventory")
+                            }
+                        }
+                    }
+                    
                     Section(header: Text("View By"), footer: Text("Access to view items by diferente metrics")) {
                         
                         NavigationLink(destination: ViewByTags()) {
@@ -400,34 +428,6 @@ struct WelcomeView: View {
                             }
                         }
                         
-                    }
-                    
-                    Section(header: Text("Scan"), footer: Text("Quickly scan and update inventory items using barcode scanning.")) {
-                        NavigationLink(destination: ScanView()) {
-                            HStack {
-                                Image(systemName: "qrcode")
-                                    .renderingMode(.original)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 25, height: 25)
-                                    .foregroundStyle(Color.accentColor)
-                                
-                                Text("Scan Item")
-                            }
-                        }
-                        
-                        NavigationLink(destination: MLView()) {
-                            HStack {
-                                Image(systemName: "scale.3d")
-                                    .renderingMode(.original)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 25, height: 25)
-                                    .foregroundStyle(Color.accentColor)
-                                
-                                Text("AI Detect Item")
-                            }
-                        }
                     }
                     
                     Section(header: Text("Warehouse Statistics"), footer: Text("Access detailed statistics and reports about your inventory.")) {

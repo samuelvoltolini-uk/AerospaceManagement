@@ -5,7 +5,45 @@ import CoreML
 
 struct MLView: View {
     @StateObject private var cameraManager = CameraManager()
+    
     @State private var classificationLabel: String = "Point the camera at an object..."
+    @State private var isCameraSheetPresented = false
+
+    var body: some View {
+        VStack {
+            Button("Open Camera") {
+                isCameraSheetPresented = true
+            }
+            .buttonStyle(.borderedProminent)
+            
+            // Results Display
+            VStack(alignment: .center) {
+                Image(systemName: "info.square.fill")
+                    .renderingMode(.original)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 30, height: 30)
+                    .foregroundStyle(Color.accentColor)
+                    .padding(.top, 20)
+                    
+                HStack {
+                    Text(classificationLabel)
+                        .padding(.top, 5)
+                }
+  
+            }
+            .font(.headline)
+            .padding()
+        }
+        .sheet(isPresented: $isCameraSheetPresented) {
+            CameraSheetView(cameraManager: cameraManager, classificationLabel: $classificationLabel)
+        }
+    }
+}
+
+struct CameraSheetView: View {
+    @ObservedObject var cameraManager: CameraManager
+    @Binding var classificationLabel: String
 
     var body: some View {
         VStack {
@@ -19,9 +57,9 @@ struct MLView: View {
             } else {
                 Text("Camera not available")
             }
-
+            
             Text(classificationLabel)
-                .font(.title)
+                .font(.headline)
                 .padding()
         }
         .onAppear {
@@ -131,12 +169,11 @@ extension CameraManager: AVCaptureVideoDataOutputSampleBufferDelegate {
                     return
                 }
 
-                if let results = request.results as? [VNClassificationObservation], let topResult = results.first {
+                if let results = request.results as? [VNClassificationObservation], let topResult = results.first, topResult.confidence >= 0.75 {
+                    let confidencePercentage = Int(topResult.confidence * 100)
                     DispatchQueue.main.async {
-                        self.classificationHandler?("Classification: \(topResult.identifier) Confidence: \(topResult.confidence)")
+                        self.classificationHandler?("\(topResult.identifier) - \(confidencePercentage)%")
                     }
-                } else {
-                    print("No results from VNCoreMLRequest.")
                 }
             }
 
