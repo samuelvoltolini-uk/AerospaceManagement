@@ -92,10 +92,10 @@ struct HistoryDetailsViewDelete: View {
                     ForEach(0..<record.status.count, id: \.self) { index in
                         HStack {
                             VStack(alignment: .leading) {
-                                detailRow(icon: "flag.square.fill", title: "Status", value: record.status[index])
-                                detailRow(icon: "square.text.square.fill", title: "Comments", value: record.comments[index])
-                                detailRow(icon: "person.crop.square.fill", title: "User", value: record.users[index])
-                                detailRow(icon: "calendar.badge.checkmark", title: "Date", value: record.dates[index])
+                                detailRow(icon: "flag.square.fill", title: "Status", value: record.status[index].trimmingCharacters(in: .whitespaces))
+                                detailRow(icon: "square.text.square.fill", title: "Comments", value: record.comments[index].trimmingCharacters(in: .whitespaces))
+                                detailRow(icon: "person.crop.square.fill", title: "User", value: record.users[index].trimmingCharacters(in: .whitespaces))
+                                detailRow(icon: "calendar.badge.checkmark", title: "Date", value: record.dates[index].trimmingCharacters(in: .whitespaces))
                             }
                             Spacer()
                             Rectangle().fill(colorForIndex(index)).frame(width: 5).cornerRadius(100).padding(.vertical, 10)

@@ -56,6 +56,7 @@
 		D05829782B34B8A70076F43C /* HistoryUpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05829772B34B8A70076F43C /* HistoryUpdateView.swift */; };
 		D058297A2B362F320076F43C /* MLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05829792B362F320076F43C /* MLView.swift */; };
 		D058297E2B362FB30076F43C /* AerospaceClassification.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D058297D2B362FB30076F43C /* AerospaceClassification.mlmodel */; };
+		D05829802B3714050076F43C /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D058297F2B3714050076F43C /* Settings.swift */; };
 		D0810B1D2B286C93005825D6 /* AerospaceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0810B1C2B286C93005825D6 /* AerospaceApp.swift */; };
 		D0810B1F2B286C93005825D6 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0810B1E2B286C93005825D6 /* SignupView.swift */; };
 		D0810B212B286C94005825D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0810B202B286C94005825D6 /* Assets.xcassets */; };
@@ -114,6 +115,7 @@
 		D05829772B34B8A70076F43C /* HistoryUpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryUpdateView.swift; sourceTree = "<group>"; };
 		D05829792B362F320076F43C /* MLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLView.swift; sourceTree = "<group>"; };
 		D058297D2B362FB30076F43C /* AerospaceClassification.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = AerospaceClassification.mlmodel; sourceTree = "<group>"; };
+		D058297F2B3714050076F43C /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		D0810B192B286C93005825D6 /* Aerospace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aerospace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0810B1C2B286C93005825D6 /* AerospaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AerospaceApp.swift; sourceTree = "<group>"; };
 		D0810B1E2B286C93005825D6 /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 				D05829752B34B7510076F43C /* DeleteItemAndHistory.swift */,
 				D05829772B34B8A70076F43C /* HistoryUpdateView.swift */,
 				D05829792B362F320076F43C /* MLView.swift */,
+				D058297F2B3714050076F43C /* Settings.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -344,6 +347,7 @@
 				D01AB6922B325A76003C2A2A /* QRScannerView.swift in Sources */,
 				D01AB6822B31E56A003C2A2A /* FavoriteView.swift in Sources */,
 				D01AB6802B30E5AF003C2A2A /* FavoritePriorityView.swift in Sources */,
+				D05829802B3714050076F43C /* Settings.swift in Sources */,
 				D0560A572B28C2BD00F93E84 /* WelcomeView.swift in Sources */,
 				D0F78CD42B2DF96700DCF50C /* ItemDetailView.swift in Sources */,
 				D03D27CA2B331AE1004364F8 /* ViewByClient.swift in Sources */,

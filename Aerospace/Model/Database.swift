@@ -1881,6 +1881,35 @@ extension DatabaseManager {
 
 }
 
+extension DatabaseManager {
+    func deleteSKU(for itemId: Int, skuToDelete: String) {
+        var currentSKUs = fetchCurrentSKUs(for: itemId)
+        
+        // Remove the specified SKU
+        currentSKUs.removeAll { $0 == skuToDelete }
+
+        // Join the remaining SKUs back into a string
+        let updatedSKUsString = currentSKUs.joined(separator: ", ")
+
+        // Prepare the update statement
+        let updateStatementString = "UPDATE Items SET SKU = ? WHERE id = ?;"
+
+        var updateStatement: OpaquePointer?
+        if sqlite3_prepare_v2(db, updateStatementString, -1, &updateStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(updateStatement, 1, (updatedSKUsString as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(updateStatement, 2, Int32(itemId))
+
+            if sqlite3_step(updateStatement) != SQLITE_DONE {
+                print("Could not update SKU. Error: \(String(describing: sqlite3_errmsg(db)))")
+            }
+        } else {
+            print("UPDATE statement could not be prepared. Error: \(String(describing: sqlite3_errmsg(db)))")
+        }
+        sqlite3_finalize(updateStatement)
+    }
+}
+
+
 
 
 extension DatabaseManager {
@@ -1911,7 +1940,7 @@ extension DatabaseManager {
 
 extension DatabaseManager {
     func removeSKUs(for itemId: Int, newSKUs: [String]) {
-        let joinedSKUs = newSKUs.joined(separator: ",")
+        let joinedSKUs = newSKUs.joined(separator: ", ")
         let updateStatementString = "UPDATE Items SET SKU = ? WHERE id = ?;"
 
         var updateStatement: OpaquePointer?
@@ -1920,7 +1949,7 @@ extension DatabaseManager {
             sqlite3_bind_int(updateStatement, 2, Int32(itemId))
 
             if sqlite3_step(updateStatement) == SQLITE_DONE {
-                print("Successfully updated SKUs.")
+                print("Successfully Deleted SKUs.")
             } else {
                 print("Could not update SKUs.")
             }

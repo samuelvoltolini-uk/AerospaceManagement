@@ -48,6 +48,8 @@ struct EditItemViewDetails: View {
                 TextField(item.name, text: $itemName)
                 TextField(item.barcode, text: $barcode)
                 TextField(item.description, text: $description)
+                    .multilineTextAlignment(.leading)
+                
                 HStack {
                     Text("Receive Date")
                     Spacer()

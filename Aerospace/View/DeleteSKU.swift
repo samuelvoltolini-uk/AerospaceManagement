@@ -136,20 +136,16 @@ struct DeleteSKUSheet: View {
     }
     
     private func deleteSKU(at offsets: IndexSet) {
-        // Check if there's at least one SKU to delete
-        guard !SKUs.isEmpty, let _ = offsets.first else { return }
+        guard let index = offsets.first else { return }
 
-        // Remove the SKU from the array
-        SKUs.remove(atOffsets: offsets)
+        let skuToDelete = SKUs[index]
+        databaseManager.deleteSKU(for: item.id, skuToDelete: skuToDelete)
 
-        // Decrease the quantity of the item by 1
-        if let updatedItem = databaseManager.fetchItemByIDForDelete(item.id) {
-            let newQuantity = max(updatedItem.quantity - 1.0, 0) // Ensure quantity doesn't go below zero
-            databaseManager.updateItemQuantity(for: item.id, newQuantity: newQuantity)
-        }
+        // Remove the SKU from the local array
+        SKUs.remove(at: index)
 
-        // Update the SKUs in the database
-        databaseManager.updateSKUs(for: item.id, newSKUs: SKUs)
+        // Optionally, update the item's quantity as well, if necessary
+        // (This part of the logic depends on your specific requirements)
     }
 
     private func labelWithIcon(_ text: String, image: String) -> some View {
