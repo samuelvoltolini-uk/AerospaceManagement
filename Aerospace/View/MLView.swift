@@ -14,7 +14,10 @@ struct MLView: View {
             Button("Open Camera") {
                 isCameraSheetPresented = true
             }
-            .buttonStyle(.borderedProminent)
+            .frame(width: 200, height: 50) // Set the size of the button
+            .background(Color.blue) // Choose your desired color
+            .foregroundColor(.white)
+            .cornerRadius(10) // Rounded corners
             
             // Results Display
             VStack(alignment: .center) {

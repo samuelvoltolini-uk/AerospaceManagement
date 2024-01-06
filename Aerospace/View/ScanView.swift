@@ -80,8 +80,6 @@ struct ItemDetailsView: View {
                 itemDetailRow(iconName: "star.square.fill", label: "Is Favorite", value: item.isFavorite ? "Yes" : "No")
                 itemDetailRow(iconName: "exclamationmark.square.fill", label: "Is Priority", value: item.isPriority ? "Yes" : "No")
                 quantityRow(value: item.quantity)
-                itemDetailRow(iconName: "calendar.badge.checkmark", label: "Receive Date", value: item.receiveDate)
-                itemDetailRow(iconName: "calendar.badge.clock", label: "Expected Date", value: item.expectedDate)
                 itemDetailRow(iconName: "person.text.rectangle.fill", label: "Created By", value: item.createdBy)
                 itemDetailRow(iconName: "calendar.badge.plus", label: "Creation Date", value: item.creationDate)
             }

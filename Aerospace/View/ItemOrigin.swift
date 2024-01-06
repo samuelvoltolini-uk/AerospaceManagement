@@ -25,7 +25,7 @@ struct ItemOrigin: View {
                         }
                     }
                 }
-                .frame(width: 1000, height: 700)
+                .frame(width: 1000, height: 1000)
                 .padding(.top, 20)
                 .onAppear {
                     loadData()
