@@ -37,7 +37,7 @@ struct FavoriteView: View {
                             .foregroundColor(.orange)
                     }
                 }
-                .searchable(text: $searchText, prompt: "Search by Name or Barcode")
+                .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Barcode or Item")
             }
         }
         .navigationBarTitle("Favorite Items")
@@ -51,7 +51,7 @@ struct FavoriteView: View {
             Image("NothingHere") // Replace with your 'Nothing to see here' image
                 .resizable()
                 .scaledToFit()
-                .frame(width: 300, height: 300)
+                .frame(width: 600, height: 600)
             Text("Nothing to see here!")
                 .font(.headline)
         }

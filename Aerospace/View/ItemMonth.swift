@@ -11,7 +11,7 @@ struct ItemMonth: View {
             if monthlyCreationData.isEmpty {
                 emptyStateView
             } else {
-                ScrollView(.horizontal) {
+                ScrollView {
                     Chart(monthlyCreationData) { data in
                         BarMark(
                             x: .value("Month", data.month),
@@ -25,7 +25,7 @@ struct ItemMonth: View {
                                 .foregroundColor(.white)
                         }
                     }
-                    .frame(width: 1000, height: 700)
+                    .frame(width: 1000, height: 1000)
                     .padding(.top, 20)
                 }
                 .chartYAxis(.hidden)
@@ -45,7 +45,7 @@ struct ItemMonth: View {
             Image("NothingHere5") // Make sure the image is available in your assets
                 .resizable()
                 .scaledToFit()
-                .frame(width: 300, height: 300)
+                .frame(width: 600, height: 600)
             Text("Nothing to see here!")
                 .font(.headline)
         }

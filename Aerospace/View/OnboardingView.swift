@@ -66,7 +66,7 @@ struct OnboardingView: View {
                         Image(colorScheme == .dark ? "LogoBlack" : "LogoWhite")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 400, height: 400)
+                            .frame(width: 800, height: 800)
                         
                         HStack {
                             NavigationLink(destination: LoginView()) {
@@ -154,7 +154,7 @@ struct OnboardingContentScreen: View {
             Image(imageName)
                 .resizable()
                 .scaledToFit()
-                .frame(height: 300)
+                .frame(height: 600)
                 .padding(20)
             Text(title)
                 .font(.title)

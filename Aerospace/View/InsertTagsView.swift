@@ -10,8 +10,8 @@ struct InsertTagsView: View {
     @State private var selectedImageName: String = "Blue"
     
     @State private var isCreatingTag: Bool = false
-    @State private var showPartialSheet = false
-    @State private var errorMessage: String = ""
+    @State private var showAlert = false
+    @State private var alertMessage = ""
     
     let allPossibleImages = ["Blue", "Yellow", "Green", "Pink", "Red"]
     var tagImages: [String] {
@@ -19,10 +19,10 @@ struct InsertTagsView: View {
             !existingTags.contains { $0.imageName == imageName }
         }
     }
-
+    
     let databaseManager = DatabaseManager()
     let loggedInUser: User
-
+    
     var body: some View {
         Form {
             Section(header: SectionHeaderView(text: "Tag Information", imageName: "tag.square.fill")) {
@@ -46,7 +46,7 @@ struct InsertTagsView: View {
                     .frame(width: 50, height: 50)
                     .cornerRadius(10)
             }
-
+            
             Section(header: SectionHeaderView(text: "User Information", imageName: "person.text.rectangle.fill")) {
                 HStack {
                     Text("User")
@@ -56,7 +56,7 @@ struct InsertTagsView: View {
                         .foregroundStyle(Color.gray)
                 }
                 .disabled(true)
-
+                
                 HStack {
                     Text("Creation Date")
                         .foregroundStyle(Color.gray)
@@ -74,7 +74,7 @@ struct InsertTagsView: View {
                 }
                 .disabled(true)
             }
-
+            
             Button(action: createTag) {
                 if isCreatingTag {
                     ProgressView()
@@ -89,23 +89,6 @@ struct InsertTagsView: View {
             }
         }
         .navigationTitle("Create Tag")
-        .partialSheet(isPresented: $showPartialSheet) {
-            VStack {
-                Image(systemName: "questionmark.square.fill")
-                    .renderingMode(.original)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 50, height: 50)
-                    .foregroundColor(.accentColor)
-                    .padding(.top, 5)
-                
-                Text(errorMessage)
-                    .foregroundColor(.gray)
-                    .font(.footnote)
-                    .multilineTextAlignment(.center)
-                    .padding(.top, 10)
-            }
-        }
         .onAppear {
             databaseManager.createTagsTable()
             existingTags = databaseManager.fetchTagsInfo()
@@ -113,9 +96,12 @@ struct InsertTagsView: View {
                 selectedImageName = firstAvailableImage
             }
         }
-        .attachPartialSheetToRoot()
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+        }
     }
-
+    
+    
     private var currentDateString: String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -126,18 +112,18 @@ struct InsertTagsView: View {
     private func createTag() {
         guard !tagName.isEmpty, !tagDescription.isEmpty, existingTags.count < 5,
               !existingTags.contains(where: { $0.name == tagName }) else {
-            errorMessage = tagName.isEmpty || tagDescription.isEmpty ?
-                "Please fill in all fields." : "A tag with this name already exists."
-            showPartialSheet = true
+            alertMessage = tagName.isEmpty || tagDescription.isEmpty ?
+            "Please fill in all fields." : "A tag with this name already exists."
+            showAlert = true
             return
         }
-
+        
         isCreatingTag = true
         
         let newTag = Tag(name: tagName, description: tagDescription, imageName: selectedImageName, creatorName: loggedInUser.name, creationDate: Date())
         
         databaseManager.addTag(tag: newTag)
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             isCreatingTag = false
             tagName = ""

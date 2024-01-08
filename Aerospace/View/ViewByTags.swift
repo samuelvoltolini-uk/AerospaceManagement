@@ -55,7 +55,7 @@ struct ViewByTags: View {
                     .listStyle(PlainListStyle())
                 }
             }
-            .searchable(text: $searchText, prompt: "Search by Name or Barcode")
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Barcode or Item")
             .navigationBarTitle("Items by Tags", displayMode: .inline)
             .onAppear {
                 fetchAllItems()
@@ -93,7 +93,7 @@ struct ViewByTags: View {
             Image("NothingHere3") // Placeholder image for empty state
                 .resizable()
                 .scaledToFit()
-                .frame(width: 300, height: 300)
+                .frame(width: 600, height: 600)
             Text("Nothing to see here!")
                 .font(.headline)
         }

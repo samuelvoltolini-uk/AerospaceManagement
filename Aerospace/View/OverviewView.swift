@@ -20,7 +20,7 @@ struct OverviewView: View {
                         .foregroundStyle(by: .value("User", order.user))
                     }
                 }
-                .frame(width: 400, height: 450)
+                .frame(width: 1000, height: 1000)
                 .padding(.top, 20)
             }
         }
@@ -36,7 +36,7 @@ struct OverviewView: View {
             Image("NothingHere5")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 300, height: 300)
+                .frame(width: 600, height: 600)
             Text("Nothing to see here!")
                 .font(.headline)
         }

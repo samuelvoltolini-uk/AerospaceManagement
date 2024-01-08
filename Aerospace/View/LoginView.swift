@@ -2,16 +2,16 @@ import SwiftUI
 import PartialSheet
 
 struct LoginView: View {
-    @State private var email: String = ""
-    @State private var password: String = ""
-    @State private var isPasswordVisible: Bool = false
-    @State private var showingSheet = false
-    @State private var alertMessage = ""
     
-    @State private var navigationPath = NavigationPath()
-    @State private var loggedInUser: User?
+    @State private var email: String = ""
+        @State private var password: String = ""
+        @State private var isPasswordVisible: Bool = false
+        @State private var showAlert = false
+        
+        @State private var navigationPath = NavigationPath()
+        @State private var loggedInUser: User?
 
-    let databaseManager = DatabaseManager()
+        let databaseManager = DatabaseManager()
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -59,24 +59,11 @@ struct LoginView: View {
                 }
             }
             .navigationBarTitle("Login", displayMode: .inline)
-            .partialSheet(isPresented: $showingSheet) {
-                VStack {
-                    Image(systemName: "questionmark.square.fill")
-                        .renderingMode(.original)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 50, height: 50)
-                        .foregroundColor(.accentColor)
-                        .padding(.top, 5)
-                    
-                    Text(alertMessage)
-                        .foregroundColor(.gray)
-                        .font(.footnote)
-                        .multilineTextAlignment(.center)
-                        .padding(.top, 10)
-                }
+            .alert("Login Error", isPresented: $showAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Incorrect email or password.")
             }
-            .attachPartialSheetToRoot()
             .navigationDestination(for: User.self) { user in
                 WelcomeView(user: user)
                     .navigationBarBackButtonHidden(true)
@@ -87,11 +74,12 @@ struct LoginView: View {
 
     private func loginAction() {
         if let user = databaseManager.fetchUser(email: email, password: password) {
-            loggedInUser = user
-            navigationPath.append(user)
+            DispatchQueue.main.async {
+                self.loggedInUser = user
+                self.navigationPath.append(user)
+            }
         } else {
-            alertMessage = "Incorrect email or password."
-            showingSheet = true
+            showAlert = true
         }
     }
 

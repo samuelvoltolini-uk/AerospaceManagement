@@ -57,8 +57,8 @@ struct ViewByClient: View {
                     .listStyle(PlainListStyle())
                 }
             }
-            .searchable(text: $searchText, prompt: "Search by Name or Barcode")
-            .navigationBarTitle("Items by Tags", displayMode: .inline)
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Barcode or Item")
+            .navigationBarTitle("Items by Client", displayMode: .inline)
             .onAppear {
                 fetchAllItems()
                 loadPickerData()
@@ -95,7 +95,7 @@ struct ViewByClient: View {
             Image("NothingHere5") // Placeholder image for empty state
                 .resizable()
                 .scaledToFit()
-                .frame(width: 300, height: 300)
+                .frame(width: 600, height: 600)
             Text("Nothing to see here!")
                 .font(.headline)
         }

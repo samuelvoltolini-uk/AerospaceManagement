@@ -40,9 +40,6 @@
 		D0560A4A2B288A3400F93E84 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0560A492B288A3400F93E84 /* Database.swift */; };
 		D0560A4C2B2893B400F93E84 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0560A4B2B2893B400F93E84 /* LoginView.swift */; };
 		D0560A4E2B2895F000F93E84 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0560A4D2B2895F000F93E84 /* OnboardingView.swift */; };
-		D0560A512B28B63E00F93E84 /* PartialSheet in Frameworks */ = {isa = PBXBuildFile; productRef = D0560A502B28B63E00F93E84 /* PartialSheet */; };
-		D0560A532B28B7FB00F93E84 /* PartialSheet in Frameworks */ = {isa = PBXBuildFile; productRef = D0560A522B28B7FB00F93E84 /* PartialSheet */; };
-		D0560A552B28B8B600F93E84 /* PartialSheet in Frameworks */ = {isa = PBXBuildFile; productRef = D0560A542B28B8B600F93E84 /* PartialSheet */; };
 		D0560A572B28C2BD00F93E84 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0560A562B28C2BD00F93E84 /* WelcomeView.swift */; };
 		D0560A592B28FB9700F93E84 /* InsertTagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0560A582B28FB9700F93E84 /* InsertTagsView.swift */; };
 		D0560A5D2B29218C00F93E84 /* DisplayTagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0560A5C2B29218C00F93E84 /* DisplayTagsView.swift */; };
@@ -133,9 +130,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0560A552B28B8B600F93E84 /* PartialSheet in Frameworks */,
-				D0560A532B28B7FB00F93E84 /* PartialSheet in Frameworks */,
-				D0560A512B28B63E00F93E84 /* PartialSheet in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,9 +256,6 @@
 			);
 			name = Aerospace;
 			packageProductDependencies = (
-				D0560A502B28B63E00F93E84 /* PartialSheet */,
-				D0560A522B28B7FB00F93E84 /* PartialSheet */,
-				D0560A542B28B8B600F93E84 /* PartialSheet */,
 			);
 			productName = Aerospace;
 			productReference = D0810B192B286C93005825D6 /* Aerospace.app */;
@@ -295,7 +286,6 @@
 			);
 			mainGroup = D0810B102B286C93005825D6;
 			packageReferences = (
-				D0560A4F2B28B63E00F93E84 /* XCRemoteSwiftPackageReference "PartialSheet" */,
 			);
 			productRefGroup = D0810B1A2B286C93005825D6 /* Products */;
 			projectDirPath = "";
@@ -508,7 +498,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"Aerospace/Preview Content\"";
 				DEVELOPMENT_TEAM = C6GW4A76XK;
 				ENABLE_PREVIEWS = YES;
@@ -534,7 +524,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -544,7 +534,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"Aerospace/Preview Content\"";
 				DEVELOPMENT_TEAM = C6GW4A76XK;
 				ENABLE_PREVIEWS = YES;
@@ -570,7 +560,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -596,35 +586,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		D0560A4F2B28B63E00F93E84 /* XCRemoteSwiftPackageReference "PartialSheet" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/AndreaMiotto/PartialSheet.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.1.1;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		D0560A502B28B63E00F93E84 /* PartialSheet */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D0560A4F2B28B63E00F93E84 /* XCRemoteSwiftPackageReference "PartialSheet" */;
-			productName = PartialSheet;
-		};
-		D0560A522B28B7FB00F93E84 /* PartialSheet */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D0560A4F2B28B63E00F93E84 /* XCRemoteSwiftPackageReference "PartialSheet" */;
-			productName = PartialSheet;
-		};
-		D0560A542B28B8B600F93E84 /* PartialSheet */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D0560A4F2B28B63E00F93E84 /* XCRemoteSwiftPackageReference "PartialSheet" */;
-			productName = PartialSheet;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D0810B112B286C93005825D6 /* Project object */;
 }

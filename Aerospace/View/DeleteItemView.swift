@@ -66,7 +66,7 @@ struct DeleteItemView: View {
             Image("NothingHere") // Placeholder image for empty state
                 .resizable()
                 .scaledToFit()
-                .frame(width: 300, height: 300)
+                .frame(width: 600, height: 600)
             Text("Nothing to see here!")
                 .font(.headline)
         }

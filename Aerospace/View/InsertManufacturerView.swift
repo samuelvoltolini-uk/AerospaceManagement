@@ -1,5 +1,4 @@
 import SwiftUI
-import PartialSheet
 
 struct InsertManufacturerView: View {
     
@@ -19,8 +18,8 @@ struct InsertManufacturerView: View {
     let databaseManager = DatabaseManager()
     let loggedInUser: User
     
-    @State private var showingErrorSheet = false
-    @State private var errorMessage = ""
+    @State private var showAlert = false
+    @State private var alertMessage = ""
     
     let creationDate: String = DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .short)
     
@@ -121,13 +120,13 @@ struct InsertManufacturerView: View {
                 Button("Save") {
                     if validateFields() {
                         if databaseManager.checkIfManufacturerExists(name: manufacturerName, code: manufacturerCode) {
-                            errorMessage = "Manufacturer with same name or code already exists."
-                            showingErrorSheet = true
+                            alertMessage = "Manufacturer with same name or code already exists."
+                            showAlert = true
                         } else {
                             saveManufacturer()
                         }
                     } else {
-                        showingErrorSheet = true
+                        showAlert = true
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -136,37 +135,25 @@ struct InsertManufacturerView: View {
             }
         }
         .navigationTitle("New Manufacturer")
-                .partialSheet(isPresented: $showingErrorSheet) {
-                    VStack {
-                        Image(systemName: "questionmark.square.fill")
-                            .renderingMode(.original)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 50, height: 50)
-                            .foregroundColor(.accentColor)
-                            .padding(.top, 5)
-                        
-                        Text(errorMessage)
-                            .foregroundColor(.gray)
-                            .font(.footnote)
-                            .multilineTextAlignment(.center)
-                            .padding(.top, 10)
-                    }
-                } // End of error sheet modifier
-                .attachPartialSheetToRoot()
-            }
-
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+        }
+    }
+    
+    
+    
     
     func validateFields() -> Bool {
         let fields = [manufacturerName, manufacturerCode, selectedCountry, stateOrProvince, postCode, street, number, phoneNumber]
         for field in fields {
             if field.isEmpty {
-                errorMessage = "Please fill in all the fields."
+                alertMessage = "Please fill in all the fields."
                 return false
             }
         }
         return true
     }
+    
     func saveManufacturer() {
         isSaving = true
         databaseManager.createManufacturerTable()
@@ -177,7 +164,7 @@ struct InsertManufacturerView: View {
             resetFormFields()
         }
     }
-
+    
     func resetFormFields() {
         manufacturerName = ""
         manufacturerCode = ""

@@ -1,12 +1,11 @@
 import SwiftUI
-import PartialSheet
 
 struct InsertItemView: View {
     
     let databaseManager = DatabaseManager()
     
-    @State private var showErrorSheet: Bool = false
-    @State private var errorMessage: String = ""
+    @State private var showAlert: Bool = false
+    @State private var alertMessage: String = ""
     
     @State private var isSaving: Bool = false
     
@@ -155,21 +154,21 @@ struct InsertItemView: View {
             }
             
             Section(header: labelWithIcon("SKU (Stock Keeping Unit)", image: "qrcode.viewfinder")) {
-                            ForEach(0..<Int(quantity), id: \.self) { index in
-                                TextField("SKU for item \(index + 1)", text: Binding(
-                                    get: { self.skus.count > index ? self.skus[index] : "" },
-                                    set: { newValue in
-                                        // Safely update the SKUs array
-                                        if self.skus.count > index {
-                                            self.skus[index] = newValue
-                                        } else {
-                                            self.skus.append(newValue)
-                                        }
-                                    }
-                                ))
-                                .keyboardType(.numberPad)
+                ForEach(0..<Int(quantity), id: \.self) { index in
+                    TextField("SKU for item \(index + 1)", text: Binding(
+                        get: { self.skus.count > index ? self.skus[index] : "" },
+                        set: { newValue in
+                            // Safely update the SKUs array
+                            if self.skus.count > index {
+                                self.skus[index] = newValue
+                            } else {
+                                self.skus.append(newValue)
                             }
                         }
+                    ))
+                    .keyboardType(.numberPad)
+                }
+            }
             
             
             Section(header: labelWithIcon("File", image: "photo.on.rectangle.angled")) {
@@ -203,127 +202,28 @@ struct InsertItemView: View {
                     .scaleEffect(1.5, anchor: .center)
                     .progressViewStyle(CircularProgressViewStyle(tint: .blue))
                     .frame(maxWidth: .infinity)
-                
             } else {
                 Button("Save") {
-                    // Validate required fields
-                    guard !itemName.isEmpty, !barcode.isEmpty, !description.isEmpty,
-                          !material.isEmpty, !repairCompanyOne.isEmpty, !comments.isEmpty else {
-                        errorMessage = "Please fill all required fields."
-                        showErrorSheet = true
-                        return
-                    }
-                    
-                    // Ensure all SKUs are provided
-                    guard skus.count == Int(quantity), !skus.contains(where: { $0.isEmpty }) else {
-                        errorMessage = "Please provide SKUs for all items."
-                        showErrorSheet = true
-                        return
-                    }
-                    
-                    // Check if barcode or SKUs already exist
-                    let dbManager = DatabaseManager()
-                    if dbManager.barcodeExists(barcode) {
-                        errorMessage = "Barcode already exists. Please use the update screen."
-                        showErrorSheet = true
-                        return
-                    }
-                    
-                    for sku in skus {
-                        if dbManager.skuExists(sku) {
-                            errorMessage = "SKU \(sku) is already in the system."
-                            showErrorSheet = true
-                            return
-                        }
-                    }
-                    
-                    // Proceed with saving the item
-                    var fileData: Data? = nil
-                    if let selectedFileURL = selectedFile {
-                        do {
-                            fileData = try Data(contentsOf: selectedFileURL)
-                        } catch {
-                            errorMessage = "Error reading file data: \(error.localizedDescription)"
-                            showErrorSheet = true
-                            return
-                        }
-                    }
-                    
-                    let newItem = Item(
-                        name: itemName,
-                        barcode: barcode,
-                        SKU: skus,
-                        description: description,
-                        manufacturer: manufacturer,
-                        status: status,
-                        origin: origin,
-                        client: client,
-                        material: material,
-                        repairCompanyOne: repairCompanyOne,
-                        repairCompanyTwo: repairCompanyTwo,
-                        historyNumber: historyNumber,
-                        comments: comments,
-                        tagName: tagName,
-                        isFavorite: isFavorite,
-                        isPriority: isPriority,
-                        quantity: quantity,
-                        receiveDate: receiveDate,
-                        expectedDate: expectedDate,
-                        file: fileData,
-                        createdBy: loggedInUser.name,
-                        creationDate: currentDate
-                    )
-                    
-                    dbManager.createItemsTable()
-                    dbManager.insertItem(item: newItem)
-                    
-                    dbManager.createHistoryTable()
-                    dbManager.insertHistoryRecord(name: itemName, barcode: barcode, status: status, comments: comments, user: loggedInUser.name)
-                    
-                    isSaving = true
-                    
-                    let delay = 0.5 + (Double(Int(quantity)) * 0.1)
-                            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                                // Reset variables
-                                resetFormFields()
-                                adjustSKUsArray()
-                                // End saving state
-                                isSaving = false
-                                
-                            }
+                    saveItem()
                 }
                 .frame(maxWidth: .infinity)
                 .foregroundColor(.accentColor)
                 .fontWeight(.semibold)
             }
         }
-        .scrollIndicators(.hidden)
-        .navigationTitle("Insert Item")
-        .partialSheet(isPresented: $showErrorSheet) {
-            VStack {
-                Image(systemName: "questionmark.square.fill")
-                    .renderingMode(.original)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 50, height: 50)
-                    .foregroundColor(.accentColor)
-                    .padding(.top, 5)
-                
-                Text(errorMessage)
-                    .foregroundColor(.gray)
-                    .font(.footnote)
-                    .multilineTextAlignment(.center)
-                    .padding(.top, 10)
-            }
+        .navigationBarTitle("Insert Item", displayMode: .inline)
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
-        .attachPartialSheetToRoot()
-        
         .onAppear {
             loadPickerData()
-            adjustSKUsArray()
-            databaseManager.createItemsTable()
+        }
+        .sheet(isPresented: $showDocumentPicker) {
+            DocumentPicker(selectedFile: $selectedFile)
         }
     }
+    
+    
     
     private func quantityChanged(_ editing: Bool) {
         if !editing {
@@ -331,52 +231,92 @@ struct InsertItemView: View {
         }
     }
     
-    private func validateFields() -> Bool {
-        // Basic validation for empty fields
-        if itemName.isEmpty || barcode.isEmpty || description.isEmpty ||
-            material.isEmpty || repairCompanyOne.isEmpty || comments.isEmpty {
-            errorMessage = "Please fill all required fields."
-            showErrorSheet = true
-            return false
+    private func saveItem() {
+        // Validate required fields
+        guard !itemName.isEmpty, !barcode.isEmpty, !description.isEmpty,
+              !material.isEmpty, !repairCompanyOne.isEmpty, !comments.isEmpty else {
+            alertMessage = "Please fill all required fields."
+            showAlert = true
+            return
         }
         
-        // Adjust the SKUs array to match the quantity
-        adjustSKUsArray()
-        
-        // Check for duplicate SKUs
-        let uniqueSKUs = Set(skus)
-        if uniqueSKUs.count < skus.count {
-            errorMessage = "Duplicate SKUs detected. Each SKU must be unique."
-            showErrorSheet = true
-            return false
+        // Ensure all SKUs are provided
+        guard skus.count == Int(quantity), !skus.contains(where: { $0.isEmpty }) else {
+            alertMessage = "Please provide SKUs for all items."
+            showAlert = true
+            return
         }
-
-        // Check if barcode or SKUs already exist in the database
+        
+        // Check if barcode or SKUs already exist
         let dbManager = DatabaseManager()
         if dbManager.barcodeExists(barcode) {
-            errorMessage = "Barcode already exists. Please use the update screen."
-            showErrorSheet = true
-            return false
+            alertMessage = "Barcode already exists. Please use the update screen."
+            showAlert = true
+            return
         }
-
+        
         for sku in skus {
             if dbManager.skuExists(sku) {
-                errorMessage = "SKU \(sku) is already in the system."
-                showErrorSheet = true
-                return false
+                alertMessage = "SKU \(sku) is already in the system."
+                showAlert = true
+                return
             }
         }
-
-        return true
-    }
-
-    private func adjustSKUsArray() {
-        skus = Array(skus.prefix(Int(quantity)))
-        while skus.count < Int(quantity) {
-            skus.append("")
+        
+        // Proceed with saving the item
+        var fileData: Data? = nil
+        if let selectedFileURL = selectedFile {
+            do {
+                fileData = try Data(contentsOf: selectedFileURL)
+            } catch {
+                alertMessage = "Error reading file data: \(error.localizedDescription)"
+                showAlert = true
+                return
+            }
+        }
+        
+        let newItem = Item(
+            name: itemName,
+            barcode: barcode,
+            SKU: skus,
+            description: description,
+            manufacturer: manufacturer,
+            status: status,
+            origin: origin,
+            client: client,
+            material: material,
+            repairCompanyOne: repairCompanyOne,
+            repairCompanyTwo: repairCompanyTwo,
+            historyNumber: historyNumber,
+            comments: comments,
+            tagName: tagName,
+            isFavorite: isFavorite,
+            isPriority: isPriority,
+            quantity: quantity,
+            receiveDate: receiveDate,
+            expectedDate: expectedDate,
+            file: fileData,
+            createdBy: loggedInUser.name,
+            creationDate: currentDate
+        )
+        
+        dbManager.createItemsTable()
+        dbManager.insertItem(item: newItem)
+        
+        dbManager.createHistoryTable()
+        dbManager.insertHistoryRecord(name: itemName, barcode: barcode, status: status, comments: comments, user: loggedInUser.name)
+        
+        isSaving = true
+        
+        // Reset the form fields after a delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            resetFormFields()
+            isSaving = false
+            // Optionally show a success message or navigate away
         }
     }
     
+    // Function to reset the form fields after saving
     private func resetFormFields() {
         itemName = ""
         barcode = ""
@@ -387,12 +327,21 @@ struct InsertItemView: View {
         historyNumber = 1
         comments = ""
         selectedFile = nil
-        skus = [""]
+        skus = []
         isFavorite = false
         isPriority = false
         quantity = 1
         receiveDate = Date()
         expectedDate = Date()
+    }
+    
+    
+    
+    private func adjustSKUsArray() {
+        skus = Array(skus.prefix(Int(quantity)))
+        while skus.count < Int(quantity) {
+            skus.append("")
+        }
     }
     
     private func loadPickerData() {
@@ -423,7 +372,7 @@ struct InsertItemView: View {
         }
     }
     
-
+    
     
     private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()

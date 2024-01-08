@@ -1,5 +1,3 @@
-
-
 import SwiftUI
 
 struct DeleteItemAndHistory: View {
@@ -53,7 +51,7 @@ struct DeleteItemAndHistory: View {
                         }
                     }
                 }
-                .searchable(text: $searchText, prompt: "Search by Name or Barcode")
+                .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Barcode or Item")
             }
         }
         .alert("Delete Item and History", isPresented: $showConfirmationDialog, presenting: itemToDelete) { item in
@@ -73,7 +71,7 @@ struct DeleteItemAndHistory: View {
             Image("NothingHere") // Placeholder image for empty state
                 .resizable()
                 .scaledToFit()
-                .frame(width: 300, height: 300)
+                .frame(width: 600, height: 600)
             Text("Nothing to see here!")
                 .font(.headline)
         }

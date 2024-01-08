@@ -6,8 +6,8 @@ struct InsertClientView: View {
     @State private var phoneNumber: String = ""
     @State private var email: String = ""
     
-    @State private var showErrorSheet: Bool = false
-    @State private var errorMessage: String = ""
+    @State private var showAlert = false
+    @State private var alertMessage = ""
     
     @State private var isSaving: Bool = false
     
@@ -16,151 +16,140 @@ struct InsertClientView: View {
     private var currentDateTime: String {
         formatDate(Date())
     }
-
+    
     var body: some View {
-
-            Form {
-                // Customer Details Section
-                Section(header:
-                    HStack {
-                    Image(systemName: "info.square.fill")
-                        .renderingMode(.original)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 25, height: 25)
-                        .foregroundStyle(Color.accentColor)
-                    
-                        Text("Customer Details")
-                    }) {
-                    TextField("Customer Name", text: $customerName)
-                            .textInputAutocapitalization(.words)
-                        
-                    TextField("Customer Code", text: $customerCode)
-                            .textInputAutocapitalization(.characters)
-                }
-
-                // Contact Information Section
-                Section(header:
-                    HStack {
-                    Image(systemName: "phone.fill")
-                        .renderingMode(.original)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 25, height: 25)
-                        .foregroundStyle(Color.accentColor)
-                    
-                        Text("Contact Information")
-                    
-                    }) {
-                    TextField("Phone Number", text: $phoneNumber)
-                            .keyboardType(.phonePad)
-                        
-                    TextField("Email", text: $email)
-                            .keyboardType(.emailAddress)
-                            .textInputAutocapitalization(.never)
-                }
-
-                // User and Date Section
-                Section(header:
-                    HStack {
-                    Image(systemName: "person.text.rectangle.fill")
-                        .renderingMode(.original)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 25, height: 25)
-                        .foregroundStyle(Color.accentColor)
-                    
-                        Text("User and Date")
-                    }) {
+        
+        Form {
+            // Customer Details Section
+            Section(header:
                         HStack {
-                            Text("User")
-                            Spacer()
-                            Text(loggedInUser.name)
-                        }
-                        
-                        HStack {
-                            Text("Current Date")
-                            Spacer()
-                            Text(currentDateTime)
-                                .foregroundColor(.gray)
-                        }
-                }
-                    .foregroundStyle(Color.gray)
+                Image(systemName: "info.square.fill")
+                    .renderingMode(.original)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 25, height: 25)
+                    .foregroundStyle(Color.accentColor)
                 
+                Text("Customer Details")
+            }) {
+                TextField("Customer Name", text: $customerName)
+                    .textInputAutocapitalization(.words)
                 
-                // Save Button
-                Button(action: {
-                    // Validate input fields
-                    if customerName.isEmpty || customerCode.isEmpty || phoneNumber.isEmpty || email.isEmpty {
-                        errorMessage = "All fields must be filled."
-                        showErrorSheet = true
-                        return
-                    }
-                    
-                    let dbManager = DatabaseManager()
-
-                    // Check if customer name or code already exists
-                    if dbManager.customerNameExists(name: customerName) {
-                        errorMessage = "Customer name already exists."
-                        showErrorSheet = true
-                        return
-                    }
-
-                    if dbManager.customerCodeExists(code: customerCode) {
-                        errorMessage = "Customer code already exists."
-                        showErrorSheet = true
-                        return
-                    }
-
-                    // Proceed with saving the client if all validations pass
-                    isSaving = true
-                    let newClient = Client(name: customerName, code: customerCode, phoneNumber: phoneNumber, email: email, registeredBy: loggedInUser.name, registrationDate: currentDateTime)
-                    dbManager.createClientsTable()
-                    dbManager.insertClient(client: newClient)
-                    
-                    // Simulate saving delay and then revert back to the save button
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        isSaving = false
-                        // Clear the fields or perform other actions after saving
-                        customerName = ""
-                        customerCode = ""
-                        phoneNumber = ""
-                        email = ""
-                    }
-                }) {
-                    if isSaving {
-                        ProgressView()
-                            .tint(.accentColor)
-                    } else {
-                        Text("Save")
-                    }
-                }
-                .frame(maxWidth: .infinity)
-                .foregroundColor(.accentColor)
-                .fontWeight(.semibold)
-                
+                TextField("Customer Code", text: $customerCode)
+                    .textInputAutocapitalization(.characters)
             }
-            .navigationBarTitle("Insert Client", displayMode: .inline)
-            .partialSheet(isPresented: $showErrorSheet) {
-                VStack {
-                    Image(systemName: "questionmark.square.fill")
-                        .renderingMode(.original)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 50, height: 50)
-                        .foregroundColor(.accentColor)
-                        .padding(.top, 5)
-                    
-                    Text(errorMessage)
+            
+            // Contact Information Section
+            Section(header:
+                        HStack {
+                Image(systemName: "phone.fill")
+                    .renderingMode(.original)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 25, height: 25)
+                    .foregroundStyle(Color.accentColor)
+                
+                Text("Contact Information")
+                
+            }) {
+                TextField("Phone Number", text: $phoneNumber)
+                    .keyboardType(.phonePad)
+                
+                TextField("Email", text: $email)
+                    .keyboardType(.emailAddress)
+                    .textInputAutocapitalization(.never)
+            }
+            
+            // User and Date Section
+            Section(header:
+                        HStack {
+                Image(systemName: "person.text.rectangle.fill")
+                    .renderingMode(.original)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 25, height: 25)
+                    .foregroundStyle(Color.accentColor)
+                
+                Text("User and Date")
+            }) {
+                HStack {
+                    Text("User")
+                    Spacer()
+                    Text(loggedInUser.name)
+                }
+                
+                HStack {
+                    Text("Current Date")
+                    Spacer()
+                    Text(currentDateTime)
                         .foregroundColor(.gray)
-                        .font(.footnote)
-                        .multilineTextAlignment(.center)
-                        .padding(.top, 10)
                 }
             }
-            .attachPartialSheetToRoot()
+            .foregroundStyle(Color.gray)
+            
+            
+            // Save Button
+            Button(action: saveClient) {
+                if isSaving {
+                    ProgressView()
+                        .tint(.accentColor)
+                } else {
+                    Text("Save")
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .foregroundColor(.accentColor)
+            .fontWeight(.semibold)
+        }
+        .navigationBarTitle("Insert Client", displayMode: .inline)
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+        }
     }
-
+    
+    private func saveClient() {
+        // Validate input fields
+        if customerName.isEmpty || customerCode.isEmpty || phoneNumber.isEmpty || email.isEmpty {
+            alertMessage = "All fields must be filled."
+            showAlert = true
+            return
+        }
+        
+        let dbManager = DatabaseManager()
+        
+        // Check if customer name or code already exists
+        if dbManager.customerNameExists(name: customerName) {
+            alertMessage = "Customer name already exists."
+            showAlert = true
+            return
+        }
+        
+        if dbManager.customerCodeExists(code: customerCode) {
+            alertMessage = "Customer code already exists."
+            showAlert = true
+            return
+        }
+        
+        // Proceed with saving the client
+        isSaving = true
+        let newClient = Client(name: customerName, code: customerCode, phoneNumber: phoneNumber, email: email, registeredBy: loggedInUser.name, registrationDate: currentDateTime)
+        dbManager.createClientsTable()
+        dbManager.insertClient(client: newClient)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            isSaving = false
+            resetFormFields()
+        }
+    }
+    
+    private func resetFormFields() {
+        customerName = ""
+        customerCode = ""
+        phoneNumber = ""
+        email = ""
+    }
+    
+    
     private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium

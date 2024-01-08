@@ -11,7 +11,7 @@ struct ItemManufacturer: View {
             if manufacturerData.isEmpty {
                 emptyStateView
             } else {
-                ScrollView(.horizontal) {
+                ScrollView {
                     Chart {
                         ForEach(manufacturerData.keys.sorted(), id: \.self) { manufacturer in
                             BarMark(
@@ -28,7 +28,7 @@ struct ItemManufacturer: View {
                             }
                         }
                     }
-                    .frame(width: 1000, height: 700)
+                    .frame(width: 1000, height: 1000)
                     .padding(.top, 20)
                 }
                 .chartYAxis(.hidden)
@@ -48,7 +48,7 @@ struct ItemManufacturer: View {
             Image("NothingHere5") // Make sure the image is available in your assets
                 .resizable()
                 .scaledToFit()
-                .frame(width: 300, height: 300)
+                .frame(width: 600, height: 600)
             Text("Nothing to see here!")
                 .font(.headline)
         }

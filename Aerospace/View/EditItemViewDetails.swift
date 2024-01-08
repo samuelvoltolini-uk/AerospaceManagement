@@ -7,8 +7,8 @@ struct EditItemViewDetails: View {
     
     let user: User
     
-    @State private var showPartialSheet = false
-    @State private var errorMessage: String = ""
+    @State private var showAlert = false
+    @State private var alertMessage = ""
 
     @State private var itemName: String = ""
     @State private var barcode: String = ""
@@ -181,24 +181,9 @@ struct EditItemViewDetails: View {
             let statusHistory = databaseManager.fetchStatusHistoryForItem(itemBarcode: item.barcode)
             historyNumber = statusHistory.count
         }
-        .partialSheet(isPresented: $showPartialSheet) {
-            VStack {
-                Image(systemName: "questionmark.square.fill")
-                    .renderingMode(.original)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 50, height: 50)
-                    .foregroundColor(.accentColor)
-                    .padding(.top, 5)
-                
-                Text(errorMessage)
-                    .foregroundColor(.gray)
-                    .font(.footnote)
-                    .multilineTextAlignment(.center)
-                    .padding(.top, 10)
-            }
-        }
-        .attachPartialSheetToRoot()
+        .alert(isPresented: $showAlert) {
+                    Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                }
     }
     
     private func handleSubmit() {
@@ -297,12 +282,11 @@ struct EditItemViewDetails: View {
     }
     
     private func validateAndSave() {
-        // Check if any required field is blank
-        if tagName.isEmpty || manufacturer.isEmpty || status.isEmpty || origin.isEmpty || client.isEmpty || material.isEmpty || repairCompanyOne.isEmpty || comments.isEmpty {
-            errorMessage = "All fields are required. Please fill out the missing information."
-            showPartialSheet = true
-            return
-        }
+            if tagName.isEmpty || manufacturer.isEmpty || status.isEmpty || origin.isEmpty || client.isEmpty || material.isEmpty || repairCompanyOne.isEmpty || comments.isEmpty {
+                alertMessage = "All fields are required. Please fill out the missing information."
+                showAlert = true
+                return
+            }
 
         // If all fields are filled, call the save function
         handleSubmit()

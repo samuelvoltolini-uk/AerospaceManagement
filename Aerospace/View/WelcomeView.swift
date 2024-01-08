@@ -561,19 +561,19 @@ struct WelcomeView: View {
                     }
                     
                     Section(header: Text("Account and Configuration"), footer: Text("Configure settings and account preferences.")) {
-                        NavigationLink(destination: Text("Settings View")) {
-                            HStack {
-                                Image(systemName: "gearshape.fill")
-                                    .renderingMode(.original)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 25, height: 25)
-                                    .foregroundStyle(Color.accentColor)
-                                
-                                Text("Settings")
+                                NavigationLink(destination: Settings(loggedInUserEmail: user.email)) {
+                                    HStack {
+                                        Image(systemName: "gearshape.fill")
+                                            .renderingMode(.original)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 25, height: 25)
+                                            .foregroundStyle(Color.accentColor)
+
+                                        Text("Settings")
+                                    }
+                                }
                             }
-                        }
-                    }
                     
                     Section(header: Text("Current User & Date"), footer: Text("Current user logged in and date.")) {
                         HStack {
@@ -605,7 +605,9 @@ struct WelcomeView: View {
             .navigationTitle("Aerospace Manager")
             .scrollIndicators(.hidden)
             .navigationBarBackButtonHidden(true)
+            
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
     
     private var currentDateTime: String {

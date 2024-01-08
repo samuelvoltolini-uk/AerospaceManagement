@@ -12,7 +12,7 @@ struct Item7Days: View {
             if dailyCreationData.isEmpty {
                 emptyStateView
             } else {
-                ScrollView(.horizontal) {
+                ScrollView {
                     Chart {
                         ForEach(dailyCreationData.sorted(by: {
                             dateFormatter.date(from: $0.day) ?? Date.distantPast < dateFormatter.date(from: $1.day) ?? Date.distantPast
@@ -30,7 +30,7 @@ struct Item7Days: View {
                             }
                         }
                     }
-                    .frame(width: 1000, height: 700)
+                    .frame(width: 1000, height: 1000)
                     .padding(.top, 20)
                 }
                 .chartYAxis(.hidden)
@@ -50,7 +50,7 @@ struct Item7Days: View {
             Image("NothingHere5") // Make sure the image is available in your assets
                 .resizable()
                 .scaledToFit()
-                .frame(width: 300, height: 300)
+                .frame(width: 600, height: 600)
             Text("Nothing to see here!")
                 .font(.headline)
         }

@@ -1,4 +1,3 @@
-
 import Charts
 import SwiftUI
 
@@ -36,7 +35,7 @@ struct ProductPerStatus: View {
                             }
                         }
                     }
-                    .frame(width: 400, height: 450)
+                    .frame(width: 1000, height: 1000)
                     .padding(.top, 20)
                 }
             }
@@ -52,7 +51,7 @@ struct ProductPerStatus: View {
             Image("NothingHere5")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 300, height: 300)
+                .frame(width: 600, height: 600)
             Text("Nothing to see here!")
                 .font(.headline)
         }

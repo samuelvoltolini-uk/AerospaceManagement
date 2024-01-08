@@ -8,6 +8,12 @@ struct User: Hashable {
     var password: String
 }
 
+struct UserSettings: Identifiable {
+    let id: Int
+    var name: String
+    var email: String
+}
+
 struct Tag {
     var id: Int64?
     var name: String
@@ -2725,6 +2731,49 @@ extension DatabaseManager {
         sqlite3_finalize(updateStatement)
     }
 }
+
+extension DatabaseManager {
+    func fetchAllUsers() -> [UserSettings] {
+        var users = [UserSettings]()
+        let query = "SELECT id, name, email FROM users"
+        
+        var statement: OpaquePointer?
+        if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK {
+            while sqlite3_step(statement) == SQLITE_ROW {
+                let id = sqlite3_column_int(statement, 0)
+                let name = String(cString: sqlite3_column_text(statement, 1))
+                let email = String(cString: sqlite3_column_text(statement, 2))
+                let user = UserSettings(id: Int(id), name: name, email: email)
+                users.append(user)
+            }
+        }
+        sqlite3_finalize(statement)
+        
+        return users
+    }
+}
+
+extension DatabaseManager {
+    func deleteUser(withID id: Int) {
+        let deleteQuery = "DELETE FROM users WHERE id = ?;" // Use placeholder for prepared statement
+
+        var statement: OpaquePointer?
+        if sqlite3_prepare_v2(db, deleteQuery, -1, &statement, nil) == SQLITE_OK {
+            sqlite3_bind_int(statement, 1, Int32(id)) // Bind the id to the query
+
+            if sqlite3_step(statement) != SQLITE_DONE {
+                print("Error executing delete statement.")
+            }
+        } else {
+            print("Error preparing delete statement.")
+        }
+
+        sqlite3_finalize(statement) // Clean up
+    }
+}
+
+
+
 
 
 

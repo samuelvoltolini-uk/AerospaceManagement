@@ -18,7 +18,7 @@ struct ProductFavoritePriority: View {
                         .foregroundStyle(by: .value(category.category, category.category))
                     }
                 }
-                .frame(width: 400, height: 450)
+                .frame(width: 1000, height: 1000)
                 .padding(.top, 20)
             }
         }
@@ -33,7 +33,7 @@ struct ProductFavoritePriority: View {
             Image("NothingHere5") // Make sure the image is available in your assets
                 .resizable()
                 .scaledToFit()
-                .frame(width: 300, height: 300)
+                .frame(width: 600, height: 600)
             Text("Nothing to see here!")
                 .font(.headline)
         }

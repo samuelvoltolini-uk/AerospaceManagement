@@ -27,7 +27,7 @@ struct HistoryView: View {
                     .navigationBarTitle("History", displayMode: .inline)
                 }
             }
-            .searchable(text: $searchText, prompt: "Search by Barcode")
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Barcode")
             .sheet(item: $selectedRecord) { record in
                 HistoryDetailsView(record: record)
             }
@@ -51,7 +51,7 @@ struct HistoryView: View {
             Image("NothingHere2") // Placeholder image for empty state
                 .resizable()
                 .scaledToFit()
-                .frame(width: 300, height: 300)
+                .frame(width: 600, height: 600)
             Text("Nothing to see here!")
                 .font(.headline)
         }
