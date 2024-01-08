@@ -1,5 +1,4 @@
 import SwiftUI
-import PartialSheet
 
 struct SignupView: View {
     @State private var name: String = ""

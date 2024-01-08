@@ -1,5 +1,4 @@
 import SwiftUI
-import PartialSheet
 
 struct EditItemViewDetails: View {
     
