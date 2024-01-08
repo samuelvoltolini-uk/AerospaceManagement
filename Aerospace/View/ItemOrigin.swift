@@ -7,7 +7,7 @@ struct ItemOrigin: View {
     private let barColors: [Color] = [.red, .green, .blue, .orange, .purple, .pink, .yellow, .gray, .brown, .cyan]
     
     var body: some View {
-            ScrollView(.horizontal) {
+            ScrollView {
                 Chart {
                     ForEach(originData.keys.sorted(), id: \.self) { origin in
                         BarMark(

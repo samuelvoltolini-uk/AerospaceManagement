@@ -8,7 +8,7 @@ struct ItemPerTag: View {
     private let barColors: [Color] = [.red, .green, .blue, .orange, .purple, .pink, .yellow, .gray, .brown, .cyan]
     
     var body: some View {
-        ScrollView(.horizontal) {
+        ScrollView {
             Chart {
                 ForEach(tagNameData.keys.sorted(), id: \.self) { tagName in
                     BarMark(
