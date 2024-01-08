@@ -15,46 +15,46 @@ struct DeleteItemView: View {
     }
 
     var body: some View {
-        VStack {
-            if filteredItems.isEmpty {
+        List {
+            if items.isEmpty {
                 emptyView
+            } else if filteredItems.isEmpty {
+                Text("No results found")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             } else {
-                List {
-                    ForEach(filteredItems, id: \.id) { item in
-                        HStack {
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    Image(systemName: "info.square.fill") // Icon for item name
-                                        .renderingMode(.original)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 25, height: 25)
-                                        .foregroundStyle(Color.accentColor)
-                                    Text(item.name)
-                                        .font(.footnote)
-                                }
-
-                                HStack {
-                                    Image(systemName: "barcode.viewfinder") // Icon for barcode
-                                        .renderingMode(.original)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 25, height: 25)
-                                        .foregroundStyle(Color.accentColor)
-                                    Text(item.barcode)
-                                        .font(.footnote)
-                                }
-
-                                // Add more details with icons as needed
+                ForEach(filteredItems, id: \.id) { item in
+                    HStack {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Image(systemName: "info.square.fill") // Icon for item name
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.accentColor)
+                                Text(item.name)
+                                    .font(.footnote)
                             }
-                            Spacer()
+
+                            HStack {
+                                Image(systemName: "barcode.viewfinder") // Icon for barcode
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.accentColor)
+                                Text(item.barcode)
+                                    .font(.footnote)
+                            }
                         }
+                        Spacer()
                     }
-                    .onDelete(perform: deleteItem)
                 }
-                .searchable(text: $searchText, prompt: "Search by Name or Barcode")
+                .onDelete(perform: deleteItem)
             }
         }
+        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Name or Barcode")
         .navigationBarTitle("Delete Items", displayMode: .inline)
         .onAppear {
             fetchItems()
@@ -70,6 +70,7 @@ struct DeleteItemView: View {
             Text("Nothing to see here!")
                 .font(.headline)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private func fetchItems() {

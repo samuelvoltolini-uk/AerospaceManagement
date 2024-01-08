@@ -52,7 +52,7 @@ struct ViewByTags: View {
                             itemDisplayView(icon: "number.square.fill", text: "\(Int(item.quantity))")
                         }
                     }
-                    .listStyle(PlainListStyle())
+                    
                 }
             }
             .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Barcode or Item")

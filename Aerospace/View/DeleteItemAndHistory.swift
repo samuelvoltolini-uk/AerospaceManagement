@@ -1,5 +1,6 @@
 import SwiftUI
 
+
 struct DeleteItemAndHistory: View {
     @State private var items: [ItemFetch] = []
     @State private var searchText = ""
@@ -8,52 +9,61 @@ struct DeleteItemAndHistory: View {
 
     let databaseManager = DatabaseManager()
 
+    private var filteredItems: [ItemFetch] {
+        if searchText.isEmpty {
+            return items
+        } else {
+            return items.filter { item in
+                item.name.lowercased().contains(searchText.lowercased()) ||
+                item.barcode.lowercased().contains(searchText.lowercased())
+            }
+        }
+    }
+
     var body: some View {
-        VStack {
-            if items.isEmpty {
+        List {
+            if filteredItems.isEmpty {
                 emptyView
             } else {
-                List {
-                    ForEach(items, id: \.id) { item in
-                        HStack {
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    Image(systemName: "info.square.fill")
-                                        .renderingMode(.original)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 25, height: 25)
-                                        .foregroundStyle(Color.accentColor)
-                                    Text(item.name)
-                                        .font(.footnote)
-                                }
+                ForEach(filteredItems, id: \.id) { item in
+                    HStack {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Image(systemName: "info.square.fill")
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.accentColor)
+                                Text(item.name)
+                                    .font(.footnote)
+                            }
 
-                                HStack {
-                                    Image(systemName: "barcode.viewfinder")
-                                        .renderingMode(.original)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 25, height: 25)
-                                        .foregroundStyle(Color.accentColor)
-                                    Text(item.barcode)
-                                        .font(.footnote)
-                                }
+                            HStack {
+                                Image(systemName: "barcode.viewfinder")
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.accentColor)
+                                Text(item.barcode)
+                                    .font(.footnote)
                             }
-                            Spacer()
                         }
-                        .swipeActions {
-                            Button(role: .destructive) {
-                                itemToDelete = item
-                                showConfirmationDialog = true
-                            } label: {
-                                Label("Delete All", systemImage: "trash")
-                            }
+                        Spacer()
+                    }
+                    .swipeActions {
+                        Button(role: .destructive) {
+                            itemToDelete = item
+                            showConfirmationDialog = true
+                        } label: {
+                            Label("Delete All", systemImage: "trash")
                         }
                     }
                 }
-                .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Barcode or Item")
             }
         }
+        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Barcode or Item")
         .alert("Delete Item and History", isPresented: $showConfirmationDialog, presenting: itemToDelete) { item in
             Button("Delete", role: .destructive) {
                 deleteItemAndHistory(item)
@@ -75,6 +85,7 @@ struct DeleteItemAndHistory: View {
             Text("Nothing to see here!")
                 .font(.headline)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private func fetchItems() {
@@ -87,6 +98,7 @@ struct DeleteItemAndHistory: View {
         fetchItems() // Refresh the list after deletion
     }
 }
+
 
 #Preview {
     DeleteItemAndHistory()
