@@ -20,7 +20,7 @@ struct OverviewView: View {
                         .foregroundStyle(by: .value("User", order.user))
                     }
                 }
-                .frame(width: 1000, height: 1000)
+                .frame(width: 1000, height: 1200)
                 .padding(.top, 20)
             }
         }

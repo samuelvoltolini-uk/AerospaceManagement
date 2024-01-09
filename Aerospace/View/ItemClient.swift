@@ -29,7 +29,7 @@ struct ItemClient: View {
                             }
                         }
                     }
-                    .frame(width: 1000, height: 1000)
+                    .frame(width: 1000, height: 1200)
                     .padding(.top, 20)
                 }
                 .chartYAxis(.hidden)
