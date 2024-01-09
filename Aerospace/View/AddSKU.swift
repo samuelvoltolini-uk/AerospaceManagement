@@ -45,7 +45,7 @@ struct AddSKU: View {
                         }
                     }
                 }
-                .searchable(text: $searchText)
+                .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
                 .navigationBarTitle("Add SKU", displayMode: .inline)
             }
         }

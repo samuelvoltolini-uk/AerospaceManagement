@@ -23,7 +23,7 @@ struct DeleteSKU: View {
                         itemDisplayView(item)
                     }
                 }
-                .searchable(text: $searchText)
+                .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
                 .navigationBarTitle("Delete SKU", displayMode: .inline)
             }
         }
